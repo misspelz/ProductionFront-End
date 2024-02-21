@@ -16,9 +16,6 @@ const VerifyForm = () => {
     inputValue5: "",
   });
 
-  // const [seconds, setSeconds] = useState(60);
-  // const [isActive, setIsActive] = useState(true);
-  // const [timerExpired, setTimerExpired] = useState(false);
   const navigate = useNavigate();
 
   const [inputRefs] = useState([null, null, null, null, null]);
@@ -61,12 +58,6 @@ const VerifyForm = () => {
       }
     }
   };
-
-  // const minutes = Math.floor(seconds / 60);
-  // const remainingSeconds = seconds % 60;
-  // const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
-  //   remainingSeconds
-  // ).padStart(2, "0")}`;
 
   const allInputsComplete = Object.values(inputValues).every(
     (value) => value !== ""
@@ -112,23 +103,6 @@ const VerifyForm = () => {
       inputRefs[0].focus();
     }
   }, [inputRefs]);
-
-  // useEffect(() => {
-  //   let interval;
-
-  //   if (isActive && seconds > 0) {
-  //     interval = setInterval(() => {
-  //       setSeconds(seconds - 1);
-  //     }, 1000);
-  //   } else if (seconds === 0) {
-  //     setIsActive(false);
-  //     setTimerExpired(true);
-  //   }
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [isActive, seconds]);
 
   return (
     <>
