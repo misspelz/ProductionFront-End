@@ -16,18 +16,14 @@ const VerifyForm = () => {
     inputValue5: "",
   });
 
-  // const [seconds, setSeconds] = useState(60);
-  // const [isActive, setIsActive] = useState(true);
-  // const [timerExpired, setTimerExpired] = useState(false);
   const navigate = useNavigate();
 
   const [inputRefs] = useState([null, null, null, null, null]);
 
-  const registrationData = JSON.parse(localStorage.getItem("registrationData"));
-  console.log("registrationData", registrationData);
+  const registrationData = JSON.parse(localStorage?.getItem("registrationData"));
 
   const registrationEmail = registrationData?.email
-  console.log("registrationEmail", registrationEmail);
+
 
   const HandleSendOTP = async () => {
     try {
@@ -62,32 +58,22 @@ const VerifyForm = () => {
     }
   };
 
-  // const minutes = Math.floor(seconds / 60);
-  // const remainingSeconds = seconds % 60;
-  // const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
-  //   remainingSeconds
-  // ).padStart(2, "0")}`;
-
   const allInputsComplete = Object.values(inputValues).every(
     (value) => value !== ""
   );
 
   const otp_code = { otp_code: Object.values(inputValues).join("") };
-  console.log("otp_code", otp_code);
 
   const verifyData = {
     email: registrationEmail,
     otp: otp_code.otp_code,
   };
 
-  console.log("verifyData", verifyData);
-
   const HandleVerify = async () => {
     try {
       setIsLoading(true);
 
       const response = await VerifyOTP(verifyData);
-      console.log("VerifyOTP", response);
 
       if (response.status === 200) {
         toast.success(response.data.message || "Verification Successful!");
@@ -96,7 +82,6 @@ const VerifyForm = () => {
         }, 2000);
       }
     } catch (error) {
-      console.log("Verifyerror", error);
       toast.error(
         error.response.data.message ||
           error.response.data.error ||
@@ -112,23 +97,6 @@ const VerifyForm = () => {
       inputRefs[0].focus();
     }
   }, [inputRefs]);
-
-  // useEffect(() => {
-  //   let interval;
-
-  //   if (isActive && seconds > 0) {
-  //     interval = setInterval(() => {
-  //       setSeconds(seconds - 1);
-  //     }, 1000);
-  //   } else if (seconds === 0) {
-  //     setIsActive(false);
-  //     setTimerExpired(true);
-  //   }
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [isActive, seconds]);
 
   return (
     <>

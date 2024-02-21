@@ -4,18 +4,15 @@ import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import "react-phone-number-input/style.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Login, UserInfoApi } from "services/auth&poll";
 import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
-import { url } from "../../utils";
 import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";
 import { EmailVerify } from "../Modals/EmailVerify";
 import Modal from "../Modals/Modal";
-import { Login, UserInfoApi } from "services/auth&poll";
 
 const SigninForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isUsingUsername, setIsUsingUsername] = useState(false);
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -27,14 +24,8 @@ const SigninForm = () => {
     navigate("/reset-password");
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-    setEmail("");
-  };
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-    setUsername("");
   };
 
   const handlePasswordChange = (event) => {
@@ -45,42 +36,28 @@ const SigninForm = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleUseUsernameClick = () => {
-    setIsUsingUsername(!isUsingUsername);
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
     setIsLoading(true);
 
-    let formData = {};
-
-    if (!isUsingUsername && username) {
-      formData = {
-        username: username,
-        password: password,
-      };
-    } else if (isUsingUsername && email) {
-      formData = {
-        email: email,
-        password: password,
-      };
-    } else {
-      throw new Error("Please provide valid credentials.");
-    }
+    const formData = {
+      email: email,
+      password: password,
+    };
 
     try {
       const response = await Login(formData);
-      console.log("loginres", response);
 
       localStorage.setItem("authToken", response.token);
 
       const userInfo = await UserInfoApi(response.token);
-      console.log("userInfo", userInfo);
 
       userInfo.data &&
-        localStorage.setItem("2gedaUserInfo", JSON.stringify(userInfo?.data.data));
+        localStorage.setItem(
+          "2gedaUserInfo",
+          JSON.stringify(userInfo?.data.data)
+        );
 
       if (userInfo?.data?.data.user.is_verified) {
         toast.success(userInfo?.data?.message || "Log In Successful");
@@ -89,8 +66,6 @@ const SigninForm = () => {
         setIsEmailVerify(true);
       }
     } catch (error) {
-      console.log(error);
-      console.log(error.message);
       toast.error(
         error.response.data.message ||
           error.response.data.detail ||
@@ -110,27 +85,14 @@ const SigninForm = () => {
         </div>
 
         <form action="" onSubmit={handleLogin}>
-          {!isUsingUsername && (
-            <div className="inp-username">
-              <InputField
-                placeholder={"Enter your username"}
-                type={"text"}
-                value={username}
-                onChange={handleUsernameChange}
-              />
-            </div>
-          )}
-
-          {isUsingUsername && (
-            <div className="inp-email">
-              <InputField
-                placeholder={"Enter your email address"}
-                type={"email"}
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
-          )}
+          <div className="inp-email">
+            <InputField
+              placeholder={"email address or username"}
+              type={"email"}
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </div>
 
           <div className="pass-con">
             <InputField
@@ -148,11 +110,6 @@ const SigninForm = () => {
           </div>
           <div className="forg-pas-contan" onClick={goToForgot}>
             Forgot password?
-          </div>
-          <div className="use-phone" onClick={handleUseUsernameClick}>
-            {isUsingUsername
-              ? "Use Username Instead"
-              : "Use Email Address Instead"}
           </div>
 
           <div className="btn-continu">

@@ -1,14 +1,13 @@
+import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
-import ActionButton from "../Commons/Button";
-import InputField from "../Commons/InputField";
+import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { url } from "../../utils";
-import Lottie from "lottie-react";
-import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
-import toast from "react-hot-toast";
 import { Register } from "services/auth&poll";
+import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
+import ActionButton from "../Commons/Button";
+import InputField from "../Commons/InputField";
 
 const SignForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -54,23 +53,21 @@ const SignForm = () => {
 
     try {
       const response = await Register(userData);
-      console.log("reg_res", response);
 
-      localStorage.setItem("registrationData", JSON.stringify(response.data));
+      localStorage.setItem("registrationData", JSON.stringify(response.data.data));
 
       if (response.status === 201) {
-        const token = response.data.token;
+        const token = response.data.data.token;
 
         localStorage.setItem("authTOken", token);
 
         navigate("/verify");
       }
     } catch (error) {
-      console.log(error);
-      console.log(error.message);
       toast.error(
-        error.response.data.message ||
           error.response.data.detail ||
+          error.response.data.data.email[0] ||
+          error.response.data.message ||
           "An error occurred"
       );
     } finally {
