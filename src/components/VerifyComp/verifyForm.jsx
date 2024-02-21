@@ -20,11 +20,10 @@ const VerifyForm = () => {
 
   const [inputRefs] = useState([null, null, null, null, null]);
 
-  const registrationData = JSON.parse(localStorage.getItem("registrationData"));
-  console.log("registrationData", registrationData);
+  const registrationData = JSON.parse(localStorage?.getItem("registrationData"));
 
   const registrationEmail = registrationData?.email
-  console.log("registrationEmail", registrationEmail);
+
 
   const HandleSendOTP = async () => {
     try {
@@ -64,21 +63,17 @@ const VerifyForm = () => {
   );
 
   const otp_code = { otp_code: Object.values(inputValues).join("") };
-  console.log("otp_code", otp_code);
 
   const verifyData = {
     email: registrationEmail,
     otp: otp_code.otp_code,
   };
 
-  console.log("verifyData", verifyData);
-
   const HandleVerify = async () => {
     try {
       setIsLoading(true);
 
       const response = await VerifyOTP(verifyData);
-      console.log("VerifyOTP", response);
 
       if (response.status === 200) {
         toast.success(response.data.message || "Verification Successful!");
@@ -87,7 +82,6 @@ const VerifyForm = () => {
         }, 2000);
       }
     } catch (error) {
-      console.log("Verifyerror", error);
       toast.error(
         error.response.data.message ||
           error.response.data.error ||

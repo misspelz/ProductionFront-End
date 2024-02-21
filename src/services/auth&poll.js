@@ -15,13 +15,9 @@ export const getToken = () => {
   return token;
 };
 
-// export const getLoginToken = () => {
-//   if (!token) {
-//     token = localStorage.getItem("authToken");
-//     console.log("logintoken", token);
-//   }
-//   return token;
-// };
+/**
+ * Auth Screens
+ */
 
 export const Register = async (payload) => {
   const res = await axios.post(`${url}/api/user/auth/register/`, { ...payload });
@@ -53,8 +49,6 @@ export const ReSendOTP = async (verificationType) => {
 
 
 export const VerifyOTP = async (data) => {
-  console.log("verifydata", data);
-
   const res = await axios.post(
     `${url}/api/user/auth/verify-account/`,
     { ...data },
@@ -68,8 +62,6 @@ export const VerifyOTP = async (data) => {
 };
 
 export const ResetPassword = async (data) => {
-  console.log("Resetdata", data);
-
   const res = await axios.post(
     `${url}/api/user/auth/reset-password/`,
     { ...data },
@@ -81,6 +73,23 @@ export const ResetPassword = async (data) => {
   );
   return res;
 };
+
+export const ForgotPassword = async (data) => {
+  const res = await axios.post(
+    `${url}/api/user/auth/forgot-password/`,
+    { ...data },
+    {
+      headers: {
+        Authorization: `Token ${getToken()}`,
+      },
+    }
+  );
+  return res;
+};
+
+/**
+ * Polls/Voting
+ */
 
 export const CreatePollApi = async (formData) => {
   const res = await axios.post(

@@ -4,18 +4,15 @@ import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import "react-phone-number-input/style.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Login, UserInfoApi } from "services/auth&poll";
 import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
-import { url } from "../../utils";
 import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";
 import { EmailVerify } from "../Modals/EmailVerify";
 import Modal from "../Modals/Modal";
-import { Login, UserInfoApi } from "services/auth&poll";
 
 const SigninForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isUsingUsername, setIsUsingUsername] = useState(false);
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +26,6 @@ const SigninForm = () => {
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-    setUsername("");
   };
 
   const handlePasswordChange = (event) => {
@@ -52,12 +48,10 @@ const SigninForm = () => {
 
     try {
       const response = await Login(formData);
-      console.log("loginres", response);
 
       localStorage.setItem("authToken", response.token);
 
       const userInfo = await UserInfoApi(response.token);
-      console.log("userInfo", userInfo);
 
       userInfo.data &&
         localStorage.setItem(
@@ -72,8 +66,6 @@ const SigninForm = () => {
         setIsEmailVerify(true);
       }
     } catch (error) {
-      console.log(error);
-      console.log(error.message);
       toast.error(
         error.response.data.message ||
           error.response.data.detail ||
