@@ -6,12 +6,9 @@ import ActionButton from "../Commons/Button";
 import "./style.css";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import toast from "react-hot-toast";
-import { url } from "utils/index";
-import { useNavigate } from "react-router-dom";
 import { ResetPassword, ReSendOTP } from "services/auth&poll";
 
 const ForgotComponent = () => {
-  const nav = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -27,7 +24,6 @@ const ForgotComponent = () => {
       setOtp(trimmedOtp);
     }
   };
-
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -91,7 +87,7 @@ const ForgotComponent = () => {
       console.log("resetotp_res", response);
       if (response.status === 200) {
         toast.success(response.data.message);
-        setShowFullForm(true); // Update the state to show the full form
+        setShowFullForm(true);
       }
     } catch (error) {
       toast.error(
