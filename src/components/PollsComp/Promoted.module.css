@@ -1,0 +1,13 @@
+.container {
+  margin-top: 4px;
+  overflow-x: auto;
+}
+
+/* Add the following styles to hide the scrollbar */
+.container::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}

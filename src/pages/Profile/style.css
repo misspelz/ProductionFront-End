@@ -1,0 +1,62 @@
+/* 
+GLOBAL STYLING
+*/
+button {
+  background: none;
+  border: none;
+}
+
+/* PROFILE CONTAINER */
+.profile_container {
+  width: 80%;
+  height: 100%;
+  background: #e6e6e6e1;
+  position: absolute;
+  padding: 110px 20px 0px 20px;
+
+  display: flex;
+  gap: 10px;
+}
+
+/* PROFILE CONTAINER LEFT CONTENT */
+.profile_overview {
+  flex: 5;
+  background: #fff;
+  overflow-y: auto;
+}
+
+.profile_overview::-webkit-scrollbar {
+  width: 0vw;
+  height: 0vh;
+}
+
+/* PROFILE CONTAINER MIDDLE CONTENT */
+.profile_ads {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* PROFILE CONTAINER RIGHT CONTENT */
+.profile_users {
+  flex: 2;
+}
+
+@media screen and (max-width: 1150px) {
+  /* PROFILE CONTAINER */
+  .profile_container {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  /* PROFILE CONTAINER MIDDLE CONTENT */
+  .profile_ads {
+    display: none;
+  }
+
+  /* PROFILE CONTAINER RIGHT CONTENT */
+  .profile_users {
+    display: none;
+  }
+}
