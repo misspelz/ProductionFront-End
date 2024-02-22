@@ -48,10 +48,11 @@ const SigninForm = () => {
 
     try {
       const response = await Login(formData);
+      console.log("loginres", response)
 
-      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("authToken", response.data.data.token);
 
-      const userInfo = await UserInfoApi(response.token);
+      const userInfo = await UserInfoApi(response.data.data.token);
 
       userInfo.data &&
         localStorage.setItem(

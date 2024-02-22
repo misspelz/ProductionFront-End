@@ -7,9 +7,21 @@ import { IoLogOutOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
 // import { AiOutlineMessage } from "react-icons/ai";
 import { MdOutlineHowToVote } from "react-icons/md";
 import "./style.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Sidebar = ({ isCollapsed }) => {
+  const nav = useNavigate()
+
+  const HandleLogOut = ()=>{
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("2gedaUserInfo");
+    toast.success("Successfully Logged Out");
+    setTimeout(() => {
+      nav("/")
+    }, 1000);
+  }
+
   return (
     <div
       className={isCollapsed ? "sidebar-container  nil" : "sidebar-container"}
@@ -135,7 +147,7 @@ const Sidebar = ({ isCollapsed }) => {
             <div className="sidebar-text">Education</div>
           </NavLink> */}
 
-          <NavLink to="/" className="side-item lout">
+          <NavLink className="side-item flex flex-row" onClick={HandleLogOut}>
             <IoLogOutOutline className="side-icon " />
             <div className="sidebar-text">Sign Out</div>
           </NavLink>
