@@ -93,7 +93,7 @@ export const ForgotPassword = async (data) => {
 
 export const CreatePollApi = async (formData) => {
   const res = await axios.post(
-    `${url}/poll/polls`,
+    `${url}/api/poll/create-poll/`,
     { ...formData },
     {
       headers: {
@@ -106,7 +106,7 @@ export const CreatePollApi = async (formData) => {
 
 export const CastVoteApi = async (payload) => {
   const res = await axios.post(
-    `${url}/poll/votes`,
+    `${url}/api/poll/cast-vote/`,
     { ...payload },
     {
       headers: {
@@ -118,7 +118,7 @@ export const CastVoteApi = async (payload) => {
 };
 
 export const MyPollsApi = async () => {
-  const res = await axios.get(`${url}/poll/polls`, {
+  const res = await axios.get(`${url}/api/poll/polls/`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -127,7 +127,7 @@ export const MyPollsApi = async () => {
 };
 
 export const SuggestedPollsApi = async () => {
-  const res = await axios.get(`${url}/poll/suggested-polls/`, {
+  const res = await axios.get(`${url}/api/poll/suggested-polls/`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },

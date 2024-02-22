@@ -48,7 +48,6 @@ const SigninForm = () => {
 
     try {
       const response = await Login(formData);
-      console.log("loginres", response)
 
       localStorage.setItem("authToken", response.data.data.token);
 
