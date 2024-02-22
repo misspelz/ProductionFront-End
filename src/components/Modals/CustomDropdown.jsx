@@ -1,8 +1,11 @@
 import { Select, Space } from 'antd';
 
-const CustomDropdown = ({ stallValue, menu }) => {
+const CustomDropdown = ({ stallValue, menu, name, setData }) => {
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (

@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
-// import EditProfile from '../Modals/EditProfile';
 import RequestVerification from '../Modals/RequestVerification';
-// import ManageAdvert from '../Modals/ManageAdvert';
-// import Gadget from '../Modals/Gadget';
 import logo from '../../assets/profile_images/2geda.png';
 import { useModal } from '../../Hooks/useModal';
 import ModalContainer from '../Modals/ModalContainer';

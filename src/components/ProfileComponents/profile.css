@@ -115,10 +115,12 @@
 
 .cover_image {
   width: 100%;
+  height: 150px;
 }
 
 .cover_image img {
   width: 100%;
+  height: 100%;
 }
 
 .profile_details {
@@ -126,14 +128,14 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: -6.5rem;
+  margin-top: -5.5rem;
   padding-bottom: 3rem;
 }
 
 .profile_details img {
-  width: 134px;
-  height: 134px;
-  border-radius: 134px;
+  width: 110px;
+  height: 110px;
+  border-radius: 100%;
   object-fit: cover;
   cursor: pointer;
 }

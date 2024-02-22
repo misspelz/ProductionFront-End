@@ -19,13 +19,45 @@ const requestOptions = {
 
 /**
  * --------------------------------
- *
+ * REQUEST BELOW :)
  * --------------------------------
  */
+// get current logged in user profile
+export const getProfileData = async () => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/user/account/profile/`,
+      requestOptions
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+// edit user profile
+export const editProfile = async (formData) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/user/account/profile/update/`,
+      { ...requestOptions, method: 'PUT', body: JSON.stringify(formData) }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 // changing password
 export const changePassword = async (credentials) => {
   try {
-    const response = await fetch(`${mainURL}/api/user/change-password/`, {
+    const response = await fetch(`${mainURL}/api/user/auth/change-password/`, {
       ...requestOptions,
       method: 'POST',
       body: JSON.stringify(credentials),
@@ -42,7 +74,7 @@ export const changePassword = async (credentials) => {
 // changing password
 export const deleteUserAccount = async () => {
   try {
-    const response = await fetch(`${mainURL}/api/user/delete-account/`, {
+    const response = await fetch(`${mainURL}/api/user/auth/delete-account/`, {
       ...requestOptions,
       method: 'DELETE',
     });
@@ -71,30 +103,6 @@ export const getUserStickers = async () => {
   }
 };
 
-/**
- *
- *
- *
- *
- *
- *
- *
- */
-// get current logged in user profile
-// export const getProfileData = async () => {
-//   try {
-//     const response = await fetch(`${mainURL}/api/userinfo/`, requestOptions);
-
-//     const data = await response.json();
-
-//     console.log(data);
-
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 // get current logged in user rewards
 export const getRewards = async () => {
   try {
@@ -106,8 +114,8 @@ export const getRewards = async () => {
     const data = await response.json();
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    throw new Error(err);
   }
 };
 
@@ -122,7 +130,7 @@ export const getClaimedHistory = async () => {
     const data = await response.json();
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    throw new Error(err);
   }
 };

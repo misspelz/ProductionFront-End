@@ -1,6 +1,12 @@
-const ProfileInput = ({ placeholder }) => {
+const ProfileInput = ({ placeholder, onChange, name }) => {
   return (
-    <input type='text' className='profile_input' placeholder={placeholder} />
+    <input
+      type='text'
+      className='profile_input'
+      placeholder={placeholder}
+      onChange={onChange}
+      name={name}
+    />
   );
 };
 
