@@ -8,10 +8,23 @@ import ManageBusinessEmpty from '../../components/ManageBusinessComponents/Manag
 import ManageBusinessLists from '../../components/ManageBusinessComponents/ManageBusinessLists';
 import plus from '../../assets/profile_images/plus.png';
 import ModalHeader from '../../components/Modals/ModalHeader';
+import { useModal } from 'Hooks/useModal';
+import EditBusinessProfile from 'components/BusinessProfileComponents/EditBusinessProfile';
+import ModalContainer from 'components/Modals/ModalContainer';
 
 const ManageBusiness = () => {
+  const { modal, setModal } = useModal();
   const navigate = useNavigate();
-  const manageBusiness = [56, 67, 89];
+  const manageBusiness = [4];
+
+  const handleClick = (e) => {
+    const type = e.target.attributes.typeof.nodeValue;
+
+    setModal((prev) => ({
+      ...prev,
+      [type]: true,
+    }));
+  };
 
   return (
     <div className='home-container'>
@@ -36,9 +49,21 @@ const ManageBusiness = () => {
             </div>
 
             {manageBusiness.length > 0 && (
-              <div className='add_new_bussiness_btn'>
-                <img src={plus} alt='Plus' />
-              </div>
+              <>
+                <div
+                  className='add_new_bussiness_btn'
+                  onClick={handleClick}
+                  typeof='setting'
+                >
+                  <img src={plus} alt='Plus' />
+                </div>
+
+                {modal.setting && (
+                  <ModalContainer type='setting'>
+                    <EditBusinessProfile />
+                  </ModalContainer>
+                )}
+              </>
             )}
           </div>
 

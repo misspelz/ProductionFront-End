@@ -16,6 +16,7 @@ export const years = Array.from({ length: 100 }, (_, i) => ({
 export const genderData = [
   { label: 'Male', value: 'Male' },
   { label: 'Female', value: 'Female' },
+  { label: 'Rather not say', value: 'None' },
 ];
 
 export const category = [
