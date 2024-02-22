@@ -18,7 +18,7 @@ const MainLayout = ({ children }) => {
       <div className="sidebar-boxxx">
       <Sidebar isCollapsed={isCollapsed}/>
       </div>
-      <div className="nav-cild">
+      <div className="nav-cild w-full">
         <Navbar />
         {children}
       </div>

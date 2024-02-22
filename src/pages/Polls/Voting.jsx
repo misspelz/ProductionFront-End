@@ -1,23 +1,23 @@
-import { Dialog } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import "./styles.css";
 import MainLayout from "Layout/MainLayout";
-import ActionButton from "components/Commons/Button";
-import InputField from "components/Commons/InputField";
-import Modal from "components/Modals/Modal";
-import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
-import { CreateCastActions } from "components/PollsComp/CreateCastActions";
-import { FindPolls } from "components/PollsComp/FindPolls";
-import { Notifications } from "components/PollsComp/Notification";
 import { Polls } from "components/PollsComp/Polls";
-import { PromotedPolls } from "components/PollsComp/PromotedPolls";
 import { PollsNotification } from "components/PollsComp/RightComp";
 import { SuggestedPolls } from "components/PollsComp/SuggestedPolls";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { FindPolls } from "components/PollsComp/FindPolls";
+import { Notifications } from "components/PollsComp/Notification";
+import { CreateCastActions } from "components/PollsComp/CreateCastActions";
+import { PromotedPolls } from "components/PollsComp/PromotedPolls";
+import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
+import { Dialog, DialogContent } from "@mui/material";
+import Modal from "components/Modals/Modal";
 import { IoMdClose } from "react-icons/io";
-import { MyPollsApi, getToken } from "services/auth&poll";
-import { url } from "utils/index";
+import InputField from "components/Commons/InputField";
+import ActionButton from "components/Commons/Button";
+import { CastVoteApi, MyPollsApi, getToken } from "services/auth&poll";
+import toast from "react-hot-toast";
 import optionss from "utils/options.json";
-import "./styles.css";
+import { url } from "utils/index";
 
 const Voting = () => {
   const [token, setToken] = useState(null); // State to store token
@@ -46,6 +46,7 @@ const Voting = () => {
   const [pollsDetails, setPollsDetails] = useState([]);
 
   const [singlePoll, setSinglePoll] = useState({});
+  console.log("singlePoll", singlePoll);
 
   const [loading, setLoading] = useState(true);
 
@@ -306,7 +307,7 @@ const Voting = () => {
           {!Notify && !CastVote && (
             <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6">
               <h1>Voting</h1>
-              <h2 className="mt-6 block lg:hidden">
+              <h2 className="mt-6">
                 Hello, {userInfo.username}
               </h2>
               <span className="text-[14px] block lg:hidden">
