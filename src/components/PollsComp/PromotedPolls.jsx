@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Polls } from "./Polls";
-import { MyPollsApi } from "services/auth&poll";
+import { MyPollsApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import optionss from "utils/options.json";
 

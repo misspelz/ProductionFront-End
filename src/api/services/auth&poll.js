@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url } from "../utils/index";
+import { url } from "../../utils/index";
 
 let token = null;
 

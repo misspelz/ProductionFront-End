@@ -14,63 +14,41 @@ import Modal from "components/Modals/Modal";
 import { IoMdClose } from "react-icons/io";
 import InputField from "components/Commons/InputField";
 import ActionButton from "components/Commons/Button";
-import { CastVoteApi, MyPollsApi, getToken } from "services/auth&poll";
+import { CastVoteApi, MyPollsApi, getToken } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import optionss from "utils/options.json";
 import { url } from "utils/index";
 
 const Voting = () => {
-  const [token, setToken] = useState(null); // State to store token
-
-  useEffect(() => {
-    const token = getToken(); // Retrieve token
-    setToken(token); // Set token state
-  }, []);
-
   const userInfoString = localStorage.getItem("2gedaUserInfo");
 
+  const [token, setToken] = useState(null);
   const userInfo = JSON.parse(userInfoString);
-
   const [selectedPoll, setSelectedPoll] = useState(false);
-
   const [Notify, setNotify] = useState(false);
   const [CastVote, setCastVote] = useState(false);
   const [viewType, setViewType] = useState("all");
-
   const [showCreateModal, setShowCreateModal] = useState(false);
-
   const [PaidPoll, setPaidPoll] = useState(false);
   const [PayNow, setPayNow] = useState(false);
   const [Success, setSuccess] = useState(false);
   const [showPaidVotes, setShowPaidVotes] = useState(false);
   const [pollsDetails, setPollsDetails] = useState([]);
-
   const [singlePoll, setSinglePoll] = useState({});
-  console.log("singlePoll", singlePoll);
-
   const [loading, setLoading] = useState(true);
-
-  const [showCloseModal, setShowCloseModal] = useState(false);
-  const [viewResults, setViewResults] = useState(false);
   const [numberOfVotes, setNumberOfVotes] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
-  // const [conversionRate, setConversionRate] = useState(1);
-
   const [payNowAmount, setPayNowAmount] = useState(0);
-
+  
   const handleNumberOfVotesChange = (e) => {
     const input = e.target.value;
-    // Check if input is a valid number
     if (!isNaN(input)) {
       const votes = parseFloat(input);
       setNumberOfVotes(votes);
-      // Calculate amount based on the number of votes and rate per vote (2000 per vote)
       setPayNowAmount(
         votes * 2000 * (selectedCurrency === "USD" ? 1 / 1900 : 1)
       );
     } else {
-      // Handle invalid input, for example, clear the input field or show an error message
-      // For now, setting the number of votes to empty string
       setNumberOfVotes("");
     }
   };
@@ -78,7 +56,6 @@ const Voting = () => {
   const handleCurrencyChange = (e) => {
     const currency = e.target.value;
     setSelectedCurrency(currency);
-    // Update payment amount based on the selected currency
     setPayNowAmount(numberOfVotes * 2000 * (currency === "USD" ? 1 / 1900 : 1));
   };
 
@@ -96,19 +73,6 @@ const Voting = () => {
     setShowPaidVotes(false);
   };
 
-  const handleShowcloseModal = () => {
-    setShowCloseModal((prev) => !prev);
-  };
-
-  const handleViewResults = () => {
-    setViewResults((prev) => !prev);
-  };
-
-  const options = [
-    { title: "Python", percentage: "30" },
-    { title: "Java", percentage: "40" },
-  ];
-
   const handleMyPolls = async (e) => {
     try {
       const response = await MyPollsApi();
@@ -119,15 +83,13 @@ const Voting = () => {
     }
   };
 
-  useEffect(() => {
-    handleMyPolls();
-  }, []);
-
   const renderPolls = () => {
     switch (viewType) {
       case "private":
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Please wait...</p>;
+        if (!pollsDetails) {
+          return <p className="mt-20">Loading polls...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           const isPrivate = pollsDetails.filter(
             (poll) => poll.privacy.toLowerCase() === "private"
@@ -160,8 +122,10 @@ const Voting = () => {
           );
         }
       case "public":
-        if (!pollsDetails || pollsDetails.length === 0) {
+        if (!pollsDetails) {
           return <p className="mt-20">Loading polls...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           const isPublic = pollsDetails.filter(
             (poll) => poll.privacy.toLowerCase() === "public"
@@ -195,8 +159,10 @@ const Voting = () => {
         }
       case "all":
       default:
-        if (!pollsDetails || pollsDetails.length === 0) {
+        if (!pollsDetails) {
           return <p className="mt-20">Loading polls...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           return pollsDetails.map((poll, index) => (
             <Polls
@@ -236,7 +202,7 @@ const Voting = () => {
   const HandlePaySuccess = () => {
     setSuccess(true);
   };
-
+  
   const HandleContinue = () => {
     setSuccess(false);
     setPayNow(false);
@@ -280,7 +246,7 @@ const Voting = () => {
         toast.success("Vote casted successfully");
       }
     } catch (error) {
-      toast.error("Something went wrong", error.message);
+      toast.error("Something went wrong" || error.message);
     } finally {
       handleMyPolls();
       setLoading(false);
@@ -299,6 +265,15 @@ const Voting = () => {
     setSelectedPoll(null);
   };
 
+  useEffect(() => {
+    handleMyPolls();
+  }, []);
+
+  useEffect(() => {
+    const token = getToken();
+    setToken(token);
+  }, []);
+
   return (
     <MainLayout>
       {/* MOBILE */}
@@ -307,9 +282,7 @@ const Voting = () => {
           {!Notify && !CastVote && (
             <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6">
               <h1>Voting</h1>
-              <h2 className="mt-6">
-                Hello, {userInfo.username}
-              </h2>
+              <h2 className="mt-6">Hello, {userInfo.username}</h2>
               <span className="text-[14px] block lg:hidden">
                 What do you want to do today ?
               </span>
@@ -350,7 +323,7 @@ const Voting = () => {
               <div className="flex justify-between  mt-16 lg:mt-20">
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "all" ? "bg-purple-900 text-white" : ""
+                    viewType === "all" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("all")}
                 >
@@ -358,7 +331,7 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "public" ? "bg-purple-900 text-white" : ""
+                    viewType === "public" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("public")}
                 >
@@ -366,7 +339,7 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "private" ? "bg-purple-900 text-white" : ""
+                    viewType === "private" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("private")}
                 >
@@ -442,25 +415,6 @@ const Voting = () => {
             </Dialog>
           </div>
         )}
-
-        {/* {Notify && <Notifications setNotify={setNotify} />} */}
-
-        {/* {CastVote && (
-          <div className="px-4 lg:hidden pb-[40px]">
-            <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
-
-            <img
-              src="images/fifa.png"
-              alt="fifa"
-              className="mt-6 w-full lg:mt-10"
-            />
-            <h2 className="mt-4">Suggested Polls</h2>
-            <SuggestedPolls HandlePoll={HandlePoll} />
-            <h2>Promoted Polls</h2>
-            <PromotedPolls HandlePoll={HandlePoll} />
-            {renderPolls()}
-          </div>
-        )} */}
 
         <PollsNotification
           setNotify={setNotify}

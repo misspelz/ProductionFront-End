@@ -53,199 +53,208 @@ import { ModalContextProvider } from "Context/ModalContext";
 import { setupAxios } from "./api";
 
 function ScrollToTop() {
-	const { pathname } = useLocation();
+  const { pathname } = useLocation();
 
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
-	return null;
+  return null;
 }
 
 function App() {
-	useEffect(() => {
-		setupAxios();
-	});
-	return (
-		<>
-			<ModalContextProvider>
-				<div className="App">
-					<ScrollToTop />
-					<Toaster
-						toastOptions={{
-							style: {
-								maxWidth: "700px",
-								padding: "12px 16px",
-								fontSize: "17px",
-								fontWeight: "400",
-							},
-							error: {
-								style: {
-									color: "red",
-								},
-							},
-							success: {
-								style: {
-									color: "green",
-								},
-							},
-						}}
-						position="top-center"
-						reverseOrder={false}
-					/>
-					<Routes>
-						<Route index path="/Signup" element={<Signup />} />
-						<Route index path="/Signin" element={<Signin />} />
-						<Route index path="/" element={<Landing />} />
-						<Route index path="/Home" element={<Home />} />
-						<Route index path="/Home/:feedId" element={<FeedDetail />} />
-						<Route index path="/reset-password" element={<ForgotPassword />} />
-						<Route index path="/verify" element={<Verify />} />
-						{/* <Route
-          path="/verify"
-          element={<ProtectedRoutes element={<Verify />} />}
-        /> */}
-						{/* <Route
-          path="/forgot"
-          element={<ProtectedRoutes element={<ForgotPassword />} />}
-        /> */}
-						<Route
-							path="/personaldetail"
-							element={<ProtectedRoutes element={<PersonalDetails />} />}
-						/>
-						<Route
-							path="/search"
-							element={<ProtectedRoutes element={<SearchPage />} />}
-						/>
-						<Route
-							path="/chat"
-							element={<ProtectedRoutes element={<Chat />} />}
-						/>
-						<Route
-							path="/CanVote"
-							element={<ProtectedRoutes element={<CantVote />} />}
-						/>
-						<Route
-							path="/CreatePoll"
-							element={<ProtectedRoutes element={<CreatePoll />} />}
-						/>
-						<Route
-							path="/ComingSoonPage"
-							element={<ProtectedRoutes element={<ComingSoonPage />} />}
-						/>
-						<Route
-							path="/Voted"
-							element={<ProtectedRoutes element={<Voted />} />}
-						/>
-						<Route
-							path="/MyPolls"
-							element={<ProtectedRoutes element={<MyPolls />} />}
-						/>
-						<Route
-							path="/PollResult"
-							element={<ProtectedRoutes element={<PollResult />} />}
-						/>
-						{/* <Route index path="/Voting" element={<Voting />} /> */}
-						<Route
-							path="/Voting"
-							element={<ProtectedRoutes element={<Voting />} />}
-						/>
-						<Route
-							path="/PrivacyPolicy"
-							element={<ProtectedRoutes element={<PrivacyPolicy />} />}
-						/>
-						<Route
-							path="/SuccessPoll"
-							element={<ProtectedRoutes element={<SuccessPoll />} />}
-						/>
-						<Route
-							path="/PollsSearch"
-							element={<ProtectedRoutes element={<PollsSearch />} />}
-						/>
-						<Route
-							path="/CantVote"
-							element={<ProtectedRoutes element={<CantVote />} />}
-						/>
-						<Route
-							path="/TicketDashCard"
-							element={<ProtectedRoutes element={<TicketDashCard />} />}
-						/>
-						<Route
-							path="/commerce"
-							element={<ProtectedRoutes element={<Commerce />} />}
-						/>
-						<Route
-							path="/category"
-							element={<ProtectedRoutes element={<CategoryPage />} />}
-						/>
-						<Route
-							path="/business"
-							element={<ProtectedRoutes element={<BusinessDirectory />} />}
-						/>
-						<Route
-							path="/ticket"
-							element={<ProtectedRoutes element={<Ticket />} />}
-						/>
-						<Route
-							path="/connect"
-							element={<ProtectedRoutes element={<Connect />} />}
-						/>
-						{/* <Route
+	
+  useEffect(() => {
+    setupAxios();
+  });
+
+  return (
+    <>
+      <ModalContextProvider>
+        <div className="App">
+          <ScrollToTop />
+          <Toaster
+            toastOptions={{
+              style: {
+                maxWidth: "700px",
+                padding: "12px 16px",
+                fontSize: "17px",
+                fontWeight: "400",
+              },
+              error: {
+                style: {
+                  color: "red",
+                },
+              },
+              success: {
+                style: {
+                  color: "green",
+                },
+              },
+            }}
+            position="top-center"
+            reverseOrder={false}
+          />
+
+          <Routes>
+            <Route index path="/" element={<Landing />} />
+
+            {/* AUTH */}
+            <Route index path="/Signup" element={<Signup />} />
+            <Route index path="/Signin" element={<Signin />} />
+            <Route index path="/reset-password" element={<ForgotPassword />} />
+            <Route index path="/verify" element={<Verify />} />
+
+            {/* HOME */}
+            <Route
+              index
+              path="/Home"
+              element={<ProtectedRoutes element={<Home />} />}
+            />
+            <Route index path="/Home/:feedId" element={<FeedDetail />} />
+
+            {/* POLL */}
+            <Route
+              path="/Voted"
+              element={<ProtectedRoutes element={<Voted />} />}
+            />
+            <Route
+              path="/MyPolls"
+              element={<ProtectedRoutes element={<MyPolls />} />}
+            />
+            <Route
+              path="/PollResult"
+              element={<ProtectedRoutes element={<PollResult />} />}
+            />
+            <Route
+              path="/Voting"
+              element={<ProtectedRoutes element={<Voting />} />}
+            />
+            <Route
+              path="/CanVote"
+              element={<ProtectedRoutes element={<CantVote />} />}
+            />
+            <Route
+              path="/CreatePoll"
+              element={<ProtectedRoutes element={<CreatePoll />} />}
+            />
+            <Route
+              path="/SuccessPoll"
+              element={<ProtectedRoutes element={<SuccessPoll />} />}
+            />
+            <Route
+              path="/PollsSearch"
+              element={<ProtectedRoutes element={<PollsSearch />} />}
+            />
+            <Route
+              path="/CantVote"
+              element={<ProtectedRoutes element={<CantVote />} />}
+            />
+
+            {/* CHAT */}
+            <Route
+              path="/chat"
+              element={<ProtectedRoutes element={<Chat />} />}
+            />
+
+            <Route
+              path="/personaldetail"
+              element={<ProtectedRoutes element={<PersonalDetails />} />}
+            />
+            <Route
+              path="/search"
+              element={<ProtectedRoutes element={<SearchPage />} />}
+            />
+            <Route
+              path="/ComingSoonPage"
+              element={<ProtectedRoutes element={<ComingSoonPage />} />}
+            />
+
+            <Route
+              path="/PrivacyPolicy"
+              element={<ProtectedRoutes element={<PrivacyPolicy />} />}
+            />
+
+            <Route
+              path="/TicketDashCard"
+              element={<ProtectedRoutes element={<TicketDashCard />} />}
+            />
+            <Route
+              path="/commerce"
+              element={<ProtectedRoutes element={<Commerce />} />}
+            />
+            <Route
+              path="/category"
+              element={<ProtectedRoutes element={<CategoryPage />} />}
+            />
+            <Route
+              path="/business"
+              element={<ProtectedRoutes element={<BusinessDirectory />} />}
+            />
+            <Route
+              path="/ticket"
+              element={<ProtectedRoutes element={<Ticket />} />}
+            />
+            <Route
+              path="/connect"
+              element={<ProtectedRoutes element={<Connect />} />}
+            />
+            {/* <Route
           path='/addprofile'
           element={<ProtectedRoutes element={<AddProfile />} />}
         /> */}
-						<Route
-							path="/EditProfile"
-							element={<ProtectedRoutes element={<EditProfile />} />}
-						/>
-						<Route
-							path="/stereo"
-							element={<ProtectedRoutes element={<Stereo />} />}
-						/>
-						<Route
-							path="/bussprofile"
-							element={<ProtectedRoutes element={<BusinessProfile />} />}
-						/>
-						<Route
-							path="/stereo/nonauth"
-							element={<ProtectedRoutes element={<NonAuthStero />} />}
-						/>
+            <Route
+              path="/EditProfile"
+              element={<ProtectedRoutes element={<EditProfile />} />}
+            />
+            <Route
+              path="/stereo"
+              element={<ProtectedRoutes element={<Stereo />} />}
+            />
+            <Route
+              path="/bussprofile"
+              element={<ProtectedRoutes element={<BusinessProfile />} />}
+            />
+            <Route
+              path="/stereo/nonauth"
+              element={<ProtectedRoutes element={<NonAuthStero />} />}
+            />
 
-						{/* PROFILE PAGE */}
-						<Route
-							path="/profile"
-							element={<ProtectedRoutes element={<Profile />} />}
-						/>
+            {/* PROFILE PAGE */}
+            <Route
+              path="/profile"
+              element={<ProtectedRoutes element={<Profile />} />}
+            />
 
-						<Route
-							index
-							path="/business-profile"
-							element={<ProtectedRoutes element={<BusinessProfile />} />}
-						/>
+            <Route
+              index
+              path="/business-profile"
+              element={<ProtectedRoutes element={<BusinessProfile />} />}
+            />
 
-						<Route
-							index
-							path="manage-business"
-							element={<ProtectedRoutes element={<ManageBusiness />} />}
-						/>
+            <Route
+              index
+              path="manage-business"
+              element={<ProtectedRoutes element={<ManageBusiness />} />}
+            />
 
-						<Route
-							path="/"
-							element={<ProtectedRoutes element={<RewardLayout />} />}
-						>
-							<Route element={<Navigate replace to="rewards" />} />
-							<Route path="rewards" element={<Rewards />} />
+            <Route
+              path="/"
+              element={<ProtectedRoutes element={<RewardLayout />} />}
+            >
+              <Route element={<Navigate replace to="rewards" />} />
+              <Route path="rewards" element={<Rewards />} />
 
-							<Route path="rewards/histories" element={<Histories />} />
-							<Route path="rewards/payouts" element={<Payouts />} />
-							<Route path="rewards/payment" element={<Payment />} />
-						</Route>
-					</Routes>
-				</div>
-			</ModalContextProvider>
-			<ReactQueryDevtools initialIsOpen={false} />
-		</>
-	);
+              <Route path="rewards/histories" element={<Histories />} />
+              <Route path="rewards/payouts" element={<Payouts />} />
+              <Route path="rewards/payment" element={<Payment />} />
+            </Route>
+          </Routes>
+        </div>
+      </ModalContextProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </>
+  );
 }
 
 export default App;

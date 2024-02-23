@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { Register } from "services/auth&poll";
+import { Register } from "api/services/auth&poll";
 import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
 import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";

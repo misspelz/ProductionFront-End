@@ -8,7 +8,7 @@ const CreatePoll = ({ onClose }) => {
   const token = localStorage.getItem("authTOken");
   const [pollData, setPollData] = useState({
     question: "",
-    content: ["", ""],
+    options: ["", ""],
     duration: "22 hours",
     type: "Free",
     privacy: "Public",
@@ -62,8 +62,8 @@ const CreatePoll = ({ onClose }) => {
     // formData.append("media", pollData.media);
 
     // Append options
-    pollData.content.forEach((content, index) => {
-        formData.append(`content`, content);
+    pollData.options.forEach((content, index) => {
+        formData.append(`options`, content);
     });
 
     console.log(formData, "formData");
@@ -74,7 +74,7 @@ const CreatePoll = ({ onClose }) => {
 
     try {
         setIsLoading(true);
-        const resp = await fetch(url + "/poll/polls/", {
+        const resp = await fetch(url + "/api/poll/create-poll/", {
             method: "POST",
             headers: {
                 Authorization: "Token " + token,
@@ -128,19 +128,19 @@ const CreatePoll = ({ onClose }) => {
         />
       </div>
 
-      {pollData.content.map((option, index) => (
+      {pollData.options.map((option, index) => (
         <div className="form-field" key={`option-${index}`}>
-          <label htmlFor={`content${index + 1}`}>{`Option ${index + 1}`}</label>
+          <label htmlFor={`options${index + 1}`}>{`Option ${index + 1}`}</label>
           <input
             type="text"
-            id={`content${index + 1}`}
+            id={`options${index + 1}`}
             placeholder="Type option"
             value={option}
             className="outline-none p-[9px]"
             onChange={(e) => {
-              const updatedOptions = [...pollData.content];
+              const updatedOptions = [...pollData.options];
               updatedOptions[index] = e.target.value;
-              handleInputChange("content", updatedOptions);
+              handleInputChange("options", updatedOptions);
             }}
           />
         </div>
