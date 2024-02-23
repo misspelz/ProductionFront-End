@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ActionButton from "../Commons/Button";
 import toast from "react-hot-toast";
-import { ReSendOTP, VerifyOTP } from "services/auth&poll";
+import { ReSendOTP, VerifyOTP } from "api/services/auth&poll";
 import { useNavigate } from "react-router-dom";
 
 const VerifyForm = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Polls } from "./Polls";
 import styles from "./SuggestedPolls.module.css";
-import { SuggestedPollsApi } from "services/auth&poll";
+import { SuggestedPollsApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import optionss from "utils/options.json";
 
@@ -10,10 +10,6 @@ export const SuggestedPolls = ({ HandlePoll }) => {
   // console.log("suggestedPolls", suggestedPolls);
   const [loading, setLoading] = useState(true);
 
-  const initialOptions = [
-    { title: "Python", percentage: "20" },
-    { title: "Java", percentage: "40" },
-  ];
 
   const GetSuggestedPolls = async () => {
     try {

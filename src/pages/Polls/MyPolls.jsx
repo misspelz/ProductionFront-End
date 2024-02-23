@@ -12,15 +12,11 @@ import ClosePoll from "components/Modals/Vote/ClosePoll";
 import PollResult from "components/Modals/Vote/PollResult";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { MyPollsApi } from "services/auth&poll";
+import { MyPollsApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import optionss from "utils/options.json";
 
 const MyPolls = () => {
-  const userInfoString = localStorage.getItem("2gedaUserInfo");
-
-  const userInfo = JSON.parse(userInfoString);
-
   const [Notify, setNotify] = useState(false);
   const [CastVote, setCastVote] = useState(false);
   const [showMyPolls, setShowMyPolls] = useState(false);
@@ -40,21 +36,6 @@ const MyPolls = () => {
 
   const goBack = () => nav("/Voting");
 
-  const HandleNotification = () => {
-    setNotify(true);
-  };
-
-  const HandleCastVote = () => {
-    setCastVote(true);
-  };
-  const handleShowMyPolls = () => {
-    setShowMyPolls((prev) => !prev);
-  };
-
-  const HandlePaidPoll = () => {
-    setPaidPoll(true);
-  };
-
   const HandlePoll = (pollData) => {
     setSelectedPoll(pollData);
     setShowPaidVotes(false);
@@ -68,16 +49,13 @@ const MyPolls = () => {
     setViewResults((prev) => !prev);
   };
 
-  // const options = [
-  //   { title: "C#", percentage: "20" },
-  //   { title: "Kotlin", percentage: "10" },
-  // ];
-
   const renderPolls = () => {
     switch (viewType) {
       case "active":
-        if (!pollsDetails || pollsDetails.length === 0) {
+        if (!pollsDetails ) {
           return <p className="mt-20">Please wait...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           const isActive = pollsDetails.filter((poll) => poll.is_active);
           return isActive.length > 0 ? (
@@ -108,8 +86,10 @@ const MyPolls = () => {
           );
         }
       case "ended":
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Loading polls...</p>;
+        if (!pollsDetails ) {
+          return <p className="mt-20">Please wait...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           const isEnded = pollsDetails.filter((poll) => poll.is_ended);
           return isEnded.length > 0 ? (
@@ -141,8 +121,10 @@ const MyPolls = () => {
         }
       case "all":
       default:
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Loading polls...</p>;
+        if (!pollsDetails ) {
+          return <p className="mt-20">Please wait...</p>;
+        } else if (pollsDetails.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
           return pollsDetails.map((poll, index) => (
             <Polls

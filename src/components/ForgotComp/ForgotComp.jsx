@@ -6,7 +6,7 @@ import ActionButton from "../Commons/Button";
 import "./style.css";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import toast from "react-hot-toast";
-import { ResetPassword, ReSendOTP, ForgotPassword } from "services/auth&poll";
+import { ResetPassword, ReSendOTP, ForgotPassword } from "api/services/auth&poll";
 import { useNavigate } from "react-router-dom";
 
 const ForgotComponent = () => {
