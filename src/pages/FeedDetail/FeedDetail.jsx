@@ -22,9 +22,11 @@ import Follower from "components/Dashboard/Follower";
 import DashMessage from "components/Dashboard/DasMess";
 import SelectCategory from "components/Dashboard/SelectCategory";
 import PostImage2 from "assets/images/post-speech.png";
+import { useGetPostById } from "api/hooks/feeds";
 
 const FeedDetail = () => {
 	const { feedId } = useParams();
+    const { data, isLoading, isError, isSuccess} = useGetPostById()
 	const navigate = useNavigate();
 	const [showCommentInput, setShowCommentInput] = useState(false);
 	const [showRecInput, setShowRecInput] = useState(false);

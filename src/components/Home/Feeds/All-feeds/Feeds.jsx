@@ -12,8 +12,8 @@ import MovieDashCard from "components/Home/Movieslider/MovieCards";
 import { useGetAllFeeds } from "api/hooks/feeds";
 
 const Feeds = () => {
-    const {data, isLoading, isError} = useGetAllFeeds()
-    console.log(data)
+	const { data, isLoading, isError } = useGetAllFeeds();
+	console.log(data);
 	const mockCreator = {
 		cover_image: { cover_image: PostAvatar },
 		username: "John Doe",
@@ -36,131 +36,43 @@ const Feeds = () => {
 		{ media: ProductImage },
 	];
 
-	return (
-		<div style={{ maxWidth: "560px" }}>
-            {/* {
+	if (!data || data?.length == 0 ) {
+        return (
+            <div>
+                <h2>No feeds available</h2>
+            </div>
+        )
+    }
+		return (
+			<div style={{ maxWidth: "560px" }}>
+				{/* {
                 data
             } */}
-			<PostComp
-				postID={"item id"}
-				creator={data?.[0].user}
-				comment={"some random comment"}
-				media={data?.[0].each_media}
-				hashtag={"hashtag"}
-				content={"Some random content"}
-				reaction={mockReaction}
-				post_reaction_count={3}
-				post_comment_count={4}
-				time_since={"2hr ago"}
-				shared
-			/>
+				<PostComp
+					postID={"item id"}
+					creator={data?.[0]?.user}
+					comment={"some random comment"}
+					media={data?.[0]?.each_media}
+					hashtag={"hashtag"}
+					content={"Some random content"}
+					reaction={mockReaction}
+					post_reaction_count={3}
+					post_comment_count={4}
+					time_since={"2hr ago"}
+					shared
+				/>
 
-			<div className="music-das-row">
-				{[1, 2, 3, 4, 5, 6, 7].map((item) => (
-					<MusicDash key={item} />
-				))}
-			</div>
-
-			<PostComp
-				postID={"item id"}
-				creator={mockCreator}
-				comment={"some random comment"}
-				media={mockMedia.slice(0, 1)}
-				hashtag={"hashtag"}
-				content={"Some random content"}
-				reaction={mockReaction}
-				post_reaction_count={3}
-				post_comment_count={4}
-				time_since={"2hr ago"}
-			/>
-
-			<div className="ticket-das-row">
-				{[1, 2, 3, 4, 5, 6, 7].map((item) => (
-					<SmallTicketPromoteCard
-						key={item}
-						description={"Lagos festival"}
-						eventId={"id123"}
-						formatedDate={"Feb 24 2024"}
-						location={"Ikeja city mall"}
-						eventImage={PostImage}
-					/>
-				))}
-			</div>
-
-			<PostComp
-				postID={"item id"}
-				creator={mockCreator}
-				comment={"some random comment"}
-				media={mockMedia.slice(0, 2)}
-				hashtag={"hashtag"}
-				content={"Some random content"}
-				reaction={mockReaction}
-				post_reaction_count={3}
-				post_comment_count={4}
-				time_since={"2hr ago"}
-				shared
-			/>
-
-			<div className="ticket-das-row">
-				{[1, 2, 3, 4, 5, 6, 7].map((item) => (
-					<MovieDashCard key={item} />
-				))}
-			</div>
-
-			<PostComp
-				postID={"item id"}
-				creator={mockCreator}
-				comment={"some random comment"}
-				media={mockMedia.slice(0, 3)}
-				hashtag={"hashtag"}
-				content={"Some random content"}
-				reaction={mockReaction}
-				post_reaction_count={3}
-				post_comment_count={4}
-				time_since={"2hr ago"}
-			/>
-
-			<div className="ticket-das-row">
-				{[1, 2, 3, 4, 5, 6, 7].map((item) => (
-					<ProductDash key={item} />
-				))}
-			</div>
-
-			<PostComp
-				postID={"item id"}
-				creator={mockCreator}
-				comment={"some random comment"}
-				media={undefined}
-				hashtag={"hashtag"}
-				content={"Some random content"}
-				reaction={mockReaction}
-				post_reaction_count={3}
-				post_comment_count={4}
-				time_since={"2hr ago"}
-				shared
-			/>
-
-			<div className="movie-slid-box">
-				<div className="post-ead">Trending movies</div>
-				<MovieSlider />
-			</div>
-
-			<div className="you-may-know">
-				<div className="post-ead">People you may know</div>
-				<div className="may-know-box">
+				<div className="music-das-row">
 					{[1, 2, 3, 4, 5, 6, 7].map((item) => (
-						<Stick key={item} />
+						<MusicDash key={item} />
 					))}
 				</div>
-			</div>
 
-			{[1, 2, 3, 4, 5].map((item) => (
 				<PostComp
-					key={item}
 					postID={"item id"}
 					creator={mockCreator}
 					comment={"some random comment"}
-					media={mockMedia.slice(0, 4)}
+					media={mockMedia.slice(0, 1)}
 					hashtag={"hashtag"}
 					content={"Some random content"}
 					reaction={mockReaction}
@@ -168,9 +80,104 @@ const Feeds = () => {
 					post_comment_count={4}
 					time_since={"2hr ago"}
 				/>
-			))}
-		</div>
-	);
+
+				<div className="ticket-das-row">
+					{[1, 2, 3, 4, 5, 6, 7].map((item) => (
+						<SmallTicketPromoteCard
+							key={item}
+							description={"Lagos festival"}
+							eventId={"id123"}
+							formatedDate={"Feb 24 2024"}
+							location={"Ikeja city mall"}
+							eventImage={PostImage}
+						/>
+					))}
+				</div>
+
+				<PostComp
+					postID={"item id"}
+					creator={mockCreator}
+					comment={"some random comment"}
+					media={mockMedia.slice(0, 2)}
+					hashtag={"hashtag"}
+					content={"Some random content"}
+					reaction={mockReaction}
+					post_reaction_count={3}
+					post_comment_count={4}
+					time_since={"2hr ago"}
+					shared
+				/>
+
+				<div className="ticket-das-row">
+					{[1, 2, 3, 4, 5, 6, 7].map((item) => (
+						<MovieDashCard key={item} />
+					))}
+				</div>
+
+				<PostComp
+					postID={"item id"}
+					creator={mockCreator}
+					comment={"some random comment"}
+					media={mockMedia.slice(0, 3)}
+					hashtag={"hashtag"}
+					content={"Some random content"}
+					reaction={mockReaction}
+					post_reaction_count={3}
+					post_comment_count={4}
+					time_since={"2hr ago"}
+				/>
+
+				<div className="ticket-das-row">
+					{[1, 2, 3, 4, 5, 6, 7].map((item) => (
+						<ProductDash key={item} />
+					))}
+				</div>
+
+				<PostComp
+					postID={"item id"}
+					creator={mockCreator}
+					comment={"some random comment"}
+					media={undefined}
+					hashtag={"hashtag"}
+					content={"Some random content"}
+					reaction={mockReaction}
+					post_reaction_count={3}
+					post_comment_count={4}
+					time_since={"2hr ago"}
+					shared
+				/>
+
+				<div className="movie-slid-box">
+					<div className="post-ead">Trending movies</div>
+					<MovieSlider />
+				</div>
+
+				<div className="you-may-know">
+					<div className="post-ead">People you may know</div>
+					<div className="may-know-box">
+						{[1, 2, 3, 4, 5, 6, 7].map((item) => (
+							<Stick key={item} />
+						))}
+					</div>
+				</div>
+
+				{[1, 2, 3, 4, 5].map((item) => (
+					<PostComp
+						key={item}
+						postID={"item id"}
+						creator={mockCreator}
+						comment={"some random comment"}
+						media={mockMedia.slice(0, 4)}
+						hashtag={"hashtag"}
+						content={"Some random content"}
+						reaction={mockReaction}
+						post_reaction_count={3}
+						post_comment_count={4}
+						time_since={"2hr ago"}
+					/>
+				))}
+			</div>
+		);
 };
 
 export default Feeds;

@@ -1,16 +1,15 @@
 import { AiFillDelete } from "react-icons/ai";
-import "./style.css";
+import "./post-modal.css";
 import { PiMicrosoftPowerpointLogo } from "react-icons/pi";
 import { SiMicrosoftword, SiMicrosoftexcel } from "react-icons/si";
 import { FaFileAlt } from "react-icons/fa";
 import {
-  BsFillFileEarmarkPdfFill,
-  BsAndroid2,
-  BsFiletypeExe,
+	BsFillFileEarmarkPdfFill,
+	BsAndroid2,
+	BsFiletypeExe,
 } from "react-icons/bs";
 
 const PostFormFilesModal = ({ selectedFile, setSelectedFile }) => {
-
 	const handleFileChange = (e) => {
 		const selected = e.target.files[0];
 		if (selected) {

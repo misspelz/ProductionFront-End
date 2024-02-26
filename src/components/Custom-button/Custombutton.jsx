@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Custombutton = ({
@@ -8,20 +7,17 @@ const Custombutton = ({
 	type,
 	className,
 	onClick,
-	variant,
 }) => {
 	return (
 		<>
-			<Button
+			<button
 				disabled={disabled ?? false}
 				type={type}
-				className={className}
+				className={className ? className : ""}
 				onClick={onClick}
-				variant={variant}
-				startIcon={disabled && <CircularProgress size={20}/>}
 			>
-				{name}
-			</Button>
+				{disabled && <CircularProgress size={20} color="inherit"/>} {name}
+			</button>
 		</>
 	);
 };
