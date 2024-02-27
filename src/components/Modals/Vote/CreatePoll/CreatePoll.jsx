@@ -1,98 +1,107 @@
 import React, { useState } from "react";
 import "./CreatePoll.css";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { toast } from "react-hot-toast";
-import { url } from "utils/index";
+import { CreatePollApi } from "api/services/auth&poll";
+import toast from "react-hot-toast";
 
-const CreatePoll = ({ onClose }) => {
-  const token = localStorage.getItem("authTOken");
+const durationOptions = [
+  { label: "12 hours", value: 12 * 60 * 60 * 1000 },
+  { label: "24 hours", value: 24 * 60 * 60 * 1000 },
+  { label: "36 hours", value: 36 * 60 * 60 * 1000 },
+  { label: "2 days", value: 2 * 24 * 60 * 60 * 1000 },
+  { label: "3 days", value: 3 * 24 * 60 * 60 * 1000 },
+];
+
+const CreatePoll = ({ onClose, fetchPolls }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [pollData, setPollData] = useState({
     question: "",
-    options: ["", ""],
-    duration: "22 hours",
-    type: "Free",
-    privacy: "Public",
-    // media: null,
-    currency: "NGN",
-    amount: 0,
+    poll_type: "",
+    poll_access: "",
+    close_time: new Date().toISOString(),
+    is_paid: false,
+    amount: "0",
+    options: [""],
   });
 
   console.log("pollData", pollData);
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleInputChange = (field, value) => {
-    setPollData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
+  const handleInputChange = (name, value) => {
+    if (name === "is_paid" && !value) {
+      setPollData((prevState) => ({
+        ...prevState,
+        is_paid: false,
+        amount: "0",
+      }));
+    } else if (name === "poll_type" && value === "Free") {
+      setPollData((prevState) => ({
+        ...prevState,
+        poll_type: "Free",
+        amount: "0",
+        is_paid: false,
+      }));
+    } else if (name === "poll_type" && value === "Paid") {
+      setPollData((prevState) => ({
+        ...prevState,
+        poll_type: "Paid",
+        is_paid: true,
+      }));
+    } else if (name === "poll_duration") {
+      const durationInMs =
+        durationOptions.find((option) => option.label === value)?.value || 0;
+      const now = new Date();
+      const localTime = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000
+      );
+      const closeTime = new Date(localTime.getTime() + durationInMs);
+      setPollData((prevState) => ({
+        ...prevState,
+        close_time: closeTime.toISOString(),
+      }));
+    } else if (name === "options") {
+      const updatedOptions = value.map((option) => {
+        if (typeof option === "string") {
+          return { content: option };
+        } else {
+          return option;
+        }
+      });
+      setPollData((prevState) => ({
+        ...prevState,
+        options: updatedOptions,
+      }));
+    } else {
+      setPollData((prevState) => ({ ...prevState, [name]: value }));
+    }
   };
-
-  const handleAddOption = () => {
-    setPollData((prevData) => ({
-      ...prevData,
-      content: [...prevData.content, ""],
-    }));
-  };
-
-  
 
   const handleCreatePoll = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    // Ensure all required fields are populated
+    if (
+      !pollData.question ||
+      !pollData.options ||
+      pollData.options.length === 0
+    ) {
+      toast.error("Missing required fields");
+      return;
+    }
 
-    // Append poll question
-    formData.append("question", pollData.question);
-
-    // Append poll duration
-    formData.append("duration", pollData.duration);
-
-    // Append poll type
-    formData.append("type", pollData.type);
-
-    // Append poll privacy
-    formData.append("privacy", pollData.privacy);
-
-    // Append poll currency and amount
-    formData.append("currency", pollData.currency);
-    formData.append("amount", pollData.amount);
-
-    // Append media
-    // formData.append("media", pollData.media);
-
-    // Append options
-    pollData.options.forEach((content, index) => {
-        formData.append(`options`, content);
-    });
-
-    console.log(formData, "formData");
-
-    const formDataRes = Object.fromEntries(formData)
-
-    console.log(formDataRes, "formDataRes");
-
+    // Make API call with updated FormData
     try {
-        setIsLoading(true);
-        const resp = await fetch(url + "/api/poll/create-poll/", {
-            method: "POST",
-            headers: {
-                Authorization: "Token " + token,
-            },
-            body: formData,
-        });
-        const result = await resp.json();
-
-        console.log(result, "REs");
-
-        if (result?.id) {
-            toast.success("Poll created successfully");
-            onClose();
-        }
+      setIsLoading(true);
+      const resp = await CreatePollApi(pollData);
+      if (resp.data.status) {
+        toast.success("Poll created successfully");
+      }
+      console.log(resp, "createpoll");
     } catch (error) {
-        console.error("Error making API request:", error);
+      console.error("createpollerror", error);
     } finally {
-        setIsLoading(false);
+      fetchPolls();
+      setIsLoading(false);
+      onClose();
     }
   };
 
@@ -135,115 +144,104 @@ const CreatePoll = ({ onClose }) => {
             type="text"
             id={`options${index + 1}`}
             placeholder="Type option"
-            value={option}
+            value={option.content} // Set the value to option.content
             className="outline-none p-[9px]"
             onChange={(e) => {
               const updatedOptions = [...pollData.options];
-              updatedOptions[index] = e.target.value;
+              updatedOptions[index] = e.target.value; // Update the option directly with the new string value
               handleInputChange("options", updatedOptions);
             }}
           />
         </div>
       ))}
-      <div className="add-option" onClick={handleAddOption}>
+
+      <div
+        className="add-option"
+        onClick={() => handleInputChange("options", [...pollData.options, ""])}
+      >
         <div className="option-icon">+</div>
         <span>Add option</span>
       </div>
 
       <div className="form-field">
-        <label htmlFor="duration">Poll duration</label>
+        <label htmlFor="poll_type">Poll type</label>
         <select
-          id="duration"
-          name="duration"
+          id="poll_type"
+          name="poll_type"
           className="outline-none"
-          onChange={(e) => handleInputChange("duration", e.target.value)}
+          onChange={(e) => handleInputChange("poll_type", e.target.value)}
         >
-          <option value="22 hours">22 hours</option>
-          <option value="24 hours">24 hours</option>
-          <option value="3 days">3 days</option>
-        </select>
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="type">Poll type</label>
-        <select
-          id="type"
-          name="type"
-          className="outline-none"
-          onChange={(e) => handleInputChange("type", e.target.value)}
-        >
+          <option value="" disabled selected>
+            Choose poll type
+          </option>
           <option value="Free">Free</option>
           <option value="Paid">Paid</option>
         </select>
       </div>
 
-      {/* {pollData.type === "Paid" && (
-        <div className="form-field">
-          <label htmlFor="price">Amount per vote</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            className="outline-none"
-            onChange={(e) => handleInputChange("price", e.target.value)}
-          />
-        </div>
-      )} */}
-
-      {pollData.type === "Paid" && (
+      {pollData.poll_type === "Paid" && (
         <div className="flex gap-2 lg:gap-4 items-center justify-center">
-          <div className="form-field w-[60%] lg:w-[80%]">
+          <div className="form-field w-full">
             <label htmlFor="amount">Amount per vote</label>
             <input
               type="number"
               id="amount"
               name="amount"
               className="outline-none p-[9px]"
+              value={pollData.amount}
               onChange={(e) => handleInputChange("amount", e.target.value)}
             />
-          </div>
-
-          <div className=" w-[40%] lg:w-[20%] mt-3">
-            <select
-              id="currency"
-              name="currency"
-              className="outline-none "
-              onChange={(e) => handleInputChange("currency", e.target.value)}
-            >
-              <option value="NGN">NGN</option>
-              <option value="USD">USD</option>
-            </select>
           </div>
         </div>
       )}
 
       <div className="form-field">
-        <label htmlFor="privacy">Poll access</label>
+        <label htmlFor="close_time">Poll duration</label>
         <select
-          id="privacy"
-          name="privacy"
+          id="poll_duration"
+          name="poll_duration"
           className="outline-none"
-          onChange={(e) => handleInputChange("privacy", e.target.value)}
+          defaultValue=""
+          onChange={(e) => handleInputChange("poll_duration", e.target.value)}
         >
+          <option value="" disabled>
+            Choose poll duration
+          </option>
+          {durationOptions.map((option) => (
+            <option key={option.label} value={option.label}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-field">
+        <label htmlFor="poll_access">Poll access</label>
+        <select
+          id="poll_access"
+          name="poll_access"
+          className="outline-none"
+          onChange={(e) => handleInputChange("poll_access", e.target.value)}
+        >
+          <option value="" disabled selected>
+            Choose poll access
+          </option>
           <option value="Public">Public</option>
           <option value="Private">Private</option>
         </select>
       </div>
 
       {/* <div className="form-field">
-        <label htmlFor="media">Add image or video</label>
+        <label htmlFor="is_paid">Is paid?</label>
         <input
-          type="file"
-          id="media"
-          accept="image/*, video/*"
-          name="media"
-          className="outline-none"
-          onChange={(e) =>
-            handleInputChange("media", e.target.files[0])
-          }
+          type="checkbox"
+          id="is_paid"
+          name="is_paid"
+          className="outline-none p-[9px]"
+          checked={pollData.is_paid}
+          onChange={(e) => handleInputChange("is_paid", e.target.checked)}
         />
       </div> */}
-
       <button
         className="create-poll-btn outline-none"
         type="submit"
@@ -256,172 +254,3 @@ const CreatePoll = ({ onClose }) => {
 };
 
 export default CreatePoll;
-
-
-// import React, { useState } from "react";
-// import "./CreatePoll.css";
-// import { FaArrowLeftLong } from "react-icons/fa6";
-// import { toast } from "react-hot-toast";
-// import { CreatePollApi } from "utils/ApICalls";
-
-// const CreatePoll = ({ onClose }) => {
-//   const [pollData, setPollData] = useState({
-//     content: ["", ""],
-//   });
-
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleInputChange = (field, value) => {
-//     setPollData((prevData) => ({
-//       ...prevData,
-//       [field]: value,
-//     }));
-//   };
-
-//   const handleAddOption = () => {
-//     setPollData((prevData) => ({
-//       ...prevData,
-//       content: [...prevData.content, ""],
-//     }));
-//   };
-
-//   const handleCreatePoll = async (e) => {
-//     e.preventDefault();
-
-//     // Create FormData
-//     const form = new FormData(e.target);
-//     form.append("content", pollData.content);
-
-//     try {
-//       setIsLoading(true);
-//       const res = await CreatePollApi(form);
-
-//       console.log("createpoll", res?.data);
-//       if (res.status === 200) {
-//         toast.success("Poll created successfully");
-//         onClose();
-//       }
-//       // Make your API request here using formData
-//       // Example: await fetch('your-api-endpoint', { method: 'POST', body: formData });
-//     } catch (error) {
-//       console.error("Error making API request:", error);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <form className="form-wrapper" onSubmit={handleCreatePoll}>
-// <div
-//   className="createTop"
-//   style={{
-//     display: "flex",
-//     alignItems: "center",
-//     gap: "40px",
-//     paddingBottom: "20px",
-//   }}
-// >
-//   <FaArrowLeftLong
-//     style={{ fontSize: "20px" }}
-//     onClick={() => onClose(false)}
-//     className="cursor-pointer"
-//   />
-//   <span style={{ fontSize: "20px" }}>Create Poll</span>
-// </div>
-//       <div className="form-field">
-//         <label htmlFor="question">Poll question</label>
-//         <input
-//           type="text"
-//           id="question"
-//           name="question"
-//           placeholder="Enter your question"
-//           className="outline-none"
-//           onChange={(e) => handleInputChange("question", e.target.value)}
-//         />
-//       </div>
-
-//       {pollData.content.map((option, index) => (
-//         <div className="form-field" key={`option-${index}`}>
-//           <label htmlFor={`content`}>{`Option ${index + 1}`}</label>
-//           <input
-//             type="text"
-//             id={`content`}
-//             placeholder="Type option"
-//             value={option}
-//             className="outline-none"
-//             onChange={(e) => {
-//               const updatedOptions = [...pollData.content];
-//               updatedOptions[index] = e.target.value;
-//               handleInputChange("content", updatedOptions);
-//             }}
-//           />
-//         </div>
-//       ))}
-//       <div className="add-option" onClick={handleAddOption}>
-//         <div className="option-icon">+</div>
-//         <span>Add option</span>
-//       </div>
-
-//       <div className="form-field">
-//         <label htmlFor="duration">Poll duration</label>
-//         <select
-//           id="duration"
-//           name="duration"
-//           className="outline-none"
-//           onChange={(e) => handleInputChange("duration", e.target.value)}
-//         >
-//           <option value="22 hours">22 hours</option>
-//           <option value="24 hours">24 hours</option>
-//           <option value="3 days">3 days</option>
-//         </select>
-//       </div>
-
-//       <div className="form-field">
-//         <label htmlFor="type">Poll type</label>
-//         <select
-//           id="type"
-//           name="type"
-//           className="outline-none"
-//           onChange={(e) => handleInputChange("type", e.target.value)}
-//         >
-//           <option value="Free">Free</option>
-//           <option value="Paid">Paid</option>
-//         </select>
-//       </div>
-
-//       <div className="form-field">
-//         <label htmlFor="privacy">Poll Access</label>
-//         <select
-//           id="privacy"
-//           name="privacy"
-//           className="outline-none"
-//           onChange={(e) => handleInputChange("privacy", e.target.value)}
-//         >
-//           <option value="Public">Public</option>
-//           <option value="Private">Private</option>
-//         </select>
-//       </div>
-
-      // <div className="form-field">
-      //   <label htmlFor="media">Add image or video</label>
-      //   <input
-      //     type="file"
-      //     id="media"
-      //     accept="image/*, video/*"
-      //     name="media"
-      //     className="outline-none"
-      //   />
-      // </div>
-
-//       <button
-//         className="create-poll-btn outline-none"
-//         type="submit"
-//         disabled={isLoading}
-//       >
-//         {isLoading ? "Please wait..." : "Create Poll"}
-//       </button>
-//     </form>
-//   );
-// };
-
-// export default CreatePoll;

@@ -14,16 +14,25 @@ import Modal from "components/Modals/Modal";
 import { IoMdClose } from "react-icons/io";
 import InputField from "components/Commons/InputField";
 import ActionButton from "components/Commons/Button";
-import { CastVoteApi, MyPollsApi, getToken } from "api/services/auth&poll";
+import { CastVoteApi, PollsApi, getToken } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import optionss from "utils/options.json";
 import { url } from "utils/index";
+import Spin from "components/Spin/Spin";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
+  const userInfo = JSON.parse(userInfoString);
 
   const [token, setToken] = useState(null);
-  const userInfo = JSON.parse(userInfoString);
+  useEffect(() => {
+    const token = getToken();
+    setToken(token);
+  }, []);
+
+  const [polls, setPolls] = useState([]);
+  console.log("polls", polls);
+
   const [selectedPoll, setSelectedPoll] = useState(false);
   const [Notify, setNotify] = useState(false);
   const [CastVote, setCastVote] = useState(false);
@@ -33,13 +42,13 @@ const Voting = () => {
   const [PayNow, setPayNow] = useState(false);
   const [Success, setSuccess] = useState(false);
   const [showPaidVotes, setShowPaidVotes] = useState(false);
-  const [pollsDetails, setPollsDetails] = useState([]);
+
   const [singlePoll, setSinglePoll] = useState({});
   const [loading, setLoading] = useState(true);
   const [numberOfVotes, setNumberOfVotes] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
   const [payNowAmount, setPayNowAmount] = useState(0);
-  
+
   const handleNumberOfVotesChange = (e) => {
     const input = e.target.value;
     if (!isNaN(input)) {
@@ -75,45 +84,45 @@ const Voting = () => {
 
   const handleMyPolls = async (e) => {
     try {
-      const response = await MyPollsApi();
-      setPollsDetails(response?.data);
-      setLoading(false);
+      const resp = await PollsApi();
+      console.log("pollsres", resp);
+      if (resp.data.status) {
+        setPolls(resp?.data?.data);
+      }
     } catch (error) {
-      toast.error(error);
+      console.log(error);
     }
   };
+
+  useEffect(() => {
+    handleMyPolls();
+  }, []);
 
   const renderPolls = () => {
     switch (viewType) {
       case "private":
-        if (!pollsDetails) {
-          return <p className="mt-20">Loading polls...</p>;
-        } else if (pollsDetails.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+        if (polls.length === 0) {
+          return <Spin />;
         } else {
-          const isPrivate = pollsDetails.filter(
-            (poll) => poll.privacy.toLowerCase() === "private"
+          const isPrivate = polls.filter(
+            (poll) =>
+              poll.poll_access.toLowerCase() === "private" &&
+              poll?.options?.length > 0
           );
           return isPrivate.length > 0 ? (
-            isPrivate?.map((poll, index) => (
+            isPrivate?.reverse().map((poll, index) => (
               <Polls
                 key={index}
-                onClick={() => HandlePoll(poll)}
-                authorName={poll.username}
-                createdAt={poll.created_at}
+                // onClick={() => HandlePoll(poll)}
+                authorName={"authorName"}
+                createdAt={"createdAt"}
                 question={poll.question}
-                // options={options}
-                optionList={
-                  poll?.options_list?.length > 0 ? poll?.options_list : optionss
-                }
-                daysRemaining={poll.duration}
-                totalVotes={poll.vote_count}
+                options={poll?.options?.length > 1 && poll?.options}
+                daysRemaining={poll.close_time}
+                totalVotes={"totalVotes"}
                 backgroundImageUrl={
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                } // take note
-                // myPolls={true}
-                // onClose={handleShowcloseModal}
-                // onView={handleViewResults}
+                }
                 className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
               />
             ))
@@ -122,34 +131,28 @@ const Voting = () => {
           );
         }
       case "public":
-        if (!pollsDetails) {
-          return <p className="mt-20">Loading polls...</p>;
-        } else if (pollsDetails.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+        if (polls.length === 0) {
+          return <Spin />;
         } else {
-          const isPublic = pollsDetails.filter(
-            (poll) => poll.privacy.toLowerCase() === "public"
+          const isPublic = polls.filter(
+            (poll) =>
+              poll.poll_access.toLowerCase() === "public" &&
+              poll?.options?.length > 0
           );
           return isPublic.length > 0 ? (
-            isPublic?.map((poll, index) => (
+            isPublic?.reverse().map((poll, index) => (
               <Polls
                 key={index}
-                onClick={() => HandlePoll(poll)}
-                authorName={poll.username}
-                createdAt={poll.created_at}
+                // onClick={() => HandlePoll(poll)}
+                authorName={"authorName"}
+                createdAt={"createdAt"}
                 question={poll.question}
-                // options={options}
-                optionList={
-                  poll?.options_list?.length > 0 ? poll?.options_list : optionss
-                }
-                daysRemaining={poll.duration}
-                totalVotes={poll.vote_count}
+                options={poll?.options?.length > 1 && poll?.options}
+                daysRemaining={poll.close_time}
+                totalVotes={"totalVotes"}
                 backgroundImageUrl={
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                } // take note
-                // myPolls={true}
-                // onClose={handleShowcloseModal}
-                // onView={handleViewResults}
+                }
                 className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
               />
             ))
@@ -159,32 +162,34 @@ const Voting = () => {
         }
       case "all":
       default:
-        if (!pollsDetails) {
-          return <p className="mt-20">Loading polls...</p>;
-        } else if (pollsDetails.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+        if (polls.length === 0) {
+          return <Spin />;
         } else {
-          return pollsDetails.map((poll, index) => (
-            <Polls
-              key={index}
-              onClick={() => HandlePoll(poll)}
-              authorName={poll.username}
-              createdAt={poll.created_at}
-              question={poll.question}
-              optionList={
-                poll?.options_list?.length > 0 ? poll?.options_list : optionss
-              }
-              daysRemaining={poll.duration}
-              totalVotes={poll.vote_count}
-              backgroundImageUrl={
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-              }
-              className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-            />
-          ));
+          const allPolls = polls.filter((poll) => poll?.options?.length > 0);
+          return allPolls.length > 0 ? (
+            allPolls?.reverse().map((poll, index) => (
+              <Polls
+                key={index}
+                onClick={() => HandlePoll(poll)}
+                authorName={"authorName"}
+                createdAt={"createdAt"}
+                question={poll.question}
+                options={poll?.options?.length > 1 && poll?.options}
+                daysRemaining={poll.close_time}
+                totalVotes={"totalVotes"}
+                backgroundImageUrl={
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
+                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+              />
+            ))
+          ) : (
+            <p className="mt-20">No polls to display</p>
+          );
         }
     }
   };
+
 
   const onSearch = () => {};
   const onFilterClick = () => {};
@@ -202,7 +207,7 @@ const Voting = () => {
   const HandlePaySuccess = () => {
     setSuccess(true);
   };
-  
+
   const HandleContinue = () => {
     setSuccess(false);
     setPayNow(false);
@@ -265,54 +270,44 @@ const Voting = () => {
     setSelectedPoll(null);
   };
 
-  useEffect(() => {
-    handleMyPolls();
-  }, []);
-
-  useEffect(() => {
-    const token = getToken();
-    setToken(token);
-  }, []);
-
   return (
     <MainLayout>
-      {/* MOBILE */}
       {!selectedPoll && (
-        <div className=" lg:bg-[#f5f5f5]  w-full pt-36  lg:px-10 lg:gap-6 lg:hidden">
-          {!Notify && !CastVote && (
-            <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6">
-              <h1>Voting</h1>
-              <h2 className="mt-6">Hello, {userInfo.username}</h2>
-              <span className="text-[14px] block lg:hidden">
-                What do you want to do today ?
-              </span>
+        <div className=" bg-[#f5f5f5]  w-full pt-36 lg:px-10 gap-6 ">
+          <div className="">
+            {!Notify && !CastVote && (
+              <div className=" overflow-x-hidden bg-[#fff] py-10 px-6 md:hidden">
+                <h1>Voting</h1>
+                <h2 className="mt-6 ">Hello, {userInfo.username}</h2>
+                <span className="text-[14px] ">
+                  What do you want to do today ?
+                </span>
 
-              {/* <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} /> */}
+                <img
+                  src="images/fifa.png"
+                  alt="fifa-pics"
+                  className="mt-6 w-full"
+                />
 
-              <img
-                src="images/fifa.png"
-                alt="fifa-image"
-                className="mt-6 w-full lg:mt-10"
-              />
-
-              <CreateCastActions
-                HandleNotification={HandleNotification}
-                HandleCastVote={HandleCastVote}
-                showCreateModal={() => setShowCreateModal((prev) => !prev)}
-              />
-            </div>
-          )}
+                <CreateCastActions
+                  HandleNotification={HandleNotification}
+                  HandleCastVote={HandleCastVote}
+                  showCreateModal={() => setShowCreateModal((prev) => !prev)}
+                />
+              </div>
+            )}
+          </div>
 
           {Notify && <Notifications setNotify={setNotify} />}
 
+          {/* Mobile */}
           {CastVote && (
-            <div className="px-4 lg:hidden pb-[40px]">
+            <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 flex md:hidden flex-col bg-[#fff]">
               <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
-
               <img
                 src="images/fifa.png"
-                alt="fifa-image"
-                className="mt-6 w-full lg:mt-10"
+                alt="fifa-pics"
+                className="mt-6 lg:mt-10"
               />
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
@@ -320,10 +315,12 @@ const Voting = () => {
               <PromotedPolls HandlePoll={HandlePoll} />
 
               {/* tabs */}
-              <div className="flex justify-between  mt-16 lg:mt-20">
+              <div className="flex justify-between mt-16 lg:mt-20">
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "all" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
+                    viewType === "all"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("all")}
                 >
@@ -331,7 +328,9 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "public" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
+                    viewType === "public"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("public")}
                 >
@@ -339,7 +338,9 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "private" ? "bg-purple-900 text-white" : "border-1 border-purple-900"
+                    viewType === "private"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("private")}
                 >
@@ -347,27 +348,28 @@ const Voting = () => {
                 </button>
               </div>
               {renderPolls()}
+              <Dialog
+                open={showCreateModal}
+                onClose={() => setShowCreateModal((prev) => !prev)}
+                fullWidth
+              >
+                <CreatePoll
+                  onClose={setShowCreateModal}
+                  fetchPolls={handleMyPolls}
+                />
+              </Dialog>
             </div>
           )}
 
-          {/* <PollsNotification
-            setNotify={setNotify}
-            showCreateModal={() => setShowCreateModal((prev) => !prev)}
-          /> */}
-        </div>
-      )}
-
-      {/* WEB */}
-      <div className=" lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 hidden">
-        {!Notify && !CastVote && (
-          <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6">
-            <div className="pb-[40px] hidden lg:block">
+          {/* Web */}
+          <div className="flex flex-row gap-4 ">
+            <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
 
               <img
                 src="images/fifa.png"
-                alt="fifa-image"
-                className="mt-6 w-full lg:mt-10"
+                alt="fifa-pics"
+                className="mt-6 lg:mt-10"
               />
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
@@ -375,10 +377,12 @@ const Voting = () => {
               <PromotedPolls HandlePoll={HandlePoll} />
 
               {/* tabs */}
-              <div className="flex justify-between  mt-16 lg:mt-20">
+              <div className="flex justify-between mt-16 lg:mt-20">
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "all" ? "bg-purple-900 text-white" : ""
+                    viewType === "all"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("all")}
                 >
@@ -386,7 +390,9 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "public" ? "bg-purple-900 text-white" : ""
+                    viewType === "public"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("public")}
                 >
@@ -394,7 +400,9 @@ const Voting = () => {
                 </button>
                 <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
-                    viewType === "private" ? "bg-purple-900 text-white" : ""
+                    viewType === "private"
+                      ? "bg-purple-900 text-white"
+                      : "border-1 border-purple-900"
                   }`}
                   onClick={() => setViewType("private")}
                 >
@@ -402,28 +410,30 @@ const Voting = () => {
                 </button>
               </div>
               {renderPolls()}
+              <Dialog
+                open={showCreateModal}
+                onClose={() => setShowCreateModal((prev) => !prev)}
+                fullWidth
+              >
+                <CreatePoll
+                  onClose={setShowCreateModal}
+                  fetchPolls={handleMyPolls}
+                />
+              </Dialog>
             </div>
-            <Dialog
-              open={showCreateModal}
-              onClose={() => setShowCreateModal((prev) => !prev)}
-              fullWidth
-            >
-              <CreatePoll
-                onClose={setShowCreateModal}
-                fetchPolls={handleMyPolls}
-              />
-            </Dialog>
-          </div>
-        )}
 
-        <PollsNotification
-          setNotify={setNotify}
-          showCreateModal={() => setShowCreateModal((prev) => !prev)}
-        />
-      </div>
+            <div className="lg:w-[30%]  bg-[#fff] hidden lg:block fixed top-[90px] right-10 ">
+              <PollsNotification
+                setNotify={setNotify}
+                showCreateModal={() => setShowCreateModal((prev) => !prev)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MOBILE */}
-      {selectedPoll && (
+      {/* {selectedPoll && (
         <div className="pt-36 lg:pt-48 px-4 flex lg:hidden flex-col justify-between w-full h-screen">
           <div className="lg:hidden w-full">
             <div
@@ -465,14 +475,14 @@ const Voting = () => {
           </div>
           <img
             src="images/fifa.png"
-            alt="fifa-image"
+            alt="fifa-pics"
             className="mb-6 w-full lg:mb-10 lg:hidden"
           />
         </div>
-      )}
+      )} */}
 
       {/* WEB */}
-      {selectedPoll && !PaidPoll && (
+      {/* {selectedPoll && !PaidPoll && (
         <div className="hidden lg:flex">
           <Modal>
             <div className="bg-white w-[50%] p-14">
@@ -537,9 +547,9 @@ const Voting = () => {
             </div>
           </Modal>
         </div>
-      )}
+      )} */}
 
-      {PaidPoll && !PayNow && (
+      {/* {PaidPoll && !PayNow && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <h3 className="font-bold text-center text-[18px]">Paid Poll</h3>
@@ -581,9 +591,9 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
 
-      {PayNow && !Success && (
+      {/* {PayNow && !Success && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <h6 className="text-[16px] text-center">You are paying</h6>
@@ -623,13 +633,13 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
 
-      {Success && !castVotes && (
+      {/* {Success && !castVotes && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <div className="flex justify-center">
-              <img src="images/success.png" alt="payment-success-image" />
+              <img src="images/success.png" alt="payment-success-pics" />
             </div>
             <h6 className="mt-8 text-[16px] text-center">Payment Successful</h6>
 
@@ -642,9 +652,9 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
 
-      {castVotes && (
+      {/* {castVotes && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <div className="flex justify-end">
@@ -684,7 +694,7 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
     </MainLayout>
   );
 };

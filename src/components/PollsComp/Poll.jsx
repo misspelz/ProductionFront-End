@@ -20,12 +20,13 @@ export const Poll = ({
     >
       <div
         className="absolute h-full w-[75%] py-7 bg-purple-900 rounded-[10px]"
-        style={{ width: `${percent}%` }}
+        // style={{ width: `${percent}%` }}
+        style={{ width: `0%` }}
       >
       </div>
       <div className="w-full flex justify-between">
         <span className="text-white font-bold z-50 ml-6">{title}</span>
-        <span className="text-white font-bold z-50">{percent}%</span>
+        <span className="text-white font-bold z-50">0%</span>
       </div>
       {cast && (
         <input

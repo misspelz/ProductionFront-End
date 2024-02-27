@@ -15,12 +15,22 @@ export const getToken = () => {
   return token;
 };
 
+export const getLoginToken = () => {
+  if (!token) {
+    token = localStorage.getItem("authToken");
+    console.log("logintoken", token);
+  }
+  return token;
+};
+
 /**
  * Auth Screens
  */
 
 export const Register = async (payload) => {
-  const res = await axios.post(`${url}/api/user/auth/register/`, { ...payload });
+  const res = await axios.post(`${url}/api/user/auth/register/`, {
+    ...payload,
+  });
   return res;
 };
 
@@ -39,14 +49,16 @@ export const UserInfoApi = async (userToken) => {
 };
 
 export const ReSendOTP = async (verificationType) => {
-  const res = await axios.get(`${url}/api/user/auth/resend-otp/?verification_type=${verificationType}`, {
-    headers: {
-      Authorization: `Token ${getToken()}`,
-    },
-  });
+  const res = await axios.get(
+    `${url}/api/user/auth/resend-otp/?verification_type=${verificationType}`,
+    {
+      headers: {
+        Authorization: `Token ${getToken()}`,
+      },
+    }
+  );
   return res;
 };
-
 
 export const VerifyOTP = async (data) => {
   const res = await axios.post(
@@ -93,14 +105,23 @@ export const ForgotPassword = async (data) => {
 
 export const CreatePollApi = async (formData) => {
   const res = await axios.post(
-    `${url}/api/poll/create-poll/`,
+    `${url}/api/polls/`,
     { ...formData },
     {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Token ${getLoginToken()}`,
       },
     }
   );
+  return res;
+};
+
+export const PollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
   return res;
 };
 
@@ -110,26 +131,17 @@ export const CastVoteApi = async (payload) => {
     { ...payload },
     {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Token ${getLoginToken()}`,
       },
     }
   );
   return res;
 };
 
-export const MyPollsApi = async () => {
-  const res = await axios.get(`${url}/api/poll/polls/`, {
-    headers: {
-      Authorization: `Token ${getToken()}`,
-    },
-  });
-  return res;
-};
-
 export const SuggestedPollsApi = async () => {
   const res = await axios.get(`${url}/api/poll/suggested-polls/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Token ${getLoginToken()}`,
     },
   });
   return res;

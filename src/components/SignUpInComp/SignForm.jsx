@@ -34,8 +34,6 @@ const SignForm = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  localStorage.setItem("email", email);
-
   const signupUser = async (event) => {
     event.preventDefault();
 
@@ -53,17 +51,19 @@ const SignForm = () => {
 
     try {
       const response = await Register(userData);
+      console.log("res", response)
 
-      localStorage.setItem("registrationData", JSON.stringify(response.data.data));
+      localStorage?.setItem("registrationData", JSON.stringify(response.data.data));
 
       if (response.status === 201) {
-        const token = response.data.data.token;
+        const token = response?.data?.data?.token;
 
-        localStorage.setItem("authTOken", token);
+        localStorage?.setItem("authTOken", token);
 
         navigate("/verify");
       }
     } catch (error) {
+      console.log(error)
       toast.error(
           error.response.data.detail ||
           error.response.data.data.email[0] ||
