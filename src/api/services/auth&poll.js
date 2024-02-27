@@ -103,10 +103,25 @@ export const ForgotPassword = async (data) => {
  * Polls/Voting
  */
 
-export const CreatePollApi = async (formData) => {
+export const CreatePollApi = async (pollData) => {
   const res = await axios.post(
     `${url}/api/polls/`,
-    { ...formData },
+    { ...pollData },
+    {
+      headers: {
+        Authorization: `Token ${getLoginToken()}`,
+      },
+    }
+  );
+  return res;
+};
+
+export const UpdatePollApi = async (pollData, pollID) => {
+  console.log("UpdatePollApi", pollData)
+  console.log("UpdatePollID", pollID)
+  const res = await axios.put(
+    `${url}/api/polls/${pollID}/`,
+    { ...pollData },
     {
       headers: {
         Authorization: `Token ${getLoginToken()}`,

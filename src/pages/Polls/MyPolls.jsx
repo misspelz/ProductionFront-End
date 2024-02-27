@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./styles.css";
 import MainLayout from "Layout/MainLayout";
 import { Polls } from "components/PollsComp/Polls";
@@ -13,8 +13,11 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { PollsApi } from "api/services/auth&poll";
 import Spin from "components/Spin/Spin";
+import { ModalContext } from "Context/ModalContext";
 
 const MyPolls = () => {
+  const { singlePoll, setSinglePoll } = useContext(ModalContext);
+
   const goBack = () => nav("/Voting");
   const [polls, setPolls] = useState([]);
   const [Notify, setNotify] = useState(false);
@@ -68,6 +71,27 @@ const MyPolls = () => {
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
 
+  const [showAction, setShowAction] = useState(false);
+  const HandleActions = () => {
+    setShowAction((prev) => !prev);
+  };
+
+  const handleShowCreateModal = () => {
+    setShowCreateModal(true);
+  };
+
+  const HandleEdit = (poll) => {
+    setSinglePoll(poll);
+    setShowCreateModal(true);
+    setShowAction((prev) => !prev);
+  };
+
+  const HandleDelete = (poll) => {
+    alert("Are you sure you want to delete this poll?");
+    setSinglePoll(poll);
+    setShowAction((prev) => !prev);
+  };
+
   const renderPolls = () => {
     switch (viewType) {
       case "active":
@@ -93,6 +117,10 @@ const MyPolls = () => {
                 myPolls={true}
                 onClose={handleShowcloseModal}
                 onView={handleViewResults}
+                HandleDelete={() => HandleDelete(poll)}
+                HandleEdit={() => HandleEdit(poll)}
+                HandleActions={HandleActions}
+                showAction={showAction}
                 className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
               />
             ))
@@ -121,6 +149,10 @@ const MyPolls = () => {
                 myPolls={true}
                 onClose={handleShowcloseModal}
                 onView={handleViewResults}
+                HandleDelete={() => HandleDelete(poll)}
+                HandleEdit={() => HandleEdit(poll)}
+                HandleActions={HandleActions}
+                showAction={showAction}
                 className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
               />
             ))
@@ -153,6 +185,10 @@ const MyPolls = () => {
                   myPolls={true}
                   onClose={handleShowcloseModal}
                   onView={handleViewResults}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  HandleActions={HandleActions}
+                  showAction={showAction}
                   className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
@@ -253,7 +289,8 @@ const MyPolls = () => {
         <div className="lg:w-[30%]  bg-[#fff] hidden lg:block fixed top-[90px] right-10">
           <PollsNotification
             setNotify={setNotify}
-            showCreateModal={() => setShowCreateModal((prev) => !prev)}
+            onShowCreateModal={handleShowCreateModal}
+            singlePoll={singlePoll}
           />
         </div>
       </div>

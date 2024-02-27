@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./CreatePoll.css";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { CreatePollApi } from "api/services/auth&poll";
+import { CreatePollApi, UpdatePollApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
+import { ModalContext } from "Context/ModalContext";
 
 const durationOptions = [
   { label: "12 hours", value: 12 * 60 * 60 * 1000 },
@@ -13,8 +14,10 @@ const durationOptions = [
 ];
 
 const CreatePoll = ({ onClose, fetchPolls }) => {
+  const { singlePoll } = useContext(ModalContext);
+  console.log("singlePoll", singlePoll);
   const [isLoading, setIsLoading] = useState(false);
-  const [pollData, setPollData] = useState({
+  const initialPollData = {
     question: "",
     poll_type: "",
     poll_access: "",
@@ -22,7 +25,11 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     is_paid: false,
     amount: "0",
     options: [""],
-  });
+  };
+
+  const [pollData, setPollData] = useState(
+    singlePoll ? { ...singlePoll } : initialPollData
+  );
 
   console.log("pollData", pollData);
 
@@ -75,27 +82,30 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     }
   };
 
-  const handleCreatePoll = async (e) => {
+  const handleCreateandEditPoll = async (e) => {
     e.preventDefault();
-
-    // Ensure all required fields are populated
-    if (
-      !pollData.question ||
-      !pollData.options ||
-      pollData.options.length === 0
-    ) {
+  
+    if (!pollData.question || !pollData.options || pollData.options.length === 0) {
       toast.error("Missing required fields");
       return;
     }
-
-    // Make API call with updated FormData
+  
     try {
       setIsLoading(true);
-      const resp = await CreatePollApi(pollData);
-      if (resp.data.status) {
-        toast.success("Poll created successfully");
+  
+      let apiCall;
+      if (singlePoll) {
+        apiCall = UpdatePollApi;
+      } else {
+        apiCall = CreatePollApi;
       }
+  
+      const resp = await apiCall(pollData, singlePoll ? singlePoll.id : null);
       console.log(resp, "createpoll");
+      if (resp.data.status) {
+        toast.success(singlePoll ? "Poll updated successfully" : "Poll created successfully");
+      }
+      
     } catch (error) {
       console.error("createpollerror", error);
     } finally {
@@ -104,9 +114,24 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       onClose();
     }
   };
+  
+
+  useEffect(() => {
+    if (singlePoll) {
+      const { question, poll_type, poll_access } = singlePoll;
+      if (question) {
+        setPollData((prevState) => ({
+          ...prevState,
+          question,
+          poll_type,
+          poll_access,
+        }));
+      }
+    }
+  }, [singlePoll]);
 
   return (
-    <form className="form-wrapper" onSubmit={handleCreatePoll}>
+    <form className="form-wrapper" onSubmit={handleCreateandEditPoll}>
       <div
         className="createTop"
         style={{
@@ -122,7 +147,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           className="cursor-pointer"
         />
         <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-          Create Poll
+          {singlePoll ? "Edit Poll" : "Create Poll"}
         </span>
       </div>
       <div className="form-field">
@@ -133,6 +158,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           name="question"
           placeholder="Enter your question"
           className="outline-none p-[9px]"
+          value={pollData.question}
           onChange={(e) => handleInputChange("question", e.target.value)}
         />
       </div>
@@ -144,11 +170,11 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
             type="text"
             id={`options${index + 1}`}
             placeholder="Type option"
-            value={option.content} // Set the value to option.content
+            value={option.content}
             className="outline-none p-[9px]"
             onChange={(e) => {
               const updatedOptions = [...pollData.options];
-              updatedOptions[index] = e.target.value; // Update the option directly with the new string value
+              updatedOptions[index] = e.target.value;
               handleInputChange("options", updatedOptions);
             }}
           />
@@ -169,6 +195,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           id="poll_type"
           name="poll_type"
           className="outline-none"
+          value={pollData.poll_type}
           onChange={(e) => handleInputChange("poll_type", e.target.value)}
         >
           <option value="" disabled selected>
@@ -202,6 +229,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           name="poll_duration"
           className="outline-none"
           defaultValue=""
+          value={pollData.poll_duration}
           onChange={(e) => handleInputChange("poll_duration", e.target.value)}
         >
           <option value="" disabled>
@@ -221,6 +249,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           id="poll_access"
           name="poll_access"
           className="outline-none"
+          value={pollData.poll_access}
           onChange={(e) => handleInputChange("poll_access", e.target.value)}
         >
           <option value="" disabled selected>
@@ -242,12 +271,19 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           onChange={(e) => handleInputChange("is_paid", e.target.checked)}
         />
       </div> */}
+
       <button
         className="create-poll-btn outline-none"
         type="submit"
         disabled={isLoading}
       >
-        {isLoading ? "Please wait..." : "Create Poll"}
+        {singlePoll
+          ? isLoading
+            ? "Updating Poll..."
+            : "Update Poll"
+          : isLoading
+          ? "Creating Poll..."
+          : "Create Poll"}
       </button>
     </form>
   );

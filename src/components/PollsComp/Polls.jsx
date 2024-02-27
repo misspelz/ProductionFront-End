@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Poll } from "./Poll";
 import { BsEye } from "react-icons/bs";
+import { CiMenuKebab } from "react-icons/ci";
 import { FaVoteYea } from "react-icons/fa";
 
 export const Polls = ({
@@ -16,25 +17,13 @@ export const Polls = ({
   myPolls,
   onClose,
   onView,
-  optionList,
   cast,
   setContent,
+  HandleEdit,
+  HandleDelete,
+  HandleActions,
+  showAction,
 }) => {
-  // console.log(cast);
-  // const formatCreatedAt = (createdAt) => {
-  //   const date = new Date(createdAt);
-  //   const options = {
-  //     weekday: "short",
-  //     year: "numeric",
-  //     month: "short",
-  //     day: "numeric",
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     hour12: true,
-  //   };
-  //   return date.toLocaleDateString("en-US", options);
-  // };
-
   // const totalNumVotes = optionList?.reduce(
   //   (total, option) => total + option.all_vote,
   //   0
@@ -68,18 +57,20 @@ export const Polls = ({
         {question}
       </h6>
 
-      {options ? options.map((o, index) => (
-        <Poll
-          key={o.id}
-          title={o.content}
-          allVotes={o.all_vote}
-          totalVotes={"totalNumVotes"}
-          name={"vote"}
-          id={o.id}
-          cast={cast}
-          setContent={setContent}
-        />
-      )) : null}
+      {options
+        ? options.map((o, index) => (
+            <Poll
+              key={o.id}
+              title={o.content}
+              allVotes={o.all_vote}
+              totalVotes={"totalNumVotes"}
+              name={"vote"}
+              id={o.id}
+              cast={cast}
+              setContent={setContent}
+            />
+          ))
+        : null}
 
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
@@ -88,9 +79,7 @@ export const Polls = ({
             {daysRemaining}
           </span>
         </div>
-        <div className="text-[#000] text-[12px] font-[500]">
-        totalNumVotes
-        </div>
+        <div className="text-[#000] text-[12px] font-[500]">totalNumVotes</div>
       </div>
 
       {myPolls && (
@@ -111,12 +100,33 @@ export const Polls = ({
             </button>
           </div>
           <div className="flex flex-col w-full gap-4">
-            <div className="flex  gap-3 self-start  ">
-              <FaVoteYea className="text-black text-xl" />
-              <div>
-                <h2 className="text-black">0</h2>
-                <span className="text-black text-[14px]">votes</span>
+            <div className="flex justify-between items-center relative">
+              <div className="flex  gap-3 self-start">
+                <FaVoteYea className="text-black text-xl" />
+                <div>
+                  <h2 className="text-black">0</h2>
+                  <span className="text-black text-[14px]">votes</span>
+                </div>
               </div>
+              <div onClick={HandleActions}>
+                <CiMenuKebab className="text-black text-xl" />
+              </div>
+              {showAction && (
+                <div className="absolute flex flex-col gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[2rem]">
+                  <button
+                    onClick={HandleEdit}
+                    className="text-[1.2rem] md:text-[1.4rem] text-[#4f0da3] text-start font-bold"
+                  >
+                    Edit Poll
+                  </button>
+                  <button
+                    onClick={HandleDelete}
+                    className="text-[1.2rem] md:text-[1.4rem] text-red-600 font-bold"
+                  >
+                    Delete Poll
+                  </button>
+                </div>
+              )}
             </div>
             <button
               className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal"
