@@ -93,10 +93,7 @@
   outline: none;
   height: 30px;
 }
-.flex {
-  display: flex;
-  align-items: center;
-}
+
 .analytic-select-filter {
   justify-content: space-between;
 }

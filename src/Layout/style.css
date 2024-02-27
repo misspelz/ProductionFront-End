@@ -123,10 +123,11 @@
 } */
 
 .sidebar-boxxx {
-  width: 20%;
+  width: 16%;
   background: #4f0da3;
   min-height: 100vh;
 }
+
 .sidebar-container {
   background: #4f0da3;
   width: 20%;
@@ -203,8 +204,8 @@ li {
   background: #fff;
   position: fixed;
   top: 0;
-  width: 80%;
-  z-index: 1;
+  width: 87%;
+  z-index: 999;
   border-bottom: 1px solid rgb(238, 233, 233);
 }
 .logo-container {

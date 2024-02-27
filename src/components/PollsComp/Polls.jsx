@@ -12,7 +12,7 @@ export const Polls = ({
   daysRemaining,
   totalVotes,
   backgroundImageUrl,
-  className = "border w-full max-w-[360px] p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
+  className = "border w-full max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
   onClose,
   onView,
@@ -21,24 +21,24 @@ export const Polls = ({
   setContent,
 }) => {
   // console.log(cast);
-  const formatCreatedAt = (createdAt) => {
-    const date = new Date(createdAt);
-    const options = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
+  // const formatCreatedAt = (createdAt) => {
+  //   const date = new Date(createdAt);
+  //   const options = {
+  //     weekday: "short",
+  //     year: "numeric",
+  //     month: "short",
+  //     day: "numeric",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     hour12: true,
+  //   };
+  //   return date.toLocaleDateString("en-US", options);
+  // };
 
-  const totalNumVotes = optionList?.reduce(
-    (total, option) => total + option.all_vote,
-    0
-  );
+  // const totalNumVotes = optionList?.reduce(
+  //   (total, option) => total + option.all_vote,
+  //   0
+  // );
 
   return (
     <div
@@ -47,7 +47,7 @@ export const Polls = ({
       onClick={onClick}
     >
       <div className="flex justify-between">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <div
             className=" rounded-full relative"
             style={{
@@ -62,24 +62,24 @@ export const Polls = ({
             {authorName}
           </span>
         </div>
-        <span className="text-[#403F3F]">{formatCreatedAt(createdAt)}</span>
+        <span className="text-[#403F3F]">{createdAt}</span>
       </div>
       <h6 className="text-[12px] lg:text-[14px] mt-4 text-[#000]">
         {question}
       </h6>
 
-      {optionList?.map((o, index) => (
+      {options ? options.map((o, index) => (
         <Poll
           key={o.id}
           title={o.content}
           allVotes={o.all_vote}
-          totalVotes={totalNumVotes}
+          totalVotes={"totalNumVotes"}
           name={"vote"}
           id={o.id}
           cast={cast}
           setContent={setContent}
         />
-      ))}
+      )) : null}
 
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
@@ -89,7 +89,7 @@ export const Polls = ({
           </span>
         </div>
         <div className="text-[#000] text-[12px] font-[500]">
-          {totalNumVotes} votes
+        totalNumVotes
         </div>
       </div>
 
@@ -114,7 +114,7 @@ export const Polls = ({
             <div className="flex  gap-3 self-start  ">
               <FaVoteYea className="text-black text-xl" />
               <div>
-                <h2 className="text-black">{totalNumVotes}</h2>
+                <h2 className="text-black">0</h2>
                 <span className="text-black text-[14px]">votes</span>
               </div>
             </div>
