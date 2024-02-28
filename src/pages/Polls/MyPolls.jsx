@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { PollsApi } from "api/services/auth&poll";
 import Spin from "components/Spin/Spin";
 import { ModalContext } from "Context/ModalContext";
+import { formatDate } from "utils/helper";
 
 const MyPolls = () => {
   const { singlePoll, setSinglePoll } = useContext(ModalContext);
@@ -59,18 +60,6 @@ const MyPolls = () => {
     setViewResults((prev) => !prev);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  };
-
   const [showAction, setShowAction] = useState(false);
   const HandleActions = () => {
     setShowAction((prev) => !prev);
@@ -99,7 +88,9 @@ const MyPolls = () => {
           return <Spin />;
         } else {
           const isActive = polls
-            .filter((poll) => poll.is_closed === false)
+            .filter(
+              (poll) => poll.is_closed === false && poll?.options?.length > 1
+            )
             .reverse();
           return isActive?.length > 0 ? (
             isActive?.map((poll, index) => (
@@ -132,7 +123,9 @@ const MyPolls = () => {
         if (polls?.length === 0) {
           return <Spin />;
         } else {
-          const isClosed = polls.filter((poll) => poll.is_closed).reverse();
+          const isClosed = polls
+            .filter((poll) => poll.is_closed && poll?.options?.length > 1)
+            .reverse();
           return isClosed?.length > 0 ? (
             isClosed?.map((poll, index) => (
               <Polls
@@ -165,7 +158,7 @@ const MyPolls = () => {
         if (polls.length === 0) {
           return <Spin />;
         } else {
-          const allPolls = polls.filter((poll) => poll?.options?.length > 0);
+          const allPolls = polls.filter((poll) => poll?.options?.length > 1);
           return allPolls.length > 0 ? (
             allPolls
               ?.reverse()

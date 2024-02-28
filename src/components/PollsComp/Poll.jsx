@@ -1,5 +1,3 @@
-import { IoIosCheckmarkCircle } from "react-icons/io";
-
 export const Poll = ({
   title,
   allVotes,
@@ -7,12 +5,11 @@ export const Poll = ({
   name,
   id,
   cast,
-  setContent,
+  selectedOptionId,
+  handleOptionChange
 }) => {
-  // console.log(cast);
   const percent =
     totalVotes !== 0 ? Math.round((allVotes / totalVotes) * 100) : 0;
-  // console.log(title);
   return (
     <label
       htmlFor={title}
@@ -20,26 +17,24 @@ export const Poll = ({
     >
       <div
         className="absolute h-full w-[75%] py-7 bg-purple-900 rounded-[10px]"
-        // style={{ width: `${percent}%` }}
-        style={{ width: `0%` }}
-      >
-      </div>
+        style={{ width: `${percent}%` }}
+      ></div>
       <div className="w-full flex justify-between">
         <span className="text-white font-bold z-50 ml-6">{title}</span>
-        <span className="text-white font-bold z-50">0%</span>
+        <span className="text-white font-bold z-50">{percent}%</span>
       </div>
       {cast && (
         <input
           type="radio"
           name={name}
-          id={title}
+          id={id}
+          value={title}
           className="cursor-pointer w-6"
-          onChange={() =>
-            setContent((prev) => ({
-              ...prev,
-              content: title,
-            }))
-          }
+          onChange={() => {
+            console.log('Clicked radio button for:', id);
+            handleOptionChange(id);
+          }}          
+          checked={selectedOptionId === id}
         />
       )}
     </label>

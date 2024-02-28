@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from "react";
-import "./styles.css";
+import { Dialog } from "@mui/material";
 import MainLayout from "Layout/MainLayout";
-import { Polls } from "components/PollsComp/Polls";
-import { PollsNotification } from "components/PollsComp/RightComp";
-import { SuggestedPolls } from "components/PollsComp/SuggestedPolls";
+import { PollsApi, VoteApi, getToken } from "api/services/auth&poll";
+import ActionButton from "components/Commons/Button";
+import Modal from "components/Modals/Modal";
+import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
+import { CreateCastActions } from "components/PollsComp/CreateCastActions";
 import { FindPolls } from "components/PollsComp/FindPolls";
 import { Notifications } from "components/PollsComp/Notification";
-import { CreateCastActions } from "components/PollsComp/CreateCastActions";
+import { Polls } from "components/PollsComp/Polls";
 import { PromotedPolls } from "components/PollsComp/PromotedPolls";
-import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
-import { Dialog, DialogContent } from "@mui/material";
-import Modal from "components/Modals/Modal";
-import { IoMdClose } from "react-icons/io";
-import InputField from "components/Commons/InputField";
-import ActionButton from "components/Commons/Button";
-import { CastVoteApi, PollsApi, getToken } from "api/services/auth&poll";
-import toast from "react-hot-toast";
-import optionss from "utils/options.json";
-import { url } from "utils/index";
+import { PollsNotification } from "components/PollsComp/RightComp";
+import { SuggestedPolls } from "components/PollsComp/SuggestedPolls";
 import Spin from "components/Spin/Spin";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { IoMdClose } from "react-icons/io";
+import "./styles.css";
+import { formatDate } from "utils/helper";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
@@ -39,15 +37,16 @@ const Voting = () => {
   const [viewType, setViewType] = useState("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [PaidPoll, setPaidPoll] = useState(false);
-  const [PayNow, setPayNow] = useState(false);
-  const [Success, setSuccess] = useState(false);
   const [showPaidVotes, setShowPaidVotes] = useState(false);
+  const [castVotes, setCastVotes] = useState(false);
 
-  const [singlePoll, setSinglePoll] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [APoll, setAPoll] = useState({});
+  const [loading, setLoading] = useState(false);
   const [numberOfVotes, setNumberOfVotes] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
   const [payNowAmount, setPayNowAmount] = useState(0);
+  const [PayNow, setPayNow] = useState(false);
+  const [Success, setSuccess] = useState(false);
 
   const handleNumberOfVotesChange = (e) => {
     const input = e.target.value;
@@ -68,6 +67,31 @@ const Voting = () => {
     setPayNowAmount(numberOfVotes * 2000 * (currency === "USD" ? 1 / 1900 : 1));
   };
 
+  const HandlePayNow = () => {
+    setPayNow(true);
+  };
+
+  const HandlePaySuccess = () => {
+    setSuccess(true);
+  };
+
+  const HandleContinue = () => {
+    setSuccess(false);
+    setPayNow(false);
+    setPaidPoll(false);
+    setShowPaidVotes(true);
+  };
+
+  const CastPaidVotes = () => {
+    setCastVotes(true);
+  };
+
+  const [allVotesValue, setAllVotesValue] = useState(0);
+
+  const handleAll = () => {
+    setAllVotesValue(numberOfVotes);
+  };
+
   const HandleNotification = () => {
     setNotify(true);
   };
@@ -77,9 +101,8 @@ const Voting = () => {
   };
 
   const HandlePoll = (pollData) => {
-    setSinglePoll(pollData);
+    setAPoll(pollData);
     setSelectedPoll(true);
-    setShowPaidVotes(false);
   };
 
   const handleMyPolls = async (e) => {
@@ -107,25 +130,27 @@ const Voting = () => {
           const isPrivate = polls.filter(
             (poll) =>
               poll.poll_access.toLowerCase() === "private" &&
-              poll?.options?.length > 0
+              poll?.options?.length > 1
           );
           return isPrivate.length > 0 ? (
-            isPrivate?.reverse().map((poll, index) => (
-              <Polls
-                key={index}
-                // onClick={() => HandlePoll(poll)}
-                authorName={"authorName"}
-                createdAt={"createdAt"}
-                question={poll.question}
-                options={poll?.options?.length > 1 && poll?.options}
-                daysRemaining={poll.close_time}
-                totalVotes={"totalVotes"}
-                backgroundImageUrl={
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
-                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-              />
-            ))
+            isPrivate
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={"authorName"}
+                  createdAt={"createdAt"}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  totalVotes={"totalVotes"}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
           ) : (
             <p className="mt-20">No polls to display</p>
           );
@@ -137,25 +162,27 @@ const Voting = () => {
           const isPublic = polls.filter(
             (poll) =>
               poll.poll_access.toLowerCase() === "public" &&
-              poll?.options?.length > 0
+              poll?.options?.length > 1
           );
           return isPublic.length > 0 ? (
-            isPublic?.reverse().map((poll, index) => (
-              <Polls
-                key={index}
-                // onClick={() => HandlePoll(poll)}
-                authorName={"authorName"}
-                createdAt={"createdAt"}
-                question={poll.question}
-                options={poll?.options?.length > 1 && poll?.options}
-                daysRemaining={poll.close_time}
-                totalVotes={"totalVotes"}
-                backgroundImageUrl={
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
-                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-              />
-            ))
+            isPublic
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={"authorName"}
+                  createdAt={"createdAt"}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  totalVotes={"totalVotes"}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
           ) : (
             <p className="mt-20">No polls to display</p>
           );
@@ -165,24 +192,26 @@ const Voting = () => {
         if (polls.length === 0) {
           return <Spin />;
         } else {
-          const allPolls = polls.filter((poll) => poll?.options?.length > 0);
+          const allPolls = polls.filter((poll) => poll?.options?.length > 1);
           return allPolls.length > 0 ? (
-            allPolls?.reverse().map((poll, index) => (
-              <Polls
-                key={index}
-                onClick={() => HandlePoll(poll)}
-                authorName={"authorName"}
-                createdAt={"createdAt"}
-                question={poll.question}
-                options={poll?.options?.length > 1 && poll?.options}
-                daysRemaining={poll.close_time}
-                totalVotes={"totalVotes"}
-                backgroundImageUrl={
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
-                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-              />
-            ))
+            allPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={"authorName"}
+                  createdAt={"createdAt"}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  totalVotes={"totalVotes"}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
           ) : (
             <p className="mt-20">No polls to display</p>
           );
@@ -190,67 +219,31 @@ const Voting = () => {
     }
   };
 
-
   const onSearch = () => {};
   const onFilterClick = () => {};
 
-  const HandlePaidPoll = () => {
-    if (singlePoll.type.toLowerCase() === "paid") {
-      setPaidPoll(true);
-    }
+  const [selectedOptionId, setSelectedOptionId] = useState(null);
+
+  const handleOptionChange = (id) => {
+    setSelectedOptionId(id);
   };
 
-  const HandlePayNow = () => {
-    setPayNow(true);
-  };
-
-  const HandlePaySuccess = () => {
-    setSuccess(true);
-  };
-
-  const HandleContinue = () => {
-    setSuccess(false);
-    setPayNow(false);
-    setPaidPoll(false);
-    setShowPaidVotes(true);
-  };
-
-  const [castVotes, setCastVotes] = useState(false);
-
-  const CastPaidVotes = () => {
-    setCastVotes(true);
-  };
-
-  const [allVotesValue, setAllVotesValue] = useState(0);
-
-  const handleAll = () => {
-    setAllVotesValue(numberOfVotes);
-  };
-
-  const handleSubmitFreeVote = async () => {
-    const load = {
-      post_id: singlePoll.vote_id,
-      content: singlePoll.content,
-      cost: 12,
+  const handleSubmitVote = async () => {
+    const data = {
+      option_id: selectedOptionId,
     };
-    console.log(load, "CastVoteload");
+
+    console.log(data, "castvote_data");
 
     try {
       setLoading(true);
-      const resp = await fetch(`${url}/poll/votes/`, {
-        method: "POST",
-        headers: {
-          Authorization: "Token " + token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(load),
-      });
-      const result = await resp.json();
-
-      if (result?.have_Voted) {
-        toast.success("Vote casted successfully");
-      }
+      const resp = await VoteApi(data, APoll.id);
+      console.log("VoteApi_resp", resp);
+      // if (result?.have_Voted) {
+      //   toast.success("Vote casted successfully");
+      // }
     } catch (error) {
+      console.log(error);
       toast.error("Something went wrong" || error.message);
     } finally {
       handleMyPolls();
@@ -262,13 +255,12 @@ const Voting = () => {
     }
   };
 
-  const HandleVoteSubmit = () => {
-    toast.success("Vote Casted Successfully");
-    setAllVotesValue(null);
-    setCastVotes(false);
-    setNumberOfVotes("");
-    setSelectedPoll(null);
-  };
+  // const [voted, setVoted] = useState(false);
+
+  // const handleVote = () => {
+  //   handleSubmitVote();
+  //   setVoted(true);
+  // };
 
   return (
     <MainLayout>
@@ -364,6 +356,7 @@ const Voting = () => {
           {/* Web */}
           <div className="flex flex-row gap-4 ">
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 hidden md:flex md:flex-col bg-[#fff]">
+              <h1>Voting</h1>
               <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
 
               <img
@@ -433,7 +426,7 @@ const Voting = () => {
       )}
 
       {/* MOBILE */}
-      {/* {selectedPoll && (
+      {selectedPoll && (
         <div className="pt-36 lg:pt-48 px-4 flex lg:hidden flex-col justify-between w-full h-screen">
           <div className="lg:hidden w-full">
             <div
@@ -445,16 +438,15 @@ const Voting = () => {
             </div>
 
             <Polls
-              // className="w-full"
-              onClick={HandlePaidPoll}
-              authorName={singlePoll.username}
-              createdAt={singlePoll.created_at}
-              question={singlePoll.question}
-              setContent={setSinglePoll}
-              cast={singlePoll.vote_id}
-              optionList={singlePoll?.options_list}
-              daysRemaining={singlePoll.daysRemaining || "No duration"}
-              totalVotes={singlePoll.vote_count}
+              authorName={"authorName"}
+              createdAt={"createdAt"}
+              question={APoll.question}
+              daysRemaining={APoll.close_time}
+              totalVotes={"totalVotes"}
+              cast={APoll.id}
+              selectedOptionId={selectedOptionId}
+              handleOptionChange={handleOptionChange}
+              options={APoll?.options?.length > 1 && APoll?.options}
               backgroundImageUrl="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             />
 
@@ -468,7 +460,7 @@ const Voting = () => {
               <ActionButton
                 label={loading ? "Voting" : "Vote"}
                 bg={"pruplr"}
-                onClick={handleSubmitFreeVote}
+                onClick={handleSubmitVote}
                 loading={loading}
               />
             </div>
@@ -479,10 +471,10 @@ const Voting = () => {
             className="mb-6 w-full lg:mb-10 lg:hidden"
           />
         </div>
-      )} */}
+      )}
 
       {/* WEB */}
-      {/* {selectedPoll && !PaidPoll && (
+      {selectedPoll && !PaidPoll && (
         <div className="hidden lg:flex">
           <Modal>
             <div className="bg-white w-[50%] p-14">
@@ -502,52 +494,50 @@ const Voting = () => {
               {!showPaidVotes && (
                 <>
                   <Polls
-                    onClick={HandlePaidPoll}
-                    className="w-[100%] p-6 mt-4 cursor-pointer"
-                    authorName={singlePoll.username}
-                    createdAt={singlePoll.created_at}
-                    question={singlePoll.question}
-                    cast={singlePoll.vote_id}
-                    setContent={setSinglePoll}
-                    optionList={singlePoll.options_list}
-                    daysRemaining={singlePoll.daysRemaining || "No duration"}
-                    totalVotes={singlePoll.vote_count}
+                    authorName={"authorName"}
+                    createdAt={"createdAt"}
+                    question={APoll.question}
+                    daysRemaining={APoll.close_time}
+                    totalVotes={"totalVotes"}
+                    cast={APoll.id}
+                    selectedOptionId={selectedOptionId}
+                    handleOptionChange={handleOptionChange}
+                    options={APoll?.options?.length > 1 && APoll?.options}
                     backgroundImageUrl="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   />
                   <div className="mt-8 ">
                     <ActionButton
                       label={loading ? "Voting" : "Vote"}
                       bg={"pruplr"}
-                      onClick={handleSubmitFreeVote}
+                      onClick={handleSubmitVote}
                       loading={loading}
                     />
                   </div>
                 </>
               )}
 
-              {showPaidVotes && !castVotes && (
+              {/* {showPaidVotes && !castVotes && (
                 <>
                   <Polls
                     onClick={CastPaidVotes}
                     className="w-[100%] p-6 mt-4 cursor-pointer"
-                    authorName={singlePoll.username}
-                    createdAt={singlePoll.created_at}
-                    question={singlePoll.question}
-                    // options={options}
-                    optionList={singlePoll.options_list}
-                    daysRemaining={singlePoll.daysRemaining || "No duration"}
-                    totalVotes={singlePoll.vote_count}
+                     authorName={"authorName"}
+                    createdAt={"createdAt"}
+                    question={APoll.question}
+                    options={APoll?.options?.length > 1 && APoll?.options}
+                    daysRemaining={APoll.close_time}
+                    totalVotes={"totalVotes"}
                     backgroundImageUrl="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   />
                   <div className="mt-20 text-center bg-orange-400 py-3 rounded-[30px] w-[35%] mx-auto text-white ">
                     You have {numberOfVotes} votes
                   </div>
                 </>
-              )}
+              )} */}
             </div>
           </Modal>
         </div>
-      )} */}
+      )}
 
       {/* {PaidPoll && !PayNow && (
         <Modal>

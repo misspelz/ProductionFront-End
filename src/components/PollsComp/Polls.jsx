@@ -13,21 +13,20 @@ export const Polls = ({
   daysRemaining,
   totalVotes,
   backgroundImageUrl,
-  className = "border w-full max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
+  className = "border w-full p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
   onClose,
   onView,
   cast,
-  setContent,
   HandleEdit,
   HandleDelete,
   HandleActions,
   showAction,
+  selectedOptionId,
+  handleOptionChange
 }) => {
-  // const totalNumVotes = optionList?.reduce(
-  //   (total, option) => total + option.all_vote,
-  //   0
-  // );
+  const totalNumVotes =
+    options && options?.reduce((total, option) => total + option.votes, 0);
 
   return (
     <div
@@ -59,27 +58,29 @@ export const Polls = ({
 
       {options
         ? options.map((o, index) => (
-            <Poll
-              key={o.id}
-              title={o.content}
-              allVotes={o.all_vote}
-              totalVotes={"totalNumVotes"}
-              name={"vote"}
-              id={o.id}
-              cast={cast}
-              setContent={setContent}
-            />
+          <Poll
+          key={o.id}
+          title={o.content}
+          allVotes={o.votes}
+          totalVotes={totalNumVotes}
+          id={o.id}
+          cast={cast}
+          handleOptionChange={handleOptionChange}
+          selectedOptionId={selectedOptionId}
+        />
           ))
         : null}
 
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
           <img src="images/time.png" alt="time-icon" />
-          <span className="text-[#000] text-[12px] font-[500]">
-            {daysRemaining}
-          </span>
+          <div className="text-[#000] text-[12px] font-[500]">
+            <span className="text-red-600">Ends:</span> {daysRemaining}
+          </div>
         </div>
-        <div className="text-[#000] text-[12px] font-[500]">totalNumVotes</div>
+        <div className="text-[#000] text-[12px] font-[500]">
+          {totalNumVotes}
+        </div>
       </div>
 
       {myPolls && (
@@ -104,7 +105,7 @@ export const Polls = ({
               <div className="flex  gap-3 self-start">
                 <FaVoteYea className="text-black text-xl" />
                 <div>
-                  <h2 className="text-black">0</h2>
+                  <h2 className="text-black">{totalNumVotes}</h2>
                   <span className="text-black text-[14px]">votes</span>
                 </div>
               </div>
