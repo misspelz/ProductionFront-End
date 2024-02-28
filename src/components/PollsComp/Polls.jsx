@@ -13,12 +13,11 @@ export const Polls = ({
   daysRemaining,
   totalVotes,
   backgroundImageUrl,
-  className = "border w-full max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
+  className = "border w-full p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
   onClose,
   onView,
   cast,
-  setContent,
   HandleEdit,
   HandleDelete,
   HandleActions,
@@ -66,7 +65,6 @@ export const Polls = ({
           totalVotes={totalNumVotes}
           id={o.id}
           cast={cast}
-          setContent={setContent}
           handleOptionChange={handleOptionChange}
           selectedOptionId={selectedOptionId}
         />
@@ -76,9 +74,9 @@ export const Polls = ({
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
           <img src="images/time.png" alt="time-icon" />
-          <span className="text-[#000] text-[12px] font-[500]">
-            {daysRemaining}
-          </span>
+          <div className="text-[#000] text-[12px] font-[500]">
+            <span className="text-red-600">Ends:</span> {daysRemaining}
+          </div>
         </div>
         <div className="text-[#000] text-[12px] font-[500]">
           {totalNumVotes}

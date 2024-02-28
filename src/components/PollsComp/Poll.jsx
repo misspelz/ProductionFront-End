@@ -5,14 +5,11 @@ export const Poll = ({
   name,
   id,
   cast,
-  setContent,
-  content,
   selectedOptionId,
   handleOptionChange
 }) => {
   const percent =
     totalVotes !== 0 ? Math.round((allVotes / totalVotes) * 100) : 0;
-  // console.log(title);
   return (
     <label
       htmlFor={title}
@@ -21,7 +18,6 @@ export const Poll = ({
       <div
         className="absolute h-full w-[75%] py-7 bg-purple-900 rounded-[10px]"
         style={{ width: `${percent}%` }}
-        // style={{ width: `0%` }}
       ></div>
       <div className="w-full flex justify-between">
         <span className="text-white font-bold z-50 ml-6">{title}</span>

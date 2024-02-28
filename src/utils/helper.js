@@ -68,3 +68,14 @@ export const advertCategory = [
     value: 'unknown',
   },
 ];
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};
