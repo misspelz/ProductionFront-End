@@ -117,10 +117,9 @@ export const CreatePollApi = async (pollData) => {
 };
 
 export const UpdatePollApi = async (pollData, pollID) => {
-  console.log("UpdatePollApi", pollData)
-  console.log("UpdatePollID", pollID)
+  const stringedId = JSON.stringify(pollID);
   const res = await axios.put(
-    `${url}/api/polls/${pollID}/`,
+    `${url}/api/polls/${stringedId}/`,
     { ...pollData },
     {
       headers: {
@@ -144,6 +143,21 @@ export const CastVoteApi = async (payload) => {
   const res = await axios.post(
     `${url}/api/poll/cast-vote/`,
     { ...payload },
+    {
+      headers: {
+        Authorization: `Token ${getLoginToken()}`,
+      },
+    }
+  );
+  return res;
+};
+
+export const VoteApi = async (option_id, poll_id) => {
+  console.log("VoteApi_optionID", option_id);
+  console.log("VoteApi_pollID", poll_id);
+  const res = await axios.post(
+    `${url}/api/polls/${poll_id}/vote`,
+    { ...option_id },
     {
       headers: {
         Authorization: `Token ${getLoginToken()}`,

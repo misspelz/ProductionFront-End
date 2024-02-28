@@ -23,11 +23,11 @@ export const Polls = ({
   HandleDelete,
   HandleActions,
   showAction,
+  selectedOptionId,
+  handleOptionChange
 }) => {
-  // const totalNumVotes = optionList?.reduce(
-  //   (total, option) => total + option.all_vote,
-  //   0
-  // );
+  const totalNumVotes =
+    options && options?.reduce((total, option) => total + option.votes, 0);
 
   return (
     <div
@@ -59,16 +59,17 @@ export const Polls = ({
 
       {options
         ? options.map((o, index) => (
-            <Poll
-              key={o.id}
-              title={o.content}
-              allVotes={o.all_vote}
-              totalVotes={"totalNumVotes"}
-              name={"vote"}
-              id={o.id}
-              cast={cast}
-              setContent={setContent}
-            />
+          <Poll
+          key={o.id}
+          title={o.content}
+          allVotes={o.votes}
+          totalVotes={totalNumVotes}
+          id={o.id}
+          cast={cast}
+          setContent={setContent}
+          handleOptionChange={handleOptionChange}
+          selectedOptionId={selectedOptionId}
+        />
           ))
         : null}
 
@@ -79,7 +80,9 @@ export const Polls = ({
             {daysRemaining}
           </span>
         </div>
-        <div className="text-[#000] text-[12px] font-[500]">totalNumVotes</div>
+        <div className="text-[#000] text-[12px] font-[500]">
+          {totalNumVotes}
+        </div>
       </div>
 
       {myPolls && (
@@ -104,7 +107,7 @@ export const Polls = ({
               <div className="flex  gap-3 self-start">
                 <FaVoteYea className="text-black text-xl" />
                 <div>
-                  <h2 className="text-black">0</h2>
+                  <h2 className="text-black">{totalNumVotes}</h2>
                   <span className="text-black text-[14px]">votes</span>
                 </div>
               </div>
