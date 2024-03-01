@@ -29,7 +29,7 @@ const WelcomeComp = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [adTexts.length]); // Empty dependency array ensures that effect runs only once
+  }, [adTexts.length]);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {

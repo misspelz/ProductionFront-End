@@ -1,6 +1,11 @@
 import { Dialog } from "@mui/material";
 import MainLayout from "Layout/MainLayout";
-import { PollsApi, VoteApi, getToken } from "api/services/auth&poll";
+import {
+  PollsApi,
+  VoteApi,
+  getLoginToken,
+  getToken,
+} from "api/services/auth&poll";
 import ActionButton from "components/Commons/Button";
 import Modal from "components/Modals/Modal";
 import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
@@ -17,19 +22,20 @@ import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import "./styles.css";
 import { formatDate } from "utils/helper";
+import { url } from "utils/index";
+import axios from "axios";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
   const userInfo = JSON.parse(userInfoString);
-
   const [token, setToken] = useState(null);
+
   useEffect(() => {
     const token = getToken();
     setToken(token);
   }, []);
 
   const [polls, setPolls] = useState([]);
-  console.log("polls", polls);
 
   const [selectedPoll, setSelectedPoll] = useState(false);
   const [Notify, setNotify] = useState(false);
@@ -105,20 +111,21 @@ const Voting = () => {
     setSelectedPoll(true);
   };
 
-  const handleMyPolls = async (e) => {
+  const handleAllPolls = async (e) => {
     try {
       const resp = await PollsApi();
-      console.log("pollsres", resp);
+
       if (resp.data.status) {
         setPolls(resp?.data?.data);
       }
     } catch (error) {
-      console.log(error);
+      console.log("allpolls", error);
+      toast.error(error.response.data.message || "Something went wrong!");
     }
   };
 
   useEffect(() => {
-    handleMyPolls();
+    handleAllPolls();
   }, []);
 
   const renderPolls = () => {
@@ -144,11 +151,10 @@ const Voting = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
-                  totalVotes={"totalVotes"}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
-                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
           ) : (
@@ -176,11 +182,10 @@ const Voting = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
-                  totalVotes={"totalVotes"}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
-                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
           ) : (
@@ -205,11 +210,10 @@ const Voting = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
-                  totalVotes={"totalVotes"}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
-                  className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
           ) : (
@@ -219,9 +223,6 @@ const Voting = () => {
     }
   };
 
-  const onSearch = () => {};
-  const onFilterClick = () => {};
-
   const [selectedOptionId, setSelectedOptionId] = useState(null);
 
   const handleOptionChange = (id) => {
@@ -229,24 +230,22 @@ const Voting = () => {
   };
 
   const handleSubmitVote = async () => {
-    const data = {
+    const dataOptionId = {
       option_id: selectedOptionId,
     };
 
-    console.log(data, "castvote_data");
-
     try {
       setLoading(true);
-      const resp = await VoteApi(data, APoll.id);
-      console.log("VoteApi_resp", resp);
-      // if (result?.have_Voted) {
-      //   toast.success("Vote casted successfully");
-      // }
+      const resp = await VoteApi(dataOptionId, APoll.id);
+
+      if (resp.data.status) {
+        toast.success("Vote casted successfully");
+      }
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong" || error.message);
+     console.log("vote", error);
+      toast.error(error.response.data.message || "Something went wrong!");
     } finally {
-      handleMyPolls();
+      handleAllPolls();
       setLoading(false);
       setAllVotesValue(null);
       setCastVotes(false);
@@ -261,6 +260,45 @@ const Voting = () => {
   //   handleSubmitVote();
   //   setVoted(true);
   // };
+
+  const [searchText, setSearchText] = useState("");
+
+  const onSearch = (text) => {
+    setSearchText(text);
+    onFetchPolls(text);
+  };
+
+  const onFetchPolls = async (text) => {
+    try {
+      let res;
+
+      if (text === "") {
+        res = await axios.get(`${url}/api/polls/find/`, {
+          headers: {
+            Authorization: `Token ${getLoginToken()}`,
+          },
+        });
+      } else {
+        res = await axios.get(`${url}/api/polls/find/`, {
+          params: { find: text },
+          headers: {
+            Authorization: `Token ${getLoginToken()}`,
+          },
+        });
+      }
+      
+      setPolls(res?.data?.data);
+    } catch (error) {
+      console.log("findpolls", error);
+      toast.error(error.response.data.message || "Something went wrong!");
+    }
+  };
+
+  useEffect(() => {
+    if (searchText !== "") {
+      onFetchPolls(searchText);
+    }
+  }, [searchText]);
 
   return (
     <MainLayout>
@@ -295,7 +333,7 @@ const Voting = () => {
           {/* Mobile */}
           {CastVote && (
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 flex md:hidden flex-col bg-[#fff]">
-              <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
+              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
               <img
                 src="images/fifa.png"
                 alt="fifa-pics"
@@ -347,7 +385,7 @@ const Voting = () => {
               >
                 <CreatePoll
                   onClose={setShowCreateModal}
-                  fetchPolls={handleMyPolls}
+                  fetchPolls={handleAllPolls}
                 />
               </Dialog>
             </div>
@@ -357,7 +395,7 @@ const Voting = () => {
           <div className="flex flex-row gap-4 ">
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <h1>Voting</h1>
-              <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
+              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
               <img
                 src="images/fifa.png"
@@ -410,7 +448,7 @@ const Voting = () => {
               >
                 <CreatePoll
                   onClose={setShowCreateModal}
-                  fetchPolls={handleMyPolls}
+                  fetchPolls={handleAllPolls}
                 />
               </Dialog>
             </div>
@@ -441,8 +479,7 @@ const Voting = () => {
               authorName={"authorName"}
               createdAt={"createdAt"}
               question={APoll.question}
-              daysRemaining={APoll.close_time}
-              totalVotes={"totalVotes"}
+              daysRemaining={formatDate(APoll.close_time)}
               cast={APoll.id}
               selectedOptionId={selectedOptionId}
               handleOptionChange={handleOptionChange}
@@ -494,11 +531,11 @@ const Voting = () => {
               {!showPaidVotes && (
                 <>
                   <Polls
+                    className="lg:max-w-full lg:p-6"
                     authorName={"authorName"}
                     createdAt={"createdAt"}
                     question={APoll.question}
-                    daysRemaining={APoll.close_time}
-                    totalVotes={"totalVotes"}
+                    daysRemaining={formatDate(APoll.close_time)}
                     cast={APoll.id}
                     selectedOptionId={selectedOptionId}
                     handleOptionChange={handleOptionChange}
@@ -526,7 +563,7 @@ const Voting = () => {
                     question={APoll.question}
                     options={APoll?.options?.length > 1 && APoll?.options}
                     daysRemaining={APoll.close_time}
-                    totalVotes={"totalVotes"}
+                    
                     backgroundImageUrl="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   />
                   <div className="mt-20 text-center bg-orange-400 py-3 rounded-[30px] w-[35%] mx-auto text-white ">
