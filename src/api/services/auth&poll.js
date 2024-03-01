@@ -105,7 +105,7 @@ export const ForgotPassword = async (data) => {
 
 export const CreatePollApi = async (pollData) => {
   const res = await axios.post(
-    `${url}/api/polls/`,
+    `${url}/api/polls/user/`,
     { ...pollData },
     {
       headers: {
@@ -117,9 +117,8 @@ export const CreatePollApi = async (pollData) => {
 };
 
 export const UpdatePollApi = async (pollData, pollID) => {
-  const stringedId = JSON.stringify(pollID);
   const res = await axios.put(
-    `${url}/api/polls/${stringedId}/`,
+    `${url}/api/polls/user/${pollID}/`,
     { ...pollData },
     {
       headers: {
@@ -127,6 +126,15 @@ export const UpdatePollApi = async (pollData, pollID) => {
       },
     }
   );
+  return res;
+};
+
+export const DeletePollApi = async (pollID) => {
+  const res = await axios.delete(`${url}/api/polls/user/${pollID}/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
   return res;
 };
 
@@ -139,39 +147,81 @@ export const PollsApi = async () => {
   return res;
 };
 
-export const CastVoteApi = async (payload) => {
-  const res = await axios.post(
-    `${url}/api/poll/cast-vote/`,
-    { ...payload },
-    {
-      headers: {
-        Authorization: `Token ${getLoginToken()}`,
-      },
-    }
-  );
-  return res;
-};
-
-export const VoteApi = async (option_id, poll_id) => {
-  console.log("VoteApi_optionID", option_id);
-  console.log("VoteApi_pollID", poll_id);
-  const res = await axios.post(
-    `${url}/api/polls/${poll_id}/vote`,
-    { ...option_id },
-    {
-      headers: {
-        Authorization: `Token ${getLoginToken()}`,
-      },
-    }
-  );
-  return res;
-};
-
-export const SuggestedPollsApi = async () => {
-  const res = await axios.get(`${url}/api/poll/suggested-polls/`, {
+export const MyPollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/user/`, {
     headers: {
       Authorization: `Token ${getLoginToken()}`,
     },
   });
+  return res;
+};
+
+export const SuggestedPollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/suggested/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const PromotedPollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/promoted/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const ActivePollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/active/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const EndedPollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/ended/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const FindPollsApi = async () => {
+  const res = await axios.get(`${url}/api/polls/find/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const ClosePollApi = async (poll_id) => {
+  console.log("ClosePoll_pollID", poll_id);
+  const res = await axios.get(`${url}/api/polls/user/${poll_id}/close/`, {
+    headers: {
+      Authorization: `Token ${getLoginToken()}`,
+    },
+  });
+  return res;
+};
+
+export const VoteApi = async (data, poll_id) => {
+  console.log("Vote_data", data);
+  console.log("Vote_poll_id", poll_id);
+  const res = await axios.post(
+    `${url}/api/polls/${poll_id}/vote/`,
+    { ...data },
+    {
+      headers: {
+        Authorization: `Token ${getLoginToken()}`,
+      },
+    }
+  );
   return res;
 };

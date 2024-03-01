@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Poll } from "./Poll";
 import { BsEye } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaVoteYea } from "react-icons/fa";
+import { ModalContext } from "Context/ModalContext";
 
 export const Polls = ({
   onClick,
@@ -13,7 +14,7 @@ export const Polls = ({
   daysRemaining,
   totalVotes,
   backgroundImageUrl,
-  className = "border w-full p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
+  className = "border w-full lg:max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
   onClose,
   onView,
@@ -21,12 +22,16 @@ export const Polls = ({
   HandleEdit,
   HandleDelete,
   HandleActions,
-  showAction,
   selectedOptionId,
-  handleOptionChange
+  handleOptionChange,
 }) => {
+  const { showAction, setShowAction } = useContext(ModalContext);
   const totalNumVotes =
     options && options?.reduce((total, option) => total + option.votes, 0);
+
+  const toggleShowAction = () => {
+    setShowAction(!showAction);
+  };
 
   return (
     <div
@@ -58,16 +63,17 @@ export const Polls = ({
 
       {options
         ? options.map((o, index) => (
-          <Poll
-          key={o.id}
-          title={o.content}
-          allVotes={o.votes}
-          totalVotes={totalNumVotes}
-          id={o.id}
-          cast={cast}
-          handleOptionChange={handleOptionChange}
-          selectedOptionId={selectedOptionId}
-        />
+            <Poll
+              key={o.id}
+              title={o.content}
+              allVotes={o.votes}
+              totalVotes={totalNumVotes}
+              id={o.id}
+              cast={cast}
+              handleOptionChange={handleOptionChange}
+              selectedOptionId={selectedOptionId}
+              onClick={() => setShowAction(true)}
+            />
           ))
         : null}
 
@@ -109,20 +115,20 @@ export const Polls = ({
                   <span className="text-black text-[14px]">votes</span>
                 </div>
               </div>
-              <div onClick={HandleActions}>
+              <div onClick={toggleShowAction}>
                 <CiMenuKebab className="text-black text-xl" />
               </div>
               {showAction && (
                 <div className="absolute flex flex-col gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[2rem]">
                   <button
                     onClick={HandleEdit}
-                    className="text-[1.2rem] md:text-[1.4rem] text-[#4f0da3] text-start font-bold"
+                    className="text-[1rem] md:text-[1.4rem] text-[#4f0da3] text-start font-bold"
                   >
                     Edit Poll
                   </button>
                   <button
                     onClick={HandleDelete}
-                    className="text-[1.2rem] md:text-[1.4rem] text-red-600 font-bold"
+                    className="text-[1rem] md:text-[1.4rem] text-red-600 font-bold"
                   >
                     Delete Poll
                   </button>

@@ -15,7 +15,7 @@ const durationOptions = [
 
 const CreatePoll = ({ onClose, fetchPolls }) => {
   const { singlePoll } = useContext(ModalContext);
-  console.log("singlePoll", singlePoll);
+
   const [isLoading, setIsLoading] = useState(false);
   const initialPollData = {
     question: "",
@@ -31,7 +31,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     singlePoll ? { ...singlePoll } : initialPollData
   );
 
-  console.log("pollData", pollData);
+
 
   const handleInputChange = (name, value) => {
     if (name === "is_paid" && !value) {
@@ -84,37 +84,51 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
 
   const handleCreateandEditPoll = async (e) => {
     e.preventDefault();
-  
-    if (!pollData.question || !pollData.options || pollData.options.length === 0) {
+
+    if (
+      !pollData.question ||
+      !pollData.options ||
+      pollData.options.length === 0
+    ) {
       toast.error("Missing required fields");
       return;
     }
-  
+
     try {
       setIsLoading(true);
-  
+
       let apiCall;
       if (singlePoll) {
         apiCall = UpdatePollApi;
       } else {
         apiCall = CreatePollApi;
       }
-  
+
       const resp = await apiCall(pollData, singlePoll ? singlePoll.id : null);
-      console.log(resp, "createpoll");
+     
       if (resp.data.status) {
-        toast.success(singlePoll ? "Poll updated successfully" : "Poll created successfully");
+        toast.success(
+          singlePoll ? "Poll updated successfully" : "Poll created successfully"
+        );
       }
-      
     } catch (error) {
-      console.error("createpollerror", error);
+      console.log("createandedit", error);
+      toast.error(error.response.data.message || "Something went wrong!");
     } finally {
       fetchPolls();
       setIsLoading(false);
       onClose();
     }
   };
-  
+
+  const handleDeleteOption = (index) => {
+    const updatedOptions = [...pollData.options];
+    updatedOptions.splice(index, 1);
+    setPollData((prevState) => ({
+      ...prevState,
+      options: updatedOptions,
+    }));
+  };
 
   useEffect(() => {
     if (singlePoll) {
@@ -165,7 +179,17 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
 
       {pollData.options.map((option, index) => (
         <div className="form-field" key={`option-${index}`}>
-          <label htmlFor={`options${index + 1}`}>{`Option ${index + 1}`}</label>
+          <div className="flex justify-between items-center">
+            <label htmlFor={`options${index + 1}`}>{`Option ${
+              index + 1
+            }`}</label>
+            <button
+              onClick={() => handleDeleteOption(index)}
+              className="text-red-600"
+            >
+              Delete
+            </button>
+          </div>
           <input
             type="text"
             id={`options${index + 1}`}
@@ -185,8 +209,10 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         className="add-option"
         onClick={() => handleInputChange("options", [...pollData.options, ""])}
       >
-        <div className="option-icon">+</div>
-        <span>Add option</span>
+        <p className="bg-purple-800 h-7 w-7 flex items-center justify-center text-[16px] rounded-full text-white font-bold">
+          +
+        </p>
+        <span className="text-[14px] md:text-[16px]">Add option</span>
       </div>
 
       <div className="form-field">
@@ -194,7 +220,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         <select
           id="poll_type"
           name="poll_type"
-          className="outline-none"
+          className="outline-none cursor-pointer"
           value={pollData.poll_type}
           onChange={(e) => handleInputChange("poll_type", e.target.value)}
         >
@@ -227,7 +253,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         <select
           id="poll_duration"
           name="poll_duration"
-          className="outline-none"
+          className="outline-none cursor-pointer"
           defaultValue=""
           value={pollData.poll_duration}
           onChange={(e) => handleInputChange("poll_duration", e.target.value)}
@@ -248,7 +274,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         <select
           id="poll_access"
           name="poll_access"
-          className="outline-none"
+          className="outline-none cursor-pointer"
           value={pollData.poll_access}
           onChange={(e) => handleInputChange("poll_access", e.target.value)}
         >

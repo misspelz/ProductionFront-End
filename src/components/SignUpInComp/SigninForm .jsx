@@ -69,7 +69,7 @@ const SigninForm = () => {
       toast.error(
         error.response.data.message ||
           error.response.data.detail ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setIsLoading(false);

@@ -1,19 +1,19 @@
 import { ModalContext } from "Context/ModalContext";
-import { ClosePollApi } from "api/services/auth&poll";
+import { DeletePollApi } from "api/services/auth&poll";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { FaTimes } from "react-icons/fa";
 
-const ClosePoll = ({ closeModal, singleClosePoll }) => {
+const DeletePoll = ({ closeModal, singleDeletePoll }) => {
   const [loading, setLoading] = useState(false);
 
   const { handleMyPolls, handleActivePolls, handleEndedPolls } =
     useContext(ModalContext);
 
-  const HandleClosePoll = async () => {
+  const HandleDeletePoll = async () => {
     try {
       setLoading(true);
-      const res = await ClosePollApi(singleClosePoll.id);
+      const res = await DeletePollApi(singleDeletePoll.id);
 
       if (res.data.status) {
         toast.success(res.data.message);
@@ -23,8 +23,8 @@ const ClosePoll = ({ closeModal, singleClosePoll }) => {
         closeModal();
       }
     } catch (error) {
-      console.log("closepollerror", error);
-      toast.error(error.message || "Something went wrong!");
+      console.log("DeletePollerror", error);
+      toast.error(error.response.data.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
@@ -81,18 +81,17 @@ const ClosePoll = ({ closeModal, singleClosePoll }) => {
             textAlign: "center",
           }}
         >
-          This poll will not be made available anymore and would be marked as
-          ended. Are you sure you want to close this poll?
+          This poll will be deleted permanently! Are you sure you want to delete this poll?
         </div>
         <button
           className="w-[165px] h-[40px] flex items-center justify-center text-white bg-[#ff0000] rounded-[64px] text-lg"
-          onClick={HandleClosePoll}
+          onClick={HandleDeletePoll}
         >
-          {loading ? "Please wait..." : "Close poll"}
+          {loading ? "Please wait..." : "Delete poll"}
         </button>
       </div>
     </div>
   );
 };
 
-export default ClosePoll;
+export default DeletePoll;

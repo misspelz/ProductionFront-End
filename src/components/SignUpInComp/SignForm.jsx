@@ -51,7 +51,6 @@ const SignForm = () => {
 
     try {
       const response = await Register(userData);
-      console.log("res", response)
 
       localStorage?.setItem("registrationData", JSON.stringify(response.data.data));
 
@@ -68,7 +67,7 @@ const SignForm = () => {
           error.response.data.detail ||
           error.response.data.data.email[0] ||
           error.response.data.message ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setIsLoading(false);

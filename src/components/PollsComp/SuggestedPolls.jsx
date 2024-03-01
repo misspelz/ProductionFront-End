@@ -1,84 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { Polls } from "./Polls";
-import styles from "./SuggestedPolls.module.css";
 import { SuggestedPollsApi } from "api/services/auth&poll";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import optionss from "utils/options.json";
+import { formatDate } from "utils/helper";
+import { Polls } from "./Polls";
+import Spin from "components/Spin/Spin";
 
-export const SuggestedPolls = () => {
+export const SuggestedPolls = ({ HandlePoll }) => {
+  const [loading, setLoading] = useState(true);
   const [suggestedPolls, setSuggestedPolls] = useState([]);
-  // console.log("suggestedPolls", suggestedPolls);
-  // const [loading, setLoading] = useState(true);
 
   const GetSuggestedPolls = async () => {
-    // try {
-    //   const res = await SuggestedPollsApi();
-    //   if (res.status === 200) {
-    //     setSuggestedPolls(res?.data);
-    //   }
-    // } catch (error) {
-    //   console.log("error", error);
-    //   toast.error(error.response.data.error || "An error occurred");
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const resp = await SuggestedPollsApi();
+
+      if (resp.data.status) {
+        setSuggestedPolls(resp?.data?.data);
+      }
+    } catch (error) {
+      console.log("SuggestedPollserror", error);
+      toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // useEffect(() => {
-  //   GetSuggestedPolls();
-  // }, []);
+  useEffect(() => {
+    GetSuggestedPolls();
+  }, []);
 
-  // if (loading) {
-  //   return <p className="mt-5">Please wait...</p>;
-  // }
+  if (loading) {
+    return <Spin />;
+  }
 
-  // if (!suggestedPolls || suggestedPolls.length === 0) {
-  //   return <p className="mt-5">No polls to display</p>;
-  // }
+  if (!suggestedPolls || suggestedPolls.length === 0) {
+    return <p className="mt-5">No polls to display</p>;
+  }
+
+  const filteredSuggestedPolls =
+    suggestedPolls &&
+    suggestedPolls.filter((poll) => poll?.options?.length > 1);
 
   return (
     <div className="flex gap-6 overflow-auto">
-      {/* {suggestedPolls.slice(0, 4).map((poll, index) => ( */}
-      <Polls
-        // key={index}
-        // onClick={() => HandlePoll(poll)}
-        authorName={"authorName"}
-        createdAt={"createdAt"}
-        question={"question"}
-        options={optionss}
-        daysRemaining={"daysRemaining"}
-        totalVotes={"totalVotes"}
-        backgroundImageUrl={
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        }
-      />
-      <Polls
-        // key={index}
-        // onClick={() => HandlePoll(poll)}
-        authorName={"authorName"}
-        createdAt={"createdAt"}
-        question={"question"}
-        options={optionss}
-        daysRemaining={"daysRemaining"}
-        totalVotes={"totalVotes"}
-        backgroundImageUrl={
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        }
-      />
-      <Polls
-        // key={index}
-        // onClick={() => HandlePoll(poll)}
-        authorName={"authorName"}
-        createdAt={"createdAt"}
-        question={"question"}
-        options={optionss}
-        daysRemaining={"daysRemaining"}
-        totalVotes={"totalVotes"}
-        backgroundImageUrl={
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        }
-      />
-      {/* ))} */}
+      {filteredSuggestedPolls.slice(0, 4).map((poll, index) => (
+        <Polls
+          key={index}
+          onClick={() => HandlePoll(poll)}
+          authorName={"authorName"}
+          createdAt={"createdAt"}
+          question={poll.question}
+          options={poll?.options?.length > 1 && poll?.options}
+          daysRemaining={formatDate(poll.close_time)}
+          totalVotes={"totalVotes"}
+          backgroundImageUrl={
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+          }
+        />
+      ))}
     </div>
   );
 };

@@ -24,12 +24,11 @@ const VerifyForm = () => {
 
   const registrationEmail = registrationData?.email
 
-
   const HandleSendOTP = async () => {
     try {
       setLoading(true);
       const response = await ReSendOTP("account_verification");
-      console.log("ReSendOTP_res", response);
+    
       if (response.status === 200) {
         toast.success(response.data.message);
       }
@@ -37,7 +36,7 @@ const VerifyForm = () => {
       toast.error(
         error.response.data.message ||
           error.response.data.error ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setLoading(false);
@@ -85,7 +84,7 @@ const VerifyForm = () => {
       toast.error(
         error.response.data.message ||
           error.response.data.error ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setIsLoading(false);

@@ -141,12 +141,6 @@ body {
   margin-bottom: 1rem;
 }
 
-.rounded-full {
-  border-radius: 50%;
-  width: 4rem;
-  height: 4rem;
-}
-
 .features{
   background-color: #fff;
   padding-bottom: 30px;
