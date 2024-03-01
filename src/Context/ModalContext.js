@@ -13,6 +13,7 @@ export const ModalContextProvider = ({ children }) => {
 
   const [singlePoll, setSinglePoll] = useState(null);
   const [polls, setPolls] = useState([]);
+  console.log("mypolls", polls);
   const [activePolls, setActivePolls] = useState([]);
   const [endedPolls, setEndedPolls] = useState([]);
   const [showAction, setShowAction] = useState(false);

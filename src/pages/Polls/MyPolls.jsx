@@ -45,6 +45,7 @@ const MyPolls = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [singleClosePoll, setSingleClosePoll] = useState(false);
   const [singleDeletePoll, setSingleDeletePoll] = useState(false);
+  const [singlePollResult, setSinglePollResult] = useState(false);
   const [viewResults, setViewResults] = useState(false);
 
   const nav = useNavigate();
@@ -77,7 +78,8 @@ const MyPolls = () => {
     setShowDeleteModal((prev) => !prev);
   };
 
-  const handleViewResults = () => {
+  const handleViewResults = (poll) => {
+    setSinglePollResult(poll);
     setViewResults((prev) => !prev);
   };
 
@@ -106,8 +108,8 @@ const MyPolls = () => {
               .map((poll, index) => (
                 <Polls
                   key={index}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -116,7 +118,7 @@ const MyPolls = () => {
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={handleViewResults}
+                  onView={() =>handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
@@ -138,8 +140,8 @@ const MyPolls = () => {
               .map((poll, index) => (
                 <Polls
                   key={index}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -148,7 +150,7 @@ const MyPolls = () => {
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={handleViewResults}
+                  onView={() =>handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
@@ -170,8 +172,8 @@ const MyPolls = () => {
                 <Polls
                   key={index}
                   onClick={() => HandlePoll(poll)}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -180,9 +182,10 @@ const MyPolls = () => {
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={handleViewResults}
+                  onView={() =>handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
+                  
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
@@ -297,7 +300,7 @@ const MyPolls = () => {
               />
             </Dialog>
             <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
-              <PollResult closeModal={handleViewResults} />
+              <PollResult closeModal={handleViewResults} singlePollResult={singlePollResult}  />
             </Dialog>
           </div>
         )}

@@ -26,6 +26,7 @@ export const Polls = ({
   handleOptionChange,
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
+
   const totalNumVotes =
     options && options?.reduce((total, option) => total + option.votes, 0);
 
@@ -55,8 +56,9 @@ export const Polls = ({
             {authorName}
           </span>
         </div>
-        <span className="text-[#403F3F]">{createdAt}</span>
+        <span className="text-[#403F3F] text-[12px]">{createdAt}</span>
       </div>
+      
       <h6 className="text-[12px] lg:text-[14px] mt-4 text-[#000]">
         {question}
       </h6>
@@ -96,11 +98,13 @@ export const Polls = ({
               <BsEye className="text-black text-xl" />
               <div className="">
                 <h2 className="text-black ">0K</h2>
-                <span className="text-black text-[14px]">views</span>
+                <span className="text-black text-[12px] lg:text-[14px]">
+                  views
+                </span>
               </div>
             </div>
             <button
-              className="bg-black w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-white !font-normal"
+              className="w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl  !font-normal bg-[#000] hover:bg-[#F5F5F5] hover:text-[#000] transition duration-500"
               onClick={onView}
             >
               View result
@@ -112,7 +116,9 @@ export const Polls = ({
                 <FaVoteYea className="text-black text-xl" />
                 <div>
                   <h2 className="text-black">{totalNumVotes}</h2>
-                  <span className="text-black text-[14px]">votes</span>
+                  <span className="text-black text-[12px] lg:text-[14px]">
+                    votes
+                  </span>
                 </div>
               </div>
               <div onClick={toggleShowAction}>
@@ -136,7 +142,7 @@ export const Polls = ({
               )}
             </div>
             <button
-              className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal"
+              className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal hover:bg-red-600 hover:text-white transition duration-500"
               onClick={onClose}
             >
               Close poll

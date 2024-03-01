@@ -1,10 +1,6 @@
-import React,{useState} from 'react';
-import { IoIosSearch } from 'react-icons/io';
-import PropTypes from 'prop-types';
+import { IoIosSearch } from "react-icons/io";
 
-export const FindPolls = ({ onSearch, onFilterClick, onFetchPolls }) => {
-  const [searchText, setSearchText] = useState('');
-
+export const FindPolls = ({ onSearch, onFetchPolls, searchText }) => {
   const handleSearch = () => {
     onSearch(searchText);
     onFetchPolls(searchText);
@@ -20,7 +16,7 @@ export const FindPolls = ({ onSearch, onFilterClick, onFetchPolls }) => {
           className="text-[14px] outline-none border-none"
           onChange={(e) => {
             const searchText = e.target.value;
-            onSearch(searchText); 
+            onSearch(searchText);
             onFetchPolls(searchText);
           }}
         />
@@ -34,11 +30,3 @@ export const FindPolls = ({ onSearch, onFilterClick, onFetchPolls }) => {
     </div>
   );
 };
-
-
-FindPolls.propTypes = {
-  onSearch: PropTypes.func.isRequired,
-  onFilterClick: PropTypes.func.isRequired,
-};
-
-

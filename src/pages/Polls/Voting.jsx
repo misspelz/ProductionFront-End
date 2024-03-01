@@ -146,8 +146,8 @@ const Voting = () => {
                 <Polls
                   key={index}
                   onClick={() => HandlePoll(poll)}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -177,8 +177,8 @@ const Voting = () => {
                 <Polls
                   key={index}
                   onClick={() => HandlePoll(poll)}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -205,8 +205,8 @@ const Voting = () => {
                 <Polls
                   key={index}
                   onClick={() => HandlePoll(poll)}
-                  authorName={"authorName"}
-                  createdAt={"createdAt"}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
@@ -242,7 +242,7 @@ const Voting = () => {
         toast.success("Vote casted successfully");
       }
     } catch (error) {
-     console.log("vote", error);
+      console.log("vote", error);
       toast.error(error.response.data.message || "Something went wrong!");
     } finally {
       handleAllPolls();
@@ -286,7 +286,7 @@ const Voting = () => {
           },
         });
       }
-      
+
       setPolls(res?.data?.data);
     } catch (error) {
       console.log("findpolls", error);
@@ -333,7 +333,11 @@ const Voting = () => {
           {/* Mobile */}
           {CastVote && (
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 flex md:hidden flex-col bg-[#fff]">
-              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+              <FindPolls
+                onSearch={onSearch}
+                onFetchPolls={onFetchPolls}
+                searchText={searchText}
+              />
               <img
                 src="images/fifa.png"
                 alt="fifa-pics"
@@ -395,6 +399,7 @@ const Voting = () => {
           <div className="flex flex-row gap-4 ">
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <h1>Voting</h1>
+              
               <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
               <img
@@ -477,7 +482,7 @@ const Voting = () => {
 
             <Polls
               authorName={"authorName"}
-              createdAt={"createdAt"}
+              createdAt={formatDate(APoll.created_at)}
               question={APoll.question}
               daysRemaining={formatDate(APoll.close_time)}
               cast={APoll.id}
@@ -533,7 +538,7 @@ const Voting = () => {
                   <Polls
                     className="lg:max-w-full lg:p-6"
                     authorName={"authorName"}
-                    createdAt={"createdAt"}
+                    createdAt={formatDate(APoll.created_at)}
                     question={APoll.question}
                     daysRemaining={formatDate(APoll.close_time)}
                     cast={APoll.id}
@@ -559,7 +564,7 @@ const Voting = () => {
                     onClick={CastPaidVotes}
                     className="w-[100%] p-6 mt-4 cursor-pointer"
                      authorName={"authorName"}
-                    createdAt={"createdAt"}
+                    createdAt={formatDate(poll.created_at)}
                     question={APoll.question}
                     options={APoll?.options?.length > 1 && APoll?.options}
                     daysRemaining={APoll.close_time}
