@@ -12,7 +12,7 @@ export const Polls = ({
   question,
   options,
   daysRemaining,
-  totalVotes,
+
   backgroundImageUrl,
   className = "border w-full lg:max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
@@ -58,7 +58,7 @@ export const Polls = ({
         </div>
         <span className="text-[#403F3F] text-[12px]">{createdAt}</span>
       </div>
-      
+
       <h6 className="text-[12px] lg:text-[14px] mt-4 text-[#000]">
         {question}
       </h6>
