@@ -46,12 +46,11 @@ export const SuggestedPolls = ({ HandlePoll }) => {
         <Polls
           key={index}
           onClick={() => HandlePoll(poll)}
-          authorName={"authorName"}
-          createdAt={"createdAt"}
+          authorName={poll.creator.username}
+          createdAt={formatDate(poll.created_at)}
           question={poll.question}
           options={poll?.options?.length > 1 && poll?.options}
           daysRemaining={formatDate(poll.close_time)}
-          totalVotes={"totalVotes"}
           backgroundImageUrl={
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
           }

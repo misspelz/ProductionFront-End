@@ -33,7 +33,7 @@ export const CreateCastActions = ({
         <div onClick={HandleNotification}>
           <div className="bg-[#D0D5DD] rounded-full flex items-center justify-center relative  ">
             <IoIosNotificationsOutline size={20} className="" />
-            <div className="absolute top-[6px] right-4 bg-purple-800 text-white rounded-[45%] w-4 text-center">
+            <div className="absolute -top-3 right-0 bg-purple-800 text-white rounded-[45%] w-4 text-center">
               0
             </div>
           </div>
