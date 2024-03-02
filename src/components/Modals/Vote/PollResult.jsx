@@ -1,45 +1,51 @@
-import React from "react";
-import Stick from "../../Dashboard/Stick";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { FaChevronUp } from "react-icons/fa";
+import { FaChevronUp, FaTimes } from "react-icons/fa";
 
-const PollResult = ({ closeModal }) => {
+const PollResult = ({ closeModal, singlePollResult }) => {
+  console.log("singlePollResult", singlePollResult);
   return (
-    <div className="w-full max-w-[641px] p-3">
-      <div className="flex gap-3 mt-3 mb-5">
-        <FaArrowLeftLong
-          style={{ fontSize: "20px" }}
+    <div className="w-full max-w-[641px] p-10">
+      <div className=" mb-3 flex justify-end ">
+        <FaTimes
           onClick={closeModal}
-          className="cursor-pointer"
+          className="text-black text-xl cursor-pointer"
         />
-        <h1 style={{ fontSize: "20px" }}>Poll Result</h1>
       </div>
+      <h1 className="text-[20px] text-center mb-3 text-purple-800">
+        Poll Result
+      </h1>
 
       <div>
-        <h3>What is your preferred programming language</h3>
-        <p style={{ textAlign: "start" }}>252 Votes</p>
+        <h3 className="text-center">{singlePollResult.question}</h3>
+        <p style={{ textAlign: "start" }}>Total Vote: {0} votes</p>
       </div>
 
-      <div
-        style={{
-          border: "1px solid #ccc",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px",
-        }}
-      >
-        <div>
-          <h3>Python</h3>
-          <p style={{ textAlign: "start" }}>220 votes</p>
-        </div>
-        <FaChevronUp style={{ fontSize: "20px" }} />
-      </div>
-      <Stick />
-      <Stick />
-      <Stick />
-      <Stick />
-      <Stick />
+      {singlePollResult.options?.map((option, index) => {
+        return (
+          <div
+            key={option.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "10px",
+            }}
+            className="mt-6 flex items-center justify-between"
+          >
+            <div className="flex flex-col">
+              <h3>{option.content}</h3>
+              <p style={{ textAlign: "start", marginBottom: "0px" }}>
+                {option.votes} votes
+              </p>
+            </div>
+            <FaChevronUp size={16} />
+            {/* 
+            <Stick />
+            <Stick />
+            <Stick />
+            <Stick />
+            <Stick /> 
+           */}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -1,5 +1,3 @@
-// MyComponent.js
-
 import React from "react";
 import { Notifications } from "./Notification";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const PollsNotification = ({ setNotify, showCreateModal }) => {
   const nav = useNavigate();
   return (
-    <div className="hidden lg:block w-[32%] py-10 px-6 bg-[#fff] h-screen fixed top-32 right-0">
+    <div className="py-10 md:py-4 px-6">
       {/* CREATE POLL ACTION */}
       <div
         className="flex items-center gap-6 mt-4 border px-4 py-2 rounded-[10px] cursor-pointer"

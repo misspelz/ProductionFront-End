@@ -1,250 +1,314 @@
-import React, { useState, useEffect } from "react";
-import "./styles.css";
-import MainLayout from "Layout/MainLayout";
-import { Polls } from "components/PollsComp/Polls";
-import { Polls2 } from "components/PollsComp/Polls2";
-import { PollsNotification } from "components/PollsComp/RightComp";
-import { FindPolls } from "components/PollsComp/FindPolls";
-import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
 import { Dialog } from "@mui/material";
-import { MyPollsCategories } from "components/PollsComp/MyPollsCategories";
+import { ModalContext } from "Context/ModalContext";
+import MainLayout from "Layout/MainLayout";
+import { getLoginToken } from "api/services/auth&poll";
+import axios from "axios";
 import ClosePoll from "components/Modals/Vote/ClosePoll";
+import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
 import PollResult from "components/Modals/Vote/PollResult";
+import { FindPolls } from "components/PollsComp/FindPolls";
+import { MyPollsCategories } from "components/PollsComp/MyPollsCategories";
+import { Polls } from "components/PollsComp/Polls";
+import { PollsNotification } from "components/PollsComp/RightComp";
+import Spin from "components/Spin/Spin";
+import { useContext, useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { MyPollsApi } from "services/auth&poll";
+import { formatDate } from "utils/helper";
+import { url } from "utils/index";
+import "./styles.css";
+import DeletePoll from "components/Modals/Vote/DeletePoll";
 import toast from "react-hot-toast";
-import optionss from "utils/options.json";
 
 const MyPolls = () => {
-  const userInfoString = localStorage.getItem("2gedaUserInfo");
-
-  const userInfo = JSON.parse(userInfoString);
-
-  const [Notify, setNotify] = useState(false);
-  const [CastVote, setCastVote] = useState(false);
-  const [showMyPolls, setShowMyPolls] = useState(false);
-  const [viewType, setViewType] = useState("all");
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [PaidPoll, setPaidPoll] = useState(false);
-  const [selectedPoll, setSelectedPoll] = useState(null);
-  const [showPaidVotes, setShowPaidVotes] = useState(false);
-  const [showCloseModal, setShowCloseModal] = useState(false);
-  const [viewResults, setViewResults] = useState(false);
-  const nav = useNavigate();
-
-  const [pollsDetails, setPollsDetails] = useState([]);
-  console.log("pollsDetails", pollsDetails);
-
-  const [loading, setLoading] = useState(true);
+  const {
+    singlePoll,
+    setSinglePoll,
+    polls,
+    setPolls,
+    activePolls,
+    setActivePolls,
+    endedPolls,
+    setEndedPolls,
+    handleMyPolls,
+    handleActivePolls,
+    handleEndedPolls,
+    setShowAction,
+  } = useContext(ModalContext);
 
   const goBack = () => nav("/Voting");
 
-  const HandleNotification = () => {
-    setNotify(true);
-  };
+  const [Notify, setNotify] = useState(false);
+  const [viewType, setViewType] = useState("all");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCloseModal, setShowCloseModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [singleClosePoll, setSingleClosePoll] = useState(false);
+  const [singleDeletePoll, setSingleDeletePoll] = useState(false);
+  const [singlePollResult, setSinglePollResult] = useState(false);
+  const [viewResults, setViewResults] = useState(false);
 
-  const HandleCastVote = () => {
-    setCastVote(true);
-  };
-  const handleShowMyPolls = () => {
-    setShowMyPolls((prev) => !prev);
-  };
+  const nav = useNavigate();
 
-  const HandlePaidPoll = () => {
-    setPaidPoll(true);
-  };
+  const [loading, setLoading] = useState(true);
+  const [CastVote, setCastVote] = useState(false);
+  const [showMyPolls, setShowMyPolls] = useState(false);
+  const [PaidPoll, setPaidPoll] = useState(false);
+  const [selectedPoll, setSelectedPoll] = useState(null);
+  const [showPaidVotes, setShowPaidVotes] = useState(false);
 
   const HandlePoll = (pollData) => {
     setSelectedPoll(pollData);
     setShowPaidVotes(false);
   };
 
-  const handleShowcloseModal = () => {
+  const handleShowcloseModal = (poll) => {
+    setSingleClosePoll(poll);
     setShowCloseModal((prev) => !prev);
   };
 
-  const handleViewResults = () => {
+  const handleShowDeleteModal = (poll) => {
+    setSingleDeletePoll(poll);
+    setShowDeleteModal((prev) => !prev);
+    setShowAction(false);
+  };
+
+  const HandleDelete = (poll) => {
+    setSingleDeletePoll(poll);
+    setShowDeleteModal((prev) => !prev);
+  };
+
+  const handleViewResults = (poll) => {
+    setSinglePollResult(poll);
     setViewResults((prev) => !prev);
   };
 
-  // const options = [
-  //   { title: "C#", percentage: "20" },
-  //   { title: "Kotlin", percentage: "10" },
-  // ];
+  const handleShowCreateModal = () => {
+    setShowCreateModal(true);
+  };
+
+  const HandleEdit = (poll) => {
+    setSinglePoll(poll);
+    setShowCreateModal(true);
+  };
 
   const renderPolls = () => {
     switch (viewType) {
       case "active":
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Please wait...</p>;
+        if (activePolls && activePolls?.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
-          const isActive = pollsDetails.filter((poll) => poll.is_active);
-          return isActive.length > 0 ? (
-            isActive?.map((poll, index) => (
-              <Polls
-                key={index}
-                onClick={HandlePoll}
-                authorName={poll.username}
-                createdAt={poll.created_at}
-                question={poll.question}
-                // options={initialOptions}
-                optionList={
-                  poll?.options_list?.length > 0 ? poll?.options_list : optionss
-                }
-                daysRemaining={poll.duration}
-                totalVotes={poll.vote_count}
-                backgroundImageUrl={
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                } // take note
-                myPolls={true}
-                onClose={handleShowcloseModal}
-                onView={handleViewResults}
-                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-              />
-            ))
-          ) : (
-            <p className="mt-20">No active polls</p>
+          const filteredActivePolls =
+            activePolls &&
+            activePolls.filter((poll) => poll?.options?.length > 1);
+          return (
+            filteredActivePolls &&
+            filteredActivePolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() =>handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
           );
         }
       case "ended":
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Loading polls...</p>;
+        if (endedPolls && endedPolls?.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
-          const isEnded = pollsDetails.filter((poll) => poll.is_ended);
-          return isEnded.length > 0 ? (
-            isEnded?.map((poll, index) => (
-              <Polls
-                key={index}
-                onClick={HandlePoll}
-                authorName={poll.username}
-                createdAt={poll.created_at}
-                question={poll.question}
-                // options={initialOptions}
-                optionList={
-                  poll?.options_list?.length > 0 ? poll?.options_list : optionss
-                }
-                daysRemaining={poll.duration}
-                totalVotes={poll.vote_count}
-                backgroundImageUrl={
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                } // take note
-                myPolls={true}
-                onClose={handleShowcloseModal}
-                onView={handleViewResults}
-                className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-              />
-            ))
-          ) : (
-            <p className="mt-20">No polls to display</p>
+          const filteredEndedPolls =
+            endedPolls &&
+            endedPolls.filter((poll) => poll?.options?.length > 1);
+          return (
+            filteredEndedPolls &&
+            filteredEndedPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() =>handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
           );
         }
       case "all":
       default:
-        if (!pollsDetails || pollsDetails.length === 0) {
-          return <p className="mt-20">Loading polls...</p>;
+        if (polls && polls.length === 0) {
+          return <Spin />;
         } else {
-          return pollsDetails.map((poll, index) => (
-            <Polls
-              key={index}
-              onClick={HandlePoll}
-              authorName={poll.username}
-              createdAt={poll.created_at}
-              question={poll.question}
-              // options={initialOptions}
-              optionList={
-                poll?.options_list?.length > 0 ? poll?.options_list : optionss
-              }
-              daysRemaining={poll.duration}
-              totalVotes={poll.vote_count}
-              backgroundImageUrl={
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-              } // take note
-              myPolls={true}
-              onClose={handleShowcloseModal}
-              onView={handleViewResults}
-              className="border p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-            />
-          ));
+          const allPolls =
+            polls && polls.filter((poll) => poll?.options?.length > 1);
+          return allPolls.length > 0 ? (
+            allPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={poll.creator.username}
+                  createdAt={formatDate(poll.created_at)}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={formatDate(poll.close_time)}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() =>handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          ) : (
+            <p className="mt-20">No polls to display</p>
+          );
         }
     }
   };
 
-  const onSearch = () => {};
-  const onFilterClick = () => {};
+  const [searchText, setSearchText] = useState("");
 
-  const handleMyPolls = async (e) => {
+  const onSearch = (text) => {
+    setSearchText(text);
+    onFetchPolls(text);
+  };
+
+  const onFetchPolls = async (text) => {
     try {
-      const response = await MyPollsApi();
-      console.log("pollsresponse", response);
-      console.log("pollsdata", response?.data);
-      setPollsDetails(response?.data);
-      setLoading(false);
+      let res;
+
+      if (text === "") {
+        res = await axios.get(`${url}/api/polls/find/`, {
+          headers: {
+            Authorization: `Token ${getLoginToken()}`,
+          },
+        });
+      } else {
+        res = await axios.get(`${url}/api/polls/find/`, {
+          params: { find: text },
+          headers: {
+            Authorization: `Token ${getLoginToken()}`,
+          },
+        });
+      }
+      
+      setPolls(res?.data?.data);
+      setActivePolls(res?.data?.data);
+      setEndedPolls(res?.data?.data);
     } catch (error) {
-      console.log("error", error);
-      toast.error(error.response.data.error || "An error occurred");
+      console.log("findpolls", error);
+      toast.error(error.response.data.message || "Something went wrong!");
     }
   };
 
   useEffect(() => {
+    if (searchText !== "") {
+      onFetchPolls(searchText);
+    }
+  }, [searchText]);
+
+  useEffect(() => {
     handleMyPolls();
+    handleActivePolls();
+    handleEndedPolls();
   }, []);
 
   return (
     <MainLayout>
       <div className=" lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
         {!Notify && !CastVote && !showMyPolls && (
-          <>
-            <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6">
-              <div className="flex gap-3">
-                <FaArrowLeftLong
-                  onClick={goBack}
-                  className="cursor-pointer text-lg"
-                />
-                <h1>My Polls</h1>
-              </div>
-
-              <div className="hidden lg:block">
-                <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
-              </div>
-
-              <img
-                src="images/fifa.png"
-                alt="fifa"
-                className="mt-6 w-full lg:mt-10"
+          <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
+            <div className="flex gap-3 items-center">
+              <FaArrowLeftLong
+                size={20}
+                onClick={goBack}
+                className="cursor-pointer text-lg"
               />
-
-              <div className="pb-[40px] ">
-                <MyPollsCategories
-                  viewType={viewType}
-                  setViewType={setViewType}
-                />
-                {renderPolls()}
-              </div>
-              <Dialog
-                open={showCreateModal}
-                onClose={() => setShowCreateModal((prev) => !prev)}
-                fullWidth
-              >
-                <CreatePoll
-                  onClose={setShowCreateModal}
-                  fetchPolls={handleMyPolls}
-                />
-              </Dialog>
-              <Dialog open={showCloseModal} onClose={handleShowcloseModal}>
-                <ClosePoll closeModal={handleShowcloseModal} />
-              </Dialog>
-              <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
-                <PollResult closeModal={handleViewResults} />
-              </Dialog>
+              <h1>My Polls</h1>
             </div>
-          </>
+
+            <div className="hidden lg:block">
+              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+            </div>
+
+            <img
+              src="images/fifa.png"
+              alt="fifa"
+              className="mt-6 w-full lg:mt-10"
+            />
+
+            <div className="pb-[40px] ">
+              <MyPollsCategories
+                viewType={viewType}
+                setViewType={setViewType}
+              />
+              {renderPolls()}
+            </div>
+            <Dialog
+              open={showCreateModal}
+              onClose={() => setShowCreateModal((prev) => !prev)}
+              fullWidth
+            >
+              <CreatePoll
+                onClose={setShowCreateModal}
+                fetchPolls={handleMyPolls}
+                selectedPoll={selectedPoll}
+              />
+            </Dialog>
+            <Dialog open={showCloseModal} onClose={handleShowcloseModal}>
+              <ClosePoll
+                closeModal={handleShowcloseModal}
+                singlePoll={singlePoll}
+                singleClosePoll={singleClosePoll}
+              />
+            </Dialog>
+            <Dialog open={showDeleteModal} onClose={handleShowDeleteModal}>
+              <DeletePoll
+                closeModal={handleShowDeleteModal}
+                singlePoll={singlePoll}
+                singleDeletePoll={singleDeletePoll}
+              />
+            </Dialog>
+            <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
+              <PollResult closeModal={handleViewResults} singlePollResult={singlePollResult}  />
+            </Dialog>
+          </div>
         )}
 
         {/* MOBILE */}
         {CastVote && (
           <div className="px-4 lg:hidden pb-[40px]">
-            <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
+            <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
             <img
               src="images/fifa.png"
@@ -258,7 +322,7 @@ const MyPolls = () => {
 
         {showMyPolls && (
           <div className="px-4 lg:hidden pb-[40px]">
-            <FindPolls onSearch={onSearch} onFilterClick={onFilterClick} />
+            <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
             <img
               src="images/fifa.png"
@@ -271,10 +335,13 @@ const MyPolls = () => {
         )}
 
         {/* WEB */}
-        <PollsNotification
-          setNotify={setNotify}
-          showCreateModal={() => setShowCreateModal((prev) => !prev)}
-        />
+        <div className="lg:w-[30%]  bg-[#fff] hidden lg:block fixed top-[90px] right-10">
+          <PollsNotification
+            setNotify={setNotify}
+            onShowCreateModal={handleShowCreateModal}
+            singlePoll={singlePoll}
+          />
+        </div>
       </div>
     </MainLayout>
   );

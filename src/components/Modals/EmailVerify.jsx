@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ActionButton from "../Commons/Button";
 import toast from "react-hot-toast";
-import { ReSendOTP } from "services/auth&poll";
+import { ReSendOTP } from "api/services/auth&poll";
 import { useState } from "react";
 
 export const EmailVerify = ({ setIsEmailVerify }) => {

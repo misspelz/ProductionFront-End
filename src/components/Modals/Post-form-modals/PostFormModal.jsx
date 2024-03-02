@@ -6,7 +6,7 @@ import { IoLocation, IoCloseSharp } from "react-icons/io5";
 import { AiOutlineClose } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
-import "./style.css";
+import "./post-modal.css";
 import PostFormPhotoModal from "./PostFormPhotoModal";
 import PostFormMusicModal from "./PostFormMusicModal";
 import PostFormRecModal from "./PostFormRecModal";
@@ -15,9 +15,9 @@ import PostFormExcelModal from "./PostFormExcelModal";
 import PostFormExeModal from "./PostFormExeModal";
 import PostFormLocationModal from "./PostFormLocModal";
 import PostFormFilesModal from "./PostFormFilesModal";
-import HashtagModal from "./HashTagModal";
-import TagFriends from "./TagFriends";
-import data from "../../utils/tag.json";
+import HashtagModal from "../HashTagModal";
+import TagFriends from "../TagFriends";
+import data from "utils/tag.json";
 import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
 import { useCreateFeedsPost } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
@@ -46,14 +46,14 @@ const PostFormModal = ({
 	const hashtags = ["#programming", "#technology", "#art", "#travel"];
 	const [checkedFriends, setCheckedFriends] = useState([]);
 	const [images, setImages] = useState([]);
-    const [selectedFile, setSelectedFile] = useState(null);
+	const [selectedFile, setSelectedFile] = useState(null);
 	const [audioFile, setAudioFile] = useState([]);
 	const [word, setWord] = useState([]);
 	const [excel, setExcel] = useState([]);
 	const [exe, setExe] = useState([]);
 	const [music, setMusic] = useState([]);
 	const [contentText, setContentText] = useState(null);
-    const [location, setLocation] = useState(null);
+	const [location, setLocation] = useState(null);
 
 	const handleFriendCheck = (img) => {
 		if (checkedFriends.includes(img)) {
@@ -81,8 +81,8 @@ const PostFormModal = ({
 
 	const handleEnterPress = (event) => {
 		if (
-			(event.key === "Enter" ||
-			event.key === "Tab") && userInput.length > 0
+			(event.key === "Enter" || event.key === "Tab") &&
+			userInput.length > 0
 		) {
 			setAddedTags([...addedTags, userInput]);
 			setUserInput("");
@@ -143,7 +143,7 @@ const PostFormModal = ({
 			data.append("media", music[0]);
 		} else if (selectedIcon === "allfiles") {
 			data.append("media", selectedFile);
-		}else if (selectedIcon === "location") {
+		} else if (selectedIcon === "location") {
 			data.append("media", location);
 		}
 
@@ -156,6 +156,10 @@ const PostFormModal = ({
 		data.append("hashtags", hashtags);
 		data.append("file_type", ["images", "audio", "text"]);
 		data.append("is_business_post", "True");
+		// data.append("reaction", []);
+		// data.append("comments", []);
+		// data.append("timestamp", []);
+		// data.append("user", []);
 		// data.append("tagged_users", TagFriends);
 		createPost(data);
 	};

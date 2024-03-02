@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { Register } from "services/auth&poll";
+import { Register } from "api/services/auth&poll";
 import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
 import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";
@@ -34,8 +34,6 @@ const SignForm = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  localStorage.setItem("email", email);
-
   const signupUser = async (event) => {
     event.preventDefault();
 
@@ -54,21 +52,22 @@ const SignForm = () => {
     try {
       const response = await Register(userData);
 
-      localStorage.setItem("registrationData", JSON.stringify(response.data.data));
+      localStorage?.setItem("registrationData", JSON.stringify(response.data.data));
 
       if (response.status === 201) {
-        const token = response.data.data.token;
+        const token = response?.data?.data?.token;
 
-        localStorage.setItem("authTOken", token);
+        localStorage?.setItem("authTOken", token);
 
         navigate("/verify");
       }
     } catch (error) {
+      console.log(error)
       toast.error(
           error.response.data.detail ||
           error.response.data.data.email[0] ||
           error.response.data.message ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setIsLoading(false);

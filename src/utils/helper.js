@@ -68,22 +68,3 @@ export const advertCategory = [
     value: "unknown",
   },
 ];
-
-export const handleAntdTimeSplit = (timeString, position = 0) => {
-  return timeString[position].split(":").join(":");
-};
-
-export const userLocalStorageInfo = () => {
-  return JSON.parse(localStorage.getItem("2gedaUserInfo"));
-};
-
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
-  return new Intl.DateTimeFormat("en-US", options).format(date);
-};

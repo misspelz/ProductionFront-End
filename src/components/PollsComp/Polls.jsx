@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Poll } from "./Poll";
 import { BsEye } from "react-icons/bs";
+import { CiMenuKebab } from "react-icons/ci";
 import { FaVoteYea } from "react-icons/fa";
+import { ModalContext } from "Context/ModalContext";
 
 export const Polls = ({
   onClick,
@@ -10,35 +12,27 @@ export const Polls = ({
   question,
   options,
   daysRemaining,
-  totalVotes,
+
   backgroundImageUrl,
-  className = "border w-full max-w-[360px] p-3 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
+  className = "border w-full lg:max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
   onClose,
   onView,
-  optionList,
   cast,
-  setContent,
+  HandleEdit,
+  HandleDelete,
+  HandleActions,
+  selectedOptionId,
+  handleOptionChange,
 }) => {
-  // console.log(cast);
-  const formatCreatedAt = (createdAt) => {
-    const date = new Date(createdAt);
-    const options = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
+  const { showAction, setShowAction } = useContext(ModalContext);
 
-  const totalNumVotes = optionList?.reduce(
-    (total, option) => total + option.all_vote,
-    0
-  );
+  const totalNumVotes =
+    options && options?.reduce((total, option) => total + option.votes, 0);
+
+  const toggleShowAction = () => {
+    setShowAction(!showAction);
+  };
 
   return (
     <div
@@ -47,7 +41,7 @@ export const Polls = ({
       onClick={onClick}
     >
       <div className="flex justify-between">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <div
             className=" rounded-full relative"
             style={{
@@ -62,34 +56,38 @@ export const Polls = ({
             {authorName}
           </span>
         </div>
-        <span className="text-[#403F3F]">{formatCreatedAt(createdAt)}</span>
+        <span className="text-[#403F3F] text-[12px]">{createdAt}</span>
       </div>
+
       <h6 className="text-[12px] lg:text-[14px] mt-4 text-[#000]">
         {question}
       </h6>
 
-      {optionList?.map((o, index) => (
-        <Poll
-          key={o.id}
-          title={o.content}
-          allVotes={o.all_vote}
-          totalVotes={totalNumVotes}
-          name={"vote"}
-          id={o.id}
-          cast={cast}
-          setContent={setContent}
-        />
-      ))}
+      {options
+        ? options.map((o, index) => (
+            <Poll
+              key={o.id}
+              title={o.content}
+              allVotes={o.votes}
+              totalVotes={totalNumVotes}
+              id={o.id}
+              cast={cast}
+              handleOptionChange={handleOptionChange}
+              selectedOptionId={selectedOptionId}
+              onClick={() => setShowAction(true)}
+            />
+          ))
+        : null}
 
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
           <img src="images/time.png" alt="time-icon" />
-          <span className="text-[#000] text-[12px] font-[500]">
-            {daysRemaining}
-          </span>
+          <div className="text-[#000] text-[12px] font-[500]">
+            <span className="text-red-600">Ends:</span> {daysRemaining}
+          </div>
         </div>
         <div className="text-[#000] text-[12px] font-[500]">
-          {totalNumVotes} votes
+          {totalNumVotes}
         </div>
       </div>
 
@@ -100,26 +98,51 @@ export const Polls = ({
               <BsEye className="text-black text-xl" />
               <div className="">
                 <h2 className="text-black ">0K</h2>
-                <span className="text-black text-[14px]">views</span>
+                <span className="text-black text-[12px] lg:text-[14px]">
+                  views
+                </span>
               </div>
             </div>
             <button
-              className="bg-black w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-white !font-normal"
+              className="w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl  !font-normal bg-[#000] hover:bg-[#F5F5F5] hover:text-[#000] transition duration-500"
               onClick={onView}
             >
               View result
             </button>
           </div>
           <div className="flex flex-col w-full gap-4">
-            <div className="flex  gap-3 self-start  ">
-              <FaVoteYea className="text-black text-xl" />
-              <div>
-                <h2 className="text-black">{totalNumVotes}</h2>
-                <span className="text-black text-[14px]">votes</span>
+            <div className="flex justify-between items-center relative">
+              <div className="flex  gap-3 self-start">
+                <FaVoteYea className="text-black text-xl" />
+                <div>
+                  <h2 className="text-black">{totalNumVotes}</h2>
+                  <span className="text-black text-[12px] lg:text-[14px]">
+                    votes
+                  </span>
+                </div>
               </div>
+              <div onClick={toggleShowAction}>
+                <CiMenuKebab className="text-black text-xl" />
+              </div>
+              {showAction && (
+                <div className="absolute flex flex-col gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[2rem]">
+                  <button
+                    onClick={HandleEdit}
+                    className="text-[1rem] md:text-[1.4rem] text-[#4f0da3] text-start font-bold"
+                  >
+                    Edit Poll
+                  </button>
+                  <button
+                    onClick={HandleDelete}
+                    className="text-[1rem] md:text-[1.4rem] text-red-600 font-bold"
+                  >
+                    Delete Poll
+                  </button>
+                </div>
+              )}
             </div>
             <button
-              className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal"
+              className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal hover:bg-red-600 hover:text-white transition duration-500"
               onClick={onClose}
             >
               Close poll

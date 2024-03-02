@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import "react-phone-number-input/style.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Login, UserInfoApi } from "services/auth&poll";
+import { Login, UserInfoApi } from "api/services/auth&poll";
 import preloader from "../../pages/Home/Animation - 1703321875032 (1).json";
 import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";
@@ -69,7 +69,7 @@ const SigninForm = () => {
       toast.error(
         error.response.data.message ||
           error.response.data.detail ||
-          "An error occurred"
+          "Something went wrong!"
       );
     } finally {
       setIsLoading(false);

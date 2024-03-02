@@ -1,10 +1,9 @@
 import { BsAndroid2 } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
-import "./style.css";
+import "./post-modal.css";
 import { useEffect } from "react";
 
 const PostFormLocationModal = ({ location, setLocation }) => {
-
 	const handleGetLocation = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
