@@ -51,6 +51,7 @@ import BusinessProfile from "./pages/BusinessProfile/BusinessProfile";
 import ManageBusiness from "pages/ManageBusiness/ManageBusiness";
 import { ModalContextProvider } from "Context/ModalContext";
 import { setupAxios } from "./api";
+import { isAuthenticated } from "routes/Auth";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -63,7 +64,6 @@ function ScrollToTop() {
 }
 
 function App() {
-	
   useEffect(() => {
     setupAxios();
   });
@@ -97,7 +97,8 @@ function App() {
           />
 
           <Routes>
-            <Route index path="/" element={<Landing />} />
+            <Route path="/" element={<Landing />} />
+            {/* isAuthenticated ? <Home /> : */}
 
             {/* AUTH */}
             <Route index path="/Signup" element={<Signup />} />
