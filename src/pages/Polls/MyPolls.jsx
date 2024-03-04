@@ -1,7 +1,12 @@
 import { Dialog } from "@mui/material";
 import { ModalContext } from "Context/ModalContext";
 import MainLayout from "Layout/MainLayout";
-import { getLoginToken } from "api/services/auth&poll";
+import {
+  ActivePollsApi,
+  EndedPollsApi,
+  MyPollsApi,
+  getLoginToken,
+} from "api/services/auth&poll";
 import axios from "axios";
 import ClosePoll from "components/Modals/Vote/ClosePoll";
 import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
@@ -11,7 +16,7 @@ import { MyPollsCategories } from "components/PollsComp/MyPollsCategories";
 import { Polls } from "components/PollsComp/Polls";
 import { PollsNotification } from "components/PollsComp/RightComp";
 import Spin from "components/Spin/Spin";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "utils/helper";
@@ -19,6 +24,10 @@ import { url } from "utils/index";
 import "./styles.css";
 import DeletePoll from "components/Modals/Vote/DeletePoll";
 import toast from "react-hot-toast";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import AD3 from "assets/images/AD3.png";
+import AD4 from "assets/images/AD3.png";
 
 const MyPolls = () => {
   const {
@@ -34,6 +43,7 @@ const MyPolls = () => {
     handleActivePolls,
     handleEndedPolls,
     setShowAction,
+    loading,
   } = useContext(ModalContext);
 
   const goBack = () => nav("/Voting");
@@ -50,7 +60,6 @@ const MyPolls = () => {
 
   const nav = useNavigate();
 
-  const [loading, setLoading] = useState(true);
   const [CastVote, setCastVote] = useState(false);
   const [showMyPolls, setShowMyPolls] = useState(false);
   const [PaidPoll, setPaidPoll] = useState(false);
@@ -95,12 +104,14 @@ const MyPolls = () => {
   const renderPolls = () => {
     switch (viewType) {
       case "active":
-        if (activePolls && activePolls?.length === 0) {
+        const filteredActivePolls =
+          activePolls &&
+          activePolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredActivePolls.length === 0) {
           return <p className="mt-20">No polls to display</p>;
         } else {
-          const filteredActivePolls =
-            activePolls &&
-            activePolls.filter((poll) => poll?.options?.length > 1);
           return (
             filteredActivePolls &&
             filteredActivePolls
@@ -113,12 +124,13 @@ const MyPolls = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
+                  isClosed={poll.is_closed}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={() =>handleViewResults(poll)}
+                  onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
@@ -127,12 +139,13 @@ const MyPolls = () => {
           );
         }
       case "ended":
-        if (endedPolls && endedPolls?.length === 0) {
+        const filteredEndedPolls =
+          endedPolls && endedPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredEndedPolls.length === 0) {
           return <p className="mt-20">No polls to display</p>;
         } else {
-          const filteredEndedPolls =
-            endedPolls &&
-            endedPolls.filter((poll) => poll?.options?.length > 1);
           return (
             filteredEndedPolls &&
             filteredEndedPolls
@@ -145,12 +158,13 @@ const MyPolls = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
+                  isClosed={poll.is_closed}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={() =>handleViewResults(poll)}
+                  onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
@@ -160,12 +174,15 @@ const MyPolls = () => {
         }
       case "all":
       default:
-        if (polls && polls.length === 0) {
+        const allPolls =
+          polls && polls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
           return <Spin />;
+        } else if (allPolls.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
-          const allPolls =
-            polls && polls.filter((poll) => poll?.options?.length > 1);
-          return allPolls.length > 0 ? (
+          return (
+            allPolls.length > 0 &&
             allPolls
               ?.reverse()
               .map((poll, index) => (
@@ -177,24 +194,44 @@ const MyPolls = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
+                  isClosed={poll.is_closed}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   myPolls={true}
                   onClose={() => handleShowcloseModal(poll)}
-                  onView={() =>handleViewResults(poll)}
+                  onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
-                  
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
-          ) : (
-            <p className="mt-20">No polls to display</p>
           );
         }
     }
   };
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = ["images/fifa.png", AD1, AD2, AD3, AD4];
+
+  const goToNextImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(goToNextImage, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    handleMyPolls();
+    handleActivePolls();
+    handleEndedPolls();
+  }, []);
 
   const [searchText, setSearchText] = useState("");
 
@@ -203,45 +240,52 @@ const MyPolls = () => {
     onFetchPolls(text);
   };
 
-  const onFetchPolls = async (text) => {
-    try {
-      let res;
+  const onFetchPolls = useCallback(
+    async (text) => {
+      try {
+        let res;
 
-      if (text === "") {
-        res = await axios.get(`${url}/api/polls/find/`, {
-          headers: {
-            Authorization: `Token ${getLoginToken()}`,
-          },
-        });
-      } else {
+        // if (text === "") {
+        //   await MyPollsApi();
+        //   await ActivePollsApi();
+        //   await EndedPollsApi();
+        // } else {
+        //   res = await axios.get(`${url}/api/polls/find/`, {
+        //     params: { find: text },
+        //     headers: {
+        //       Authorization: `Token ${getLoginToken()}`,
+        //     },
+        //   });
+        // }
         res = await axios.get(`${url}/api/polls/find/`, {
           params: { find: text },
           headers: {
             Authorization: `Token ${getLoginToken()}`,
           },
         });
+
+        console.log("mypollsres", res);
+
+        if (res?.data?.status) {
+          setPolls(res?.data?.data);
+          setActivePolls(res?.data?.data);
+          setEndedPolls(res?.data?.data);
+        }
+      } catch (error) {
+        console.log("findpolls", error);
+        toast.error(error.response.data.message || "Something went wrong!");
       }
-      
-      setPolls(res?.data?.data);
-      setActivePolls(res?.data?.data);
-      setEndedPolls(res?.data?.data);
-    } catch (error) {
-      console.log("findpolls", error);
-      toast.error(error.response.data.message || "Something went wrong!");
-    }
-  };
+    },
+    [setPolls, setActivePolls, setEndedPolls]
+  );
 
-  useEffect(() => {
-    if (searchText !== "") {
-      onFetchPolls(searchText);
-    }
-  }, [searchText]);
-
-  useEffect(() => {
-    handleMyPolls();
-    handleActivePolls();
-    handleEndedPolls();
-  }, []);
+  // useEffect(() => {
+  //   if (searchText !== "") {
+  //     onFetchPolls(searchText);
+  //   } else {
+  //     onFetchPolls();
+  //   }
+  // }, [searchText, onFetchPolls]);
 
   return (
     <MainLayout>
@@ -252,19 +296,21 @@ const MyPolls = () => {
               <FaArrowLeftLong
                 size={20}
                 onClick={goBack}
-                className="cursor-pointer text-lg"
+                className="cursor-pointer text-lg mb-[0.5rem]"
               />
               <h1>My Polls</h1>
             </div>
 
-            <div className="hidden lg:block">
-              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
-            </div>
-
             <img
-              src="images/fifa.png"
-              alt="fifa"
+              src={images[currentIndex]}
+              alt="slider-pics"
               className="mt-6 w-full lg:mt-10"
+            />
+
+            <FindPolls
+              onSearch={onSearch}
+              onFetchPolls={onFetchPolls}
+              searchText={searchText}
             />
 
             <div className="pb-[40px] ">
@@ -300,7 +346,10 @@ const MyPolls = () => {
               />
             </Dialog>
             <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
-              <PollResult closeModal={handleViewResults} singlePollResult={singlePollResult}  />
+              <PollResult
+                closeModal={handleViewResults}
+                singlePollResult={singlePollResult}
+              />
             </Dialog>
           </div>
         )}
@@ -311,10 +360,15 @@ const MyPolls = () => {
             <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
             <img
-              src="images/fifa.png"
-              alt="fifa"
+              src={images[currentIndex]}
+              alt="slider-pics"
               className="mt-6 w-full lg:mt-10"
             />
+            {/* <FindPolls
+              onSearch={onSearch}
+              onFetchPolls={onFetchPolls}
+              searchText={searchText}
+            /> */}
             <MyPollsCategories viewType={viewType} setViewType={setViewType} />
             {renderPolls()}
           </div>
@@ -325,9 +379,14 @@ const MyPolls = () => {
             <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
             <img
-              src="images/fifa.png"
-              alt="fifa"
+              src={images[currentIndex]}
+              alt="slider-pics"
               className="mt-6 w-full lg:mt-10"
+            />
+            <FindPolls
+              onSearch={onSearch}
+              onFetchPolls={onFetchPolls}
+              searchText={searchText}
             />
             <MyPollsCategories viewType={viewType} setViewType={setViewType} />
             {renderPolls()}
@@ -335,11 +394,10 @@ const MyPolls = () => {
         )}
 
         {/* WEB */}
-        <div className="lg:w-[30%]  bg-[#fff] hidden lg:block fixed top-[90px] right-10">
+        <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
           <PollsNotification
             setNotify={setNotify}
-            onShowCreateModal={handleShowCreateModal}
-            singlePoll={singlePoll}
+            showCreateModal={() => setShowCreateModal((prev) => !prev)}
           />
         </div>
       </div>

@@ -40,7 +40,7 @@ export const Login = async (payload) => {
 };
 
 export const UserInfoApi = async (userToken) => {
-  const res = await axios.get(`${url}/api/user/account/profile/retrieve`, {
+  const res = await axios.get(`${url}/api/user/account/profile/`, {
     headers: {
       Authorization: `Token ${userToken || getToken()}`,
     },
@@ -175,7 +175,7 @@ export const PromotedPollsApi = async () => {
 };
 
 export const ActivePollsApi = async () => {
-  const res = await axios.get(`${url}/api/polls/active/`, {
+  const res = await axios.get(`${url}/api/polls/user/active/`, {
     headers: {
       Authorization: `Token ${getLoginToken()}`,
     },
@@ -184,7 +184,7 @@ export const ActivePollsApi = async () => {
 };
 
 export const EndedPollsApi = async () => {
-  const res = await axios.get(`${url}/api/polls/ended/`, {
+  const res = await axios.get(`${url}/api/polls/user/ended/`, {
     headers: {
       Authorization: `Token ${getLoginToken()}`,
     },

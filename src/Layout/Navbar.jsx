@@ -8,6 +8,7 @@ const Navbar = () => {
   const [isToggled, setIsToggled] = useState(false);
 
   const handleToggledIcon = () => {
+ 
     setIsToggled(true);
   };
   const handleCloseToggledIcon = () => {
@@ -26,6 +27,7 @@ const Navbar = () => {
         >
           <BiSearch className="sea-icon " size={20} />
         </div>
+
         {isToggled && (
           <GeneralSearch handleCloseToggledIcon={handleCloseToggledIcon} />
         )}

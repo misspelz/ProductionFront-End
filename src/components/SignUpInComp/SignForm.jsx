@@ -52,7 +52,10 @@ const SignForm = () => {
     try {
       const response = await Register(userData);
 
-      localStorage?.setItem("registrationData", JSON.stringify(response.data.data));
+      localStorage?.setItem(
+        "registrationData",
+        JSON.stringify(response.data.data)
+      );
 
       if (response.status === 201) {
         const token = response?.data?.data?.token;
@@ -62,8 +65,9 @@ const SignForm = () => {
         navigate("/verify");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error(
+        error.message ||
           error.response.data.detail ||
           error.response.data.data.email[0] ||
           error.response.data.message ||

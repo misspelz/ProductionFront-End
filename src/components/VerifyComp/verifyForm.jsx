@@ -3,11 +3,11 @@ import ActionButton from "../Commons/Button";
 import toast from "react-hot-toast";
 import { ReSendOTP, VerifyOTP } from "api/services/auth&poll";
 import { useNavigate } from "react-router-dom";
+import Spin from "components/Spin/Spin";
 
 const VerifyForm = () => {
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [inputValues, setInputValues] = useState({
     inputValue1: "",
     inputValue2: "",
@@ -15,20 +15,17 @@ const VerifyForm = () => {
     inputValue4: "",
     inputValue5: "",
   });
-
   const navigate = useNavigate();
-
   const [inputRefs] = useState([null, null, null, null, null]);
-
-  const registrationData = JSON.parse(localStorage?.getItem("registrationData"));
-
-  const registrationEmail = registrationData?.email
+  const registrationData = JSON.parse(
+    localStorage?.getItem("registrationData")
+  );
+  const registrationEmail = registrationData?.email;
 
   const HandleSendOTP = async () => {
     try {
       setLoading(true);
       const response = await ReSendOTP("account_verification");
-    
       if (response.status === 200) {
         toast.success(response.data.message);
       }
@@ -92,6 +89,12 @@ const VerifyForm = () => {
   };
 
   useEffect(() => {
+    if (allInputsComplete) {
+      HandleVerify();
+    }
+  }, [inputValues]);
+
+  useEffect(() => {
     if (inputRefs[0]) {
       inputRefs[0].focus();
     }
@@ -126,7 +129,6 @@ const VerifyForm = () => {
           </div>
 
           <div className="counter-resend">
-            {/* <div className="count">{formattedTime}</div> */}
             <div className="resend">
               <div>
                 Didn’t get code ?{" "}
@@ -142,8 +144,7 @@ const VerifyForm = () => {
           </div>
           <div className="veri-bttn-bx">
             <ActionButton
-              label={"verify"}
-              onClick={HandleVerify}
+              label={"Verify"}
               loading={isLoading}
               bg={allInputsComplete ? "complete-button ver-uncop" : "ver-uncop"}
               type={allInputsComplete ? "submit" : "button"}
