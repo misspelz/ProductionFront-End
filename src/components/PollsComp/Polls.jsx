@@ -24,6 +24,7 @@ export const Polls = ({
   HandleActions,
   selectedOptionId,
   handleOptionChange,
+  isClosed,
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
 
@@ -82,12 +83,16 @@ export const Polls = ({
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
           <img src="images/time.png" alt="time-icon" />
-          <div className="text-[#000] text-[12px] font-[500]">
-            <span className="text-red-600">Ends:</span> {daysRemaining}
+          <div className="text-[#000] text-[12px] lg:text-[14px]   font-[500]">
+            {isClosed ? (
+              <span className="text-red-600">Closed</span>
+            ) : (
+              <span className="text-red-600">Ends: {daysRemaining}</span>
+            )}
           </div>
         </div>
-        <div className="text-[#000] text-[12px] font-[500]">
-          {totalNumVotes}
+        <div className="text-primaryColor text-[12px] lg:text-[14px]  font-[500]">
+          Total Votes: {totalNumVotes}
         </div>
       </div>
 

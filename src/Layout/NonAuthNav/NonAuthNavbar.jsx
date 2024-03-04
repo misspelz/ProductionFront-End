@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
-import { HiX } from "react-icons/hi";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import ActionButton from "../../components/Commons/Button";
 import "./style.css";
 
@@ -19,29 +18,15 @@ const NonAuthNavbar = () => {
     setToggleIcon(!toggleIcon);
   };
 
-  useEffect(() => {
-    const closeMenuOnOutsideClick = (e) => {
-      if (toggleIcon && !e.target.closest(".navbar")) {
-        setToggleIcon(false);
-      }
-    };
-
-    document.addEventListener("click", closeMenuOnOutsideClick);
-
-    return () => {
-      document.removeEventListener("click", closeMenuOnOutsideClick);
-    };
-  }, [toggleIcon]);
-
   return (
     <div className={`non-navbar-container ${toggleIcon ? "active" : ""}`}>
       <div className="navbar">
         <div className="logon">
           <img src="/images/lo2.png" alt="" style={{ width: "80px" }} />
         </div>
-        <div className={`nav ${toggleIcon ? "active" : ""}`}>
+        <div className="flex items-center justify-center">
           <div className="nav-icon" onClick={handleToggleIcon}>
-            {toggleIcon ? <HiX size={30} /> : <FaBars size={30} />}
+            {toggleIcon ? <FaTimes size={30} /> : <FaBars size={30} />}
           </div>
           <ul className="nav-ul">
             {data.map((item, key) => (

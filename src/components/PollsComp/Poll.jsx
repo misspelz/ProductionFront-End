@@ -33,7 +33,7 @@ export const Poll = ({
           name={name}
           id={id}
           value={title}
-          className="cursor-pointer w-6"
+          className="cursor-pointer w-6 mr-6 z-[999]"
           onChange={() => {
             console.log("Clicked radio button for:", id);
             handleOptionChange(id);

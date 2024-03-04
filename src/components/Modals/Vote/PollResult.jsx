@@ -16,7 +16,9 @@ const PollResult = ({ closeModal, singlePollResult }) => {
 
       <div>
         <h3 className="text-center">{singlePollResult.question}</h3>
-        <p style={{ textAlign: "start" }}>Total Vote: {0} votes</p>
+        <p style={{ textAlign: "start" }}>
+          Total Vote: {singlePollResult.total_votes} votes
+        </p>
       </div>
 
       {singlePollResult.options?.map((option, index) => {

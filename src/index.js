@@ -6,16 +6,19 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ReactQueryProvider } from "providers/QueryProvider";
+import { ModalContextProvider } from "Context/ModalContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <ReactQueryProvider>
-        <React.StrictMode>
-            <Router>
-                <App />
-            </Router>
-        </React.StrictMode>
-    </ReactQueryProvider>
+  <ReactQueryProvider>
+    <React.StrictMode>
+      <ModalContextProvider>
+        <Router>
+          <App />
+        </Router>
+      </ModalContextProvider>
+    </React.StrictMode>
+  </ReactQueryProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
