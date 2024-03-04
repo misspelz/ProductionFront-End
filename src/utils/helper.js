@@ -14,68 +14,59 @@ export const years = Array.from({ length: 100 }, (_, i) => ({
 }));
 
 export const genderData = [
-  { label: 'Male', value: 'Male' },
-  { label: 'Female', value: 'Female' },
-  { label: 'Rather not say', value: 'None' },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+  { label: "Rather not say", value: "None" },
 ];
 
 export const category = [
   {
-    label: 'Business category not know yet',
-    value: 'Business category not know yet',
+    label: "Individual",
+    value: "individual",
   },
   {
-    label: 'Business category not know yet',
-    value: 'Business category not know yet',
+    label: "Company",
+    value: "company",
   },
 ];
 
 export const banks = [
   {
-    label: 'Wema bank',
-    value: 'Wema bank',
+    label: "Wema bank",
+    value: "Wema bank",
   },
 
   {
-    label: 'First bank',
-    value: 'First bank',
+    label: "First bank",
+    value: "First bank",
   },
 
   {
-    label: 'Stanbic bank',
-    value: 'Stanbic bank',
+    label: "Stanbic bank",
+    value: "Stanbic bank",
   },
 ];
 
 export const advertCategory = [
   {
-    label: 'unknown',
-    value: 'unknown',
+    label: "unknown",
+    value: "unknown",
   },
 
   {
-    label: 'unknown',
-    value: 'unknown',
+    label: "unknown",
+    value: "unknown",
   },
 
   {
-    label: 'unknown',
-    value: 'unknown',
+    label: "unknown",
+    value: "unknown",
   },
 
   {
-    label: 'unknown',
-    value: 'unknown',
+    label: "unknown",
+    value: "unknown",
   },
 ];
 
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
-  return new Intl.DateTimeFormat("en-US", options).format(date);
-};
+export const formatDate = () => {};

@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { MdOutlineAddPhotoAlternate, MdEdit } from 'react-icons/md';
-import ModalHeader from './ModalHeader';
-import ModalWrapper from './ModalWrapper';
-import img from '../../assets/profile_images/profile-cover.png';
-import ProfileInput from '../ProfileComponents/ProfileInput';
-import ProfileEditOption from '../ProfileComponents/ProfileEditOption';
-import ModalButton from './ModalButton';
-import CustomDropdown from './CustomDropdown';
-import { day, genderData, month, years } from 'utils/helper';
-import { useEditProfile } from 'pages/Profile/useEditProfile';
-import ErrorMessage from './ErrorMessage';
-import Spinner from 'components/Spinner';
+import { useState } from "react";
+import { MdOutlineAddPhotoAlternate, MdEdit } from "react-icons/md";
+import ModalHeader from "./ModalHeader";
+import ModalWrapper from "./ModalWrapper";
+import img from "../../assets/profile_images/profile-cover.png";
+import ProfileInput from "../ProfileComponents/ProfileInput";
+import ProfileEditOption from "../ProfileComponents/ProfileEditOption";
+import ModalButton from "./ModalButton";
+import CustomDropdown from "./CustomDropdown";
+import { day, genderData, month, years } from "utils/helper";
+import { useEditProfile } from "pages/Profile/useEditProfile";
+import ErrorMessage from "./ErrorMessage";
+import Spinner from "components/Spinner";
 
 const EditProfile = ({ onModalClose }) => {
   const [data, setData] = useState({});
-  const [cover, setCover] = useState('');
-  const [profile, setProfile] = useState('');
+  const [cover, setCover] = useState("");
+  const [profile, setProfile] = useState("");
   const [bioValidate, setBioValidate] = useState(false);
   const { editStatus, editing } = useEditProfile();
 
@@ -39,7 +39,7 @@ const EditProfile = ({ onModalClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const bioChar = data.bio.split(' ');
+    const bioChar = data.bio.split(" ");
 
     if (bioChar.length > 50) {
       return setBioValidate(true);
@@ -64,48 +64,48 @@ const EditProfile = ({ onModalClose }) => {
 
   return (
     <ModalWrapper>
-      <ModalHeader header='Edit profile' onModalClose={onModalClose} />
+      <ModalHeader header="Edit profile" onModalClose={onModalClose} />
 
-      <form className='edit_profile_container' onSubmit={handleSubmit}>
-        <div className='edit_profile_images'>
-          <div className='top_image'>
-            <div className='top_image_container'>
+      <form className="edit_profile_container" onSubmit={handleSubmit}>
+        <div className="edit_profile_images">
+          <div className="top_image">
+            <div className="top_image_container">
               {cover ? (
-                <img src={cover ? cover : img} alt='User Photo' />
+                <img src={cover ? cover : img} alt="User" />
               ) : (
-                <div className='stalling'>
-                  <MdOutlineAddPhotoAlternate className='stalling_photo_alt' />
+                <div className="stalling">
+                  <MdOutlineAddPhotoAlternate className="stalling_photo_alt" />
                   <h2>Add cover photo</h2>
                 </div>
               )}
             </div>
 
             <input
-              type='file'
-              id='cover'
-              style={{ display: 'none' }}
+              type="file"
+              id="cover"
+              style={{ display: "none" }}
               onChange={handleCover}
             />
-            <label htmlFor='cover'>
+            <label htmlFor="cover">
               <MdEdit />
             </label>
           </div>
 
-          <div className='bottom_image'>
-            <div className='image'>
+          <div className="bottom_image">
+            <div className="image">
               {profile ? (
-                <img src={profile} alt='' />
+                <img src={profile} alt="" />
               ) : (
-                <div className='stalling_image'></div>
+                <div className="stalling_image"></div>
               )}
 
               <input
-                type='file'
-                id='profile'
-                style={{ display: 'none' }}
+                type="file"
+                id="profile"
+                style={{ display: "none" }}
                 onChange={handleProfile}
               />
-              <label htmlFor='profile'>
+              <label htmlFor="profile">
                 <MdEdit />
               </label>
             </div>
@@ -114,70 +114,70 @@ const EditProfile = ({ onModalClose }) => {
           </div>
         </div>
 
-        <div className='edit_profile_content'>
+        <div className="edit_profile_content">
           <div>
             <ProfileInput
-              placeholder='First name'
-              name='first_name'
+              placeholder="First name"
+              name="first_name"
               onChange={handleChange}
             />
             <ProfileInput
-              placeholder='Last name'
-              name='last_name'
+              placeholder="Last name"
+              name="last_name"
               onChange={handleChange}
             />
           </div>
 
           <div>
             <ProfileInput
-              placeholder='Occupation'
-              name='occupation'
+              placeholder="Occupation"
+              name="occupation"
               onChange={handleChange}
             />
             <ProfileInput
-              placeholder='Current city'
-              name='city'
+              placeholder="Current city"
+              name="city"
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <ProfileEditOption header='Date of Birth'>
+            <ProfileEditOption header="Date of Birth">
               <CustomDropdown
-                stallValue='Day'
+                stallValue="Day"
                 menu={day}
-                name='day'
+                name="day"
                 setData={setData}
               />
               <CustomDropdown
-                stallValue='Month'
+                stallValue="Month"
                 menu={month}
-                name='month'
+                name="month"
                 setData={setData}
               />
               <CustomDropdown
-                stallValue='Year'
+                stallValue="Year"
                 menu={years}
-                name='year'
+                name="year"
                 setData={setData}
               />
             </ProfileEditOption>
 
-            <ProfileEditOption header='Gender'>
+            <ProfileEditOption header="Gender">
               <CustomDropdown
-                stallValue='Gender'
+                stallValue="Gender"
                 menu={genderData}
-                name='gender'
+                name="gender"
                 setData={setData}
               />
             </ProfileEditOption>
           </div>
 
-          <div className='textarea_container'>
+          <div className="textarea_container">
             <textarea
-              placeholder='Bio'
+              placeholder="Bio"
               onChange={handleChange}
-              name='bio'
+              name="bio"
             ></textarea>
 
             <span>Max 50 words</span>
@@ -185,7 +185,7 @@ const EditProfile = ({ onModalClose }) => {
           {bioValidate && <ErrorMessage>Maximum of 50 words</ErrorMessage>}
 
           <ModalButton>
-            {editStatus === 'pending' ? <Spinner /> : 'Save & Continue'}
+            {editStatus === "pending" ? <Spinner /> : "Save & Continue"}
           </ModalButton>
         </div>
       </form>
