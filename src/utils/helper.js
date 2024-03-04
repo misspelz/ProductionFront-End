@@ -68,3 +68,5 @@ export const advertCategory = [
     value: "unknown",
   },
 ];
+
+export const formatDate = () => {};
