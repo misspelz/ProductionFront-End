@@ -33,12 +33,12 @@ import AD4 from "assets/images/AD3.png";
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
   const userInfo = JSON.parse(userInfoString);
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(null);
 
-  useEffect(() => {
-    const token = getToken();
-    setToken(token);
-  }, []);
+  // useEffect(() => {
+  //   const token = getToken();
+  //   setToken(token);
+  // }, []);
 
   const [polls, setPolls] = useState([]);
 

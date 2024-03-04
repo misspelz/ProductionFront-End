@@ -1,25 +1,15 @@
 import axios from "axios";
 import { url } from "../../utils/index";
 
-let token = null;
-
-export const setToken = (newToken) => {
-  token = newToken;
-};
-
 export const getToken = () => {
-  if (!token) {
-    token = localStorage.getItem("authTOken");
-    console.log("regtoken", token);
-  }
+  const token = localStorage.getItem("authTOken");
+  console.log("regtoken", token);
   return token;
 };
 
 export const getLoginToken = () => {
-  if (!token) {
-    token = localStorage.getItem("authToken");
-    console.log("logintoken", token);
-  }
+  const token = localStorage.getItem("authToken");
+  console.log("innertoken", token);
   return token;
 };
 
@@ -148,6 +138,7 @@ export const PollsApi = async () => {
 };
 
 export const MyPollsApi = async () => {
+  console.log("logintoken", getLoginToken());
   const res = await axios.get(`${url}/api/polls/user/`, {
     headers: {
       Authorization: `Token ${getLoginToken()}`,
