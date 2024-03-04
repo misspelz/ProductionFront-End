@@ -1,20 +1,20 @@
-import { getTokenFromLocalStorage } from 'utils/token';
+import { getTokenFromLocalStorage } from "utils/token";
 
 // MAIN URL
-const mainURL = 'https://development.2geda.net';
+const mainURL = "https://development.2geda.net";
 
 // getting current logged user token
 const token = getTokenFromLocalStorage();
 
 // appending token to authorization header
 const myHeaders = new Headers();
-myHeaders.append('Authorization', `Token ${token}`);
-myHeaders.append('Content-Type', 'application/json');
+myHeaders.append("Authorization", `Token ${token}`);
+myHeaders.append("Content-Type", "application/json");
 
 const requestOptions = {
-  method: 'GET',
+  method: "GET",
   headers: myHeaders,
-  redirect: 'follow',
+  redirect: "follow",
 };
 
 /**
@@ -26,7 +26,7 @@ const requestOptions = {
 export const getProfileData = async () => {
   try {
     const response = await fetch(
-      `${mainURL}/api/user/account/profile/`,
+      `${mainURL}/api/user/account/profile/retrieve`,
       requestOptions
     );
 
@@ -43,7 +43,7 @@ export const editProfile = async (formData) => {
   try {
     const response = await fetch(
       `${mainURL}/api/user/account/profile/update/`,
-      { ...requestOptions, method: 'PUT', body: JSON.stringify(formData) }
+      { ...requestOptions, method: "PUT", body: JSON.stringify(formData) }
     );
 
     const data = await response.json();
@@ -59,7 +59,7 @@ export const changePassword = async (credentials) => {
   try {
     const response = await fetch(`${mainURL}/api/user/auth/change-password/`, {
       ...requestOptions,
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(credentials),
     });
 
@@ -76,7 +76,7 @@ export const deleteUserAccount = async () => {
   try {
     const response = await fetch(`${mainURL}/api/user/auth/delete-account/`, {
       ...requestOptions,
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     const data = await response.json();
