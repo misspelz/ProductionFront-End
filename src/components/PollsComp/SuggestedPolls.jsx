@@ -32,13 +32,15 @@ export const SuggestedPolls = ({ HandlePoll }) => {
     return <Spin />;
   }
 
-  if (!suggestedPolls || suggestedPolls.length === 0) {
-    return <p className="mt-5">No polls to display</p>;
-  }
-
   const filteredSuggestedPolls =
     suggestedPolls &&
-    suggestedPolls.filter((poll) => poll?.options?.length > 1);
+    suggestedPolls.filter(
+      (poll) => poll?.options?.length > 1 && !poll.is_closed
+    );
+
+  if (!filteredSuggestedPolls || filteredSuggestedPolls.length === 0) {
+    return <p className="mt-5">No polls to display</p>;
+  }
 
   return (
     <div className="flex gap-6 overflow-auto">
@@ -51,6 +53,7 @@ export const SuggestedPolls = ({ HandlePoll }) => {
           question={poll.question}
           options={poll?.options?.length > 1 && poll?.options}
           daysRemaining={formatDate(poll.close_time)}
+          isClosed={poll.is_closed}
           backgroundImageUrl={
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
           }

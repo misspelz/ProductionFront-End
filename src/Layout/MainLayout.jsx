@@ -6,7 +6,7 @@ import {
   MdKeyboardArrowRight
 } from "react-icons/md";
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, onLogout }) => {
   const [ isCollapsed, setIsCollapsed ] = useState(true);
 
   const handleCollapseIcon = () => {
@@ -16,7 +16,7 @@ const MainLayout = ({ children }) => {
     <div className="layout-container ">
       <div className={isCollapsed ? "ctrl-btn lst" : "ctrl-btn"}  onClick={handleCollapseIcon}>{isCollapsed ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}</div>
       <div className="sidebar-boxxx">
-      <Sidebar isCollapsed={isCollapsed}/>
+      <Sidebar isCollapsed={isCollapsed} onLogout={onLogout}/>
       </div>
       <div className="nav-cild w-full">
         <Navbar />

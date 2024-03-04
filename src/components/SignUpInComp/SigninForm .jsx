@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import "react-phone-number-input/style.css";
@@ -10,8 +10,10 @@ import ActionButton from "../Commons/Button";
 import InputField from "../Commons/InputField";
 import { EmailVerify } from "../Modals/EmailVerify";
 import Modal from "../Modals/Modal";
+import { ModalContext } from "Context/ModalContext";
 
 const SigninForm = () => {
+  const { setIsAuthenticated } = useContext(ModalContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +51,8 @@ const SigninForm = () => {
     try {
       const response = await Login(formData);
 
+      setIsAuthenticated(true);
+
       localStorage.setItem("authToken", response.data.data.token);
 
       const userInfo = await UserInfoApi(response.data.data.token);
@@ -66,8 +70,10 @@ const SigninForm = () => {
         setIsEmailVerify(true);
       }
     } catch (error) {
+      console.log(error);
       toast.error(
         error.response.data.message ||
+          error.message ||
           error.response.data.detail ||
           "Something went wrong!"
       );
@@ -87,7 +93,7 @@ const SigninForm = () => {
         <form action="" onSubmit={handleLogin}>
           <div className="inp-email">
             <InputField
-              placeholder={"email address or username"}
+              placeholder={"Email address or username"}
               type={"email"}
               value={email}
               onChange={handleEmailChange}

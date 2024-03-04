@@ -1,26 +1,27 @@
 import { BiSolidHome } from "react-icons/bi";
 // import { CgMediaLive } from "react-icons/cg";
 import { BsPersonCircle, BsTicketFill } from "react-icons/bs";
-import { IoLogOutOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IoChatbubbleEllipsesOutline, IoLogOutOutline } from "react-icons/io5";
 // import { IoIosPeople, IoMdBook } from "react-icons/io";
 // import { PiBookDuotone } from "react-icons/pi";
 // import { AiOutlineMessage } from "react-icons/ai";
-import { MdOutlineHowToVote } from "react-icons/md";
-import "./style.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { ModalContext } from "Context/ModalContext";
+import { useContext } from "react";
 import toast from "react-hot-toast";
+import { MdOutlineHowToVote } from "react-icons/md";
+import { NavLink, useNavigate } from "react-router-dom";
+import "./style.css";
 
 const Sidebar = ({ isCollapsed }) => {
-  const nav = useNavigate()
-
-  const HandleLogOut = ()=>{
+  const nav = useNavigate();
+  const { setIsAuthenticated } = useContext(ModalContext);
+  const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("2gedaUserInfo");
+    setIsAuthenticated(false);
+    nav("/");
     toast.success("Successfully Logged Out");
-    setTimeout(() => {
-      nav("/")
-    }, 1000);
-  }
+  };
 
   return (
     <div
@@ -147,7 +148,7 @@ const Sidebar = ({ isCollapsed }) => {
             <div className="sidebar-text">Education</div>
           </NavLink> */}
 
-          <NavLink className="side-item flex flex-row" onClick={HandleLogOut}>
+          <NavLink className="side-item flex flex-row" onClick={handleLogout}>
             <IoLogOutOutline className="side-icon " />
             <div className="sidebar-text">Sign Out</div>
           </NavLink>

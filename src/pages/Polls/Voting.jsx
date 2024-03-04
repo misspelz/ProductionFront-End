@@ -24,6 +24,11 @@ import "./styles.css";
 import { formatDate } from "utils/helper";
 import { url } from "utils/index";
 import axios from "axios";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import AD3 from "assets/images/AD3.png";
+import AD4 from "assets/images/AD3.png";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
@@ -41,6 +46,7 @@ const Voting = () => {
   const [Notify, setNotify] = useState(false);
   const [CastVote, setCastVote] = useState(false);
   const [viewType, setViewType] = useState("all");
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [PaidPoll, setPaidPoll] = useState(false);
   const [showPaidVotes, setShowPaidVotes] = useState(false);
@@ -48,6 +54,7 @@ const Voting = () => {
 
   const [APoll, setAPoll] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [numberOfVotes, setNumberOfVotes] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
   const [payNowAmount, setPayNowAmount] = useState(0);
@@ -106,6 +113,10 @@ const Voting = () => {
     setCastVote(true);
   };
 
+  const goBack = () => {
+    setCastVote(false);
+  };
+
   const HandlePoll = (pollData) => {
     setAPoll(pollData);
     setSelectedPoll(true);
@@ -114,7 +125,6 @@ const Voting = () => {
   const handleAllPolls = async (e) => {
     try {
       const resp = await PollsApi();
-
       if (resp.data.status) {
         setPolls(resp?.data?.data);
       }
@@ -130,74 +140,82 @@ const Voting = () => {
 
   const renderPolls = () => {
     switch (viewType) {
-      case "private":
-        if (polls.length === 0) {
-          return <Spin />;
-        } else {
-          const isPrivate = polls.filter(
-            (poll) =>
-              poll.poll_access.toLowerCase() === "private" &&
-              poll?.options?.length > 1
-          );
-          return isPrivate.length > 0 ? (
-            isPrivate
-              ?.reverse()
-              .map((poll, index) => (
-                <Polls
-                  key={index}
-                  onClick={() => HandlePoll(poll)}
-                  authorName={poll.creator.username}
-                  createdAt={formatDate(poll.created_at)}
-                  question={poll.question}
-                  options={poll?.options?.length > 1 && poll?.options}
-                  daysRemaining={formatDate(poll.close_time)}
-                  backgroundImageUrl={
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  }
-                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-                />
-              ))
-          ) : (
-            <p className="mt-20">No polls to display</p>
-          );
-        }
-      case "public":
-        if (polls.length === 0) {
-          return <Spin />;
-        } else {
-          const isPublic = polls.filter(
-            (poll) =>
-              poll.poll_access.toLowerCase() === "public" &&
-              poll?.options?.length > 1
-          );
-          return isPublic.length > 0 ? (
-            isPublic
-              ?.reverse()
-              .map((poll, index) => (
-                <Polls
-                  key={index}
-                  onClick={() => HandlePoll(poll)}
-                  authorName={poll.creator.username}
-                  createdAt={formatDate(poll.created_at)}
-                  question={poll.question}
-                  options={poll?.options?.length > 1 && poll?.options}
-                  daysRemaining={formatDate(poll.close_time)}
-                  backgroundImageUrl={
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  }
-                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-                />
-              ))
-          ) : (
-            <p className="mt-20">No polls to display</p>
-          );
-        }
+      // case "private":
+      //   const isPrivate = polls.filter(
+      //     (poll) =>
+      //       poll.poll_access.toLowerCase() === "private" &&
+      //       poll?.options?.length > 1
+      //   );
+      //   if (isLoading) {
+      //     return <Spin />;
+      //   } else if (isPrivate.length === 0) {
+      //     return <p className="mt-20">No polls to display</p>;
+      //   } else {
+      //     return isPrivate.length > 0 ? (
+      //       isPrivate
+      //         ?.reverse()
+      //         .map((poll, index) => (
+      //           <Polls
+      //             key={index}
+      //             onClick={() => HandlePoll(poll)}
+      //             authorName={poll.creator.username}
+      //             createdAt={formatDate(poll.created_at)}
+      //             question={poll.question}
+      //             options={poll?.options?.length > 1 && poll?.options}
+      //             daysRemaining={formatDate(poll.close_time)}
+      //             backgroundImageUrl={
+      //               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      //             }
+      //             className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+      //           />
+      //         ))
+      //     ) : (
+      //       <p className="mt-20">No polls to display</p>
+      //     );
+      //   }
+      // case "public":
+      //   const isPublic = polls.filter(
+      //     (poll) =>
+      //       poll.poll_access.toLowerCase() === "public" &&
+      //       poll?.options?.length > 1
+      //   );
+      //   if (isLoading) {
+      //     return <Spin />;
+      //   } else if (isPublic.length === 0) {
+      //     return <p className="mt-20">No polls to display</p>;
+      //   } else {
+      //     return isPublic.length > 0 ? (
+      //       isPublic
+      //         ?.reverse()
+      //         .map((poll, index) => (
+      //           <Polls
+      //             key={index}
+      //             onClick={() => HandlePoll(poll)}
+      //             authorName={poll.creator.username}
+      //             createdAt={formatDate(poll.created_at)}
+      //             question={poll.question}
+      //             options={poll?.options?.length > 1 && poll?.options}
+      //             daysRemaining={formatDate(poll.close_time)}
+      //             backgroundImageUrl={
+      //               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      //             }
+      //             className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+      //           />
+      //         ))
+      //     ) : (
+      //       <p className="mt-20">No polls to display</p>
+      //     );
+      //   }
       case "all":
       default:
-        if (polls.length === 0) {
+        const allPolls = polls.filter(
+          (poll) => poll?.options?.length > 1 && !poll.is_closed
+        );
+        if (isLoading) {
           return <Spin />;
+        } else if (allPolls.length === 0) {
+          return <p className="mt-20">No polls to display</p>;
         } else {
-          const allPolls = polls.filter((poll) => poll?.options?.length > 1);
           return allPolls.length > 0 ? (
             allPolls
               ?.reverse()
@@ -210,6 +228,7 @@ const Voting = () => {
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={formatDate(poll.close_time)}
+                  isClosed={poll.is_closed}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -261,6 +280,16 @@ const Voting = () => {
   //   setVoted(true);
   // };
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = ["images/fifa.png", AD1, AD2, AD3, AD4];
+
+  const goToNextImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   const [searchText, setSearchText] = useState("");
 
   const onSearch = (text) => {
@@ -270,14 +299,11 @@ const Voting = () => {
 
   const onFetchPolls = async (text) => {
     try {
+      setIsLoading(true);
       let res;
 
       if (text === "") {
-        res = await axios.get(`${url}/api/polls/find/`, {
-          headers: {
-            Authorization: `Token ${getLoginToken()}`,
-          },
-        });
+        res = await PollsApi();
       } else {
         res = await axios.get(`${url}/api/polls/find/`, {
           params: { find: text },
@@ -287,16 +313,28 @@ const Voting = () => {
         });
       }
 
-      setPolls(res?.data?.data);
+      if (res.data.status) {
+        setPolls(res?.data?.data);
+      }
     } catch (error) {
       console.log("findpolls", error);
       toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    const intervalId = setInterval(goToNextImage, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     if (searchText !== "") {
       onFetchPolls(searchText);
+    } else {
+      onFetchPolls();
     }
   }, [searchText]);
 
@@ -314,9 +352,9 @@ const Voting = () => {
                 </span>
 
                 <img
-                  src="images/fifa.png"
-                  alt="fifa-pics"
-                  className="mt-6 w-full"
+                  src={images[currentIndex]}
+                  alt="slider-pics"
+                  className="mt-6 lg:mt-10"
                 />
 
                 <CreateCastActions
@@ -333,34 +371,46 @@ const Voting = () => {
           {/* Mobile */}
           {CastVote && (
             <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 flex md:hidden flex-col bg-[#fff]">
-              <FindPolls
-                onSearch={onSearch}
-                onFetchPolls={onFetchPolls}
-                searchText={searchText}
-              />
+              <div className="flex gap-3 items-center mt-8">
+                <FaArrowLeftLong
+                  size={20}
+                  onClick={goBack}
+                  className="cursor-pointer text-lg mb-[0.5rem]"
+                />
+                <h1>Cast Vote</h1>
+              </div>
+
               <img
-                src="images/fifa.png"
-                alt="fifa-pics"
+                src={images[currentIndex]}
+                alt="slider-pics"
                 className="mt-6 lg:mt-10"
               />
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
-              <h2>Promoted Polls</h2>
-              <PromotedPolls HandlePoll={HandlePoll} />
+
+              {/* <h2>Promoted Polls</h2>
+              <PromotedPolls HandlePoll={HandlePoll} /> */}
 
               {/* tabs */}
-              <div className="flex justify-between mt-16 lg:mt-20">
-                <button
-                  className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
+              <div className=" mt-16 lg:mt-20">
+                <div
+                  className={`border-1  border-primaryColor text-primaryColor p-3 w-[100%] ${
                     viewType === "all"
-                      ? "bg-purple-900 text-white"
-                      : "border-1 border-purple-900"
-                  }`}
+                      ? "bg-primaryColor text-white"
+                      : "border-1 border-primaryColor"
+                  } `}
                   onClick={() => setViewType("all")}
                 >
-                  All
-                </button>
-                <button
+                  <h2 className="text-center">All Polls</h2>
+                </div>
+                <div className="">
+                  <FindPolls
+                    onSearch={onSearch}
+                    onFetchPolls={onFetchPolls}
+                    searchText={searchText}
+                  />
+                </div>
+                {/* <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
                     viewType === "public"
                       ? "bg-purple-900 text-white"
@@ -379,7 +429,7 @@ const Voting = () => {
                   onClick={() => setViewType("private")}
                 >
                   Private
-                </button>
+                </button> */}
               </div>
               {renderPolls()}
               <Dialog
@@ -397,34 +447,39 @@ const Voting = () => {
 
           {/* Web */}
           <div className="flex flex-row gap-4 ">
-            <div className="lg:w-[60%] px-4 pb-[40px] lg:pt-5 hidden md:flex md:flex-col bg-[#fff]">
+            <div className="md:w-[60%] px-4 pb-[40px] md:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <h1>Voting</h1>
-              
-              <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
               <img
-                src="images/fifa.png"
-                alt="fifa-pics"
+                src={images[currentIndex]}
+                alt="slider-pics"
                 className="mt-6 lg:mt-10"
               />
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
-              <h2>Promoted Polls</h2>
-              <PromotedPolls HandlePoll={HandlePoll} />
+              {/* <h2>Promoted Polls</h2>
+              <PromotedPolls HandlePoll={HandlePoll} /> */}
 
               {/* tabs */}
-              <div className="flex justify-between mt-16 lg:mt-20">
-                <button
-                  className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
+              <div className=" mt-16 md:mt-20">
+                <div
+                  className={`border-1 mt-6 border-primaryColor text-primaryColor p-3 w-[100%] ${
                     viewType === "all"
-                      ? "bg-purple-900 text-white"
-                      : "border-1 border-purple-900"
-                  }`}
+                      ? "bg-primaryColor text-white"
+                      : "border-1 border-primaryColor"
+                  } `}
                   onClick={() => setViewType("all")}
                 >
-                  All
-                </button>
-                <button
+                  <h2 className="text-center">All Polls</h2>
+                </div>
+                <div className="">
+                  <FindPolls
+                    onSearch={onSearch}
+                    onFetchPolls={onFetchPolls}
+                    searchText={searchText}
+                  />
+                </div>
+                {/* <button
                   className={`border-1 border-purple-900 text-purple-900 p-3 rounded-[40px] w-[30%] text-[12px] ${
                     viewType === "public"
                       ? "bg-purple-900 text-white"
@@ -443,7 +498,7 @@ const Voting = () => {
                   onClick={() => setViewType("private")}
                 >
                   Private
-                </button>
+                </button> */}
               </div>
               {renderPolls()}
               <Dialog
@@ -458,7 +513,7 @@ const Voting = () => {
               </Dialog>
             </div>
 
-            <div className="lg:w-[30%]  bg-[#fff] hidden lg:block fixed top-[90px] right-10 ">
+            <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
               <PollsNotification
                 setNotify={setNotify}
                 showCreateModal={() => setShowCreateModal((prev) => !prev)}
@@ -481,10 +536,11 @@ const Voting = () => {
             </div>
 
             <Polls
-              authorName={"authorName"}
+              authorName={APoll.creator.username}
               createdAt={formatDate(APoll.created_at)}
               question={APoll.question}
               daysRemaining={formatDate(APoll.close_time)}
+              isClosed={APoll.is_closed}
               cast={APoll.id}
               selectedOptionId={selectedOptionId}
               handleOptionChange={handleOptionChange}
@@ -508,9 +564,9 @@ const Voting = () => {
             </div>
           </div>
           <img
-            src="images/fifa.png"
-            alt="fifa-pics"
-            className="mb-6 w-full lg:mb-10 lg:hidden"
+            src={images[currentIndex]}
+            alt="slider-pics"
+            className="mt-6 lg:mt-10"
           />
         </div>
       )}
@@ -537,10 +593,11 @@ const Voting = () => {
                 <>
                   <Polls
                     className="lg:max-w-full lg:p-6"
-                    authorName={"authorName"}
+                    authorName={APoll.creator.username}
                     createdAt={formatDate(APoll.created_at)}
                     question={APoll.question}
                     daysRemaining={formatDate(APoll.close_time)}
+                    isClosed={APoll.is_closed}
                     cast={APoll.id}
                     selectedOptionId={selectedOptionId}
                     handleOptionChange={handleOptionChange}

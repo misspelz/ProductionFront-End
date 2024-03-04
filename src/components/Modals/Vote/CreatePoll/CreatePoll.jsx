@@ -6,11 +6,20 @@ import toast from "react-hot-toast";
 import { ModalContext } from "Context/ModalContext";
 
 const durationOptions = [
-  { label: "12 hours", value: 12 * 60 * 60 * 1000 },
   { label: "24 hours", value: 24 * 60 * 60 * 1000 },
-  { label: "36 hours", value: 36 * 60 * 60 * 1000 },
-  { label: "2 days", value: 2 * 24 * 60 * 60 * 1000 },
-  { label: "3 days", value: 3 * 24 * 60 * 60 * 1000 },
+  { label: "48 hours", value: 48 * 60 * 60 * 1000 },
+  { label: "1 week", value: 7 * 24 * 60 * 60 * 1000 },
+  { label: "2 weeks", value: 2 * 7 * 24 * 60 * 60 * 1000 },
+  ...Array.from({ length: 3 }, (_, index) => {
+    const now = new Date();
+    const currentMonth = now.getMonth() + index;
+    const currentYear = now.getFullYear();
+    const nextMonth = new Date(currentYear, currentMonth, 0);
+    return {
+      label: `${index + 1} month${index !== 0 ? "s" : ""}`,
+      value: nextMonth.getTime() - now.getTime(),
+    };
+  }),
 ];
 
 const CreatePoll = ({ onClose, fetchPolls }) => {
@@ -31,7 +40,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     singlePoll ? { ...singlePoll } : initialPollData
   );
 
-
+  console.log("pollData", pollData);
 
   const handleInputChange = (name, value) => {
     if (name === "is_paid" && !value) {
@@ -60,10 +69,13 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       const localTime = new Date(
         now.getTime() - now.getTimezoneOffset() * 60000
       );
+      localTime.setHours(2, 14, 0, 0);
+
       const closeTime = new Date(localTime.getTime() + durationInMs);
+      const formattedCloseTime = closeTime.toISOString().slice(0, -1) + "Z";
       setPollData((prevState) => ({
         ...prevState,
-        close_time: closeTime.toISOString(),
+        close_time: formattedCloseTime,
       }));
     } else if (name === "options") {
       const updatedOptions = value.map((option) => {
@@ -85,12 +97,18 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
   const handleCreateandEditPoll = async (e) => {
     e.preventDefault();
 
-    if (
-      !pollData.question ||
-      !pollData.options ||
-      pollData.options.length === 0
-    ) {
-      toast.error("Missing required fields");
+    const missingFields = [];
+    if (!pollData.question) missingFields.push("question");
+    if (!pollData.options) missingFields.push("options");
+    if (!pollData.poll_type) missingFields.push("poll type");
+    if (!pollData.close_time) missingFields.push("poll duration");
+    if (!pollData.poll_access) missingFields.push("poll access");
+    if (pollData.options && pollData.options.length < 2) {
+      toast.error("At least two options are required.");
+      return;
+    }
+    if (missingFields.length > 0) {
+      toast.error(`Missing required fields: ${missingFields.join(", ")}`);
       return;
     }
 
@@ -105,11 +123,12 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       }
 
       const resp = await apiCall(pollData, singlePoll ? singlePoll.id : null);
-     
+
       if (resp.data.status) {
         toast.success(
           singlePoll ? "Poll updated successfully" : "Poll created successfully"
         );
+        // closeModal();
       }
     } catch (error) {
       console.log("createandedit", error);
@@ -249,24 +268,15 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       )}
 
       <div className="form-field">
-        <label htmlFor="close_time">Poll duration</label>
-        <select
-          id="poll_duration"
-          name="poll_duration"
+        <label htmlFor="close_time">Close time</label>
+        <input
+          type="datetime-local"
+          id="close_time"
+          name="close_time"
           className="outline-none cursor-pointer"
-          defaultValue=""
-          value={pollData.poll_duration}
-          onChange={(e) => handleInputChange("poll_duration", e.target.value)}
-        >
-          <option value="" disabled>
-            Choose poll duration
-          </option>
-          {durationOptions.map((option) => (
-            <option key={option.label} value={option.label}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          value={pollData.close_time}
+          onChange={(e) => handleInputChange("close_time", e.target.value)}
+        />
       </div>
 
       <div className="form-field">
