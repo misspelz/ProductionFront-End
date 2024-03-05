@@ -12,7 +12,6 @@ export const Polls = ({
   question,
   options,
   daysRemaining,
-
   backgroundImageUrl,
   className = "border w-full lg:max-w-[360px] p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0",
   myPolls,
@@ -21,7 +20,6 @@ export const Polls = ({
   cast,
   HandleEdit,
   HandleDelete,
-  HandleActions,
   selectedOptionId,
   handleOptionChange,
   isClosed,
@@ -33,6 +31,19 @@ export const Polls = ({
 
   const toggleShowAction = () => {
     setShowAction(!showAction);
+  };
+
+  const isCloseTimeReached = (closeTime) => {
+    const closeDate = new Date(closeTime);
+    const currentDate = new Date();
+
+    // console.log("Current Date:", currentDate);
+    // console.log("Close Date:", closeDate);
+
+    const isReached = currentDate.getTime() >= closeDate.getTime();
+    // console.log("Is Close Time Reached:", isReached);
+
+    return isReached;
   };
 
   return (
@@ -85,9 +96,11 @@ export const Polls = ({
           <img src="images/time.png" alt="time-icon" />
           <div className="text-[#000] text-[12px] lg:text-[14px]   font-[500]">
             {isClosed ? (
-              <span className="text-red-600">Closed</span>
+              <span className="text-orange-600">Closed</span>
+            ) : isCloseTimeReached(daysRemaining) ? (
+              <span className="text-red-600">Ended</span>
             ) : (
-              <span className="text-red-600">Ends: {daysRemaining}</span>
+              <span className="text-yellow-600">Ends: {daysRemaining}</span>
             )}
           </div>
         </div>

@@ -69,4 +69,15 @@ export const advertCategory = [
   },
 ];
 
-export const formatDate = () => {};
+export const formatDate = (date) => {
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+  };
+
+  return new Date(date).toLocaleString("en-US", options);
+};
