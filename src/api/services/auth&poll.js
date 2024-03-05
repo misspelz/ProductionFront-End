@@ -1,25 +1,13 @@
 import axios from "axios";
-import { url } from "../../utils/index";
-
-let token = null;
-
-export const setToken = (newToken) => {
-  token = newToken;
-};
+import { url } from "utils/index";
 
 export const getToken = () => {
-  if (!token) {
-    token = localStorage.getItem("authTOken");
-    console.log("regtoken", token);
-  }
+  const token = localStorage.getItem("authTOken");
   return token;
 };
 
 export const getLoginToken = () => {
-  if (!token) {
-    token = localStorage.getItem("authToken");
-    console.log("logintoken", token);
-  }
+  const token = localStorage.getItem("authToken");
   return token;
 };
 

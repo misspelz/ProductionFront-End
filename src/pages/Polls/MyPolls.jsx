@@ -92,9 +92,9 @@ const MyPolls = () => {
     setViewResults((prev) => !prev);
   };
 
-  const handleShowCreateModal = () => {
-    setShowCreateModal(true);
-  };
+  // const handleShowCreateModal = () => {
+  //   setShowCreateModal(true);
+  // };
 
   const HandleEdit = (poll) => {
     setSinglePoll(poll);

@@ -33,14 +33,9 @@ import AD4 from "assets/images/AD3.png";
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
   const userInfo = JSON.parse(userInfoString);
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    const token = getToken();
-    setToken(token);
-  }, []);
 
   const [polls, setPolls] = useState([]);
+  console.log("allpolls", polls)
 
   const [selectedPoll, setSelectedPoll] = useState(false);
   const [Notify, setNotify] = useState(false);
@@ -138,6 +133,8 @@ const Voting = () => {
     handleAllPolls();
   }, []);
 
+ 
+
   const renderPolls = () => {
     switch (viewType) {
       // case "private":
@@ -211,6 +208,7 @@ const Voting = () => {
         const allPolls = polls.filter(
           (poll) => poll?.options?.length > 1 && !poll.is_closed
         );
+        
         if (isLoading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
@@ -272,13 +270,6 @@ const Voting = () => {
       setSelectedPoll(null);
     }
   };
-
-  // const [voted, setVoted] = useState(false);
-
-  // const handleVote = () => {
-  //   handleSubmitVote();
-  //   setVoted(true);
-  // };
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

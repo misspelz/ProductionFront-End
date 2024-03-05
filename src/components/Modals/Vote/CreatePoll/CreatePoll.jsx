@@ -29,7 +29,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
   const initialPollData = {
     question: "",
     poll_type: "",
-    poll_access: "",
+    // poll_access: "",
     close_time: new Date().toISOString(),
     is_paid: false,
     amount: "0",
@@ -66,16 +66,13 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       const durationInMs =
         durationOptions.find((option) => option.label === value)?.value || 0;
       const now = new Date();
-      const localTime = new Date(
-        now.getTime() - now.getTimezoneOffset() * 60000
-      );
-      localTime.setHours(2, 14, 0, 0);
+      const closeTime = new Date(now.getTime() + durationInMs);
+      
+      const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
 
-      const closeTime = new Date(localTime.getTime() + durationInMs);
-      const formattedCloseTime = closeTime.toISOString().slice(0, -1) + "Z";
       setPollData((prevState) => ({
         ...prevState,
-        close_time: formattedCloseTime,
+        close_time: formattedCloseTime, 
       }));
     } else if (name === "options") {
       const updatedOptions = value.map((option) => {
@@ -102,7 +99,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     if (!pollData.options) missingFields.push("options");
     if (!pollData.poll_type) missingFields.push("poll type");
     if (!pollData.close_time) missingFields.push("poll duration");
-    if (!pollData.poll_access) missingFields.push("poll access");
+    // if (!pollData.poll_access) missingFields.push("poll access");
     if (pollData.options && pollData.options.length < 2) {
       toast.error("At least two options are required.");
       return;
@@ -157,7 +154,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           ...prevState,
           question,
           poll_type,
-          poll_access,
+          // poll_access,
         }));
       }
     }
@@ -268,18 +265,18 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       )}
 
       <div className="form-field">
-        <label htmlFor="close_time">Close time</label>
+        <label htmlFor="close_time">Poll duration</label>
         <input
           type="datetime-local"
           id="close_time"
           name="close_time"
-          className="outline-none cursor-pointer"
           value={pollData.close_time}
+          className="outline-none cursor-pointer w-full "
           onChange={(e) => handleInputChange("close_time", e.target.value)}
         />
       </div>
 
-      <div className="form-field">
+      {/* <div className="form-field">
         <label htmlFor="poll_access">Poll access</label>
         <select
           id="poll_access"
@@ -294,7 +291,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           <option value="Public">Public</option>
           <option value="Private">Private</option>
         </select>
-      </div>
+      </div> */}
 
       {/* <div className="form-field">
         <label htmlFor="is_paid">Is paid?</label>
