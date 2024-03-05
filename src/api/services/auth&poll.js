@@ -28,7 +28,7 @@ export const Login = async (payload) => {
 };
 
 export const UserInfoApi = async (userToken) => {
-  const res = await axios.get(`${url}/api/user/account/profile/retrieve/`, {
+  const res = await axios.get(`${url}/api/user/account/profile/`, {
     headers: {
       Authorization: `Token ${userToken || getToken()}`,
     },
