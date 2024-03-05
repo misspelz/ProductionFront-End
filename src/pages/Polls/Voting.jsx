@@ -35,7 +35,7 @@ const Voting = () => {
   const userInfo = JSON.parse(userInfoString);
 
   const [polls, setPolls] = useState([]);
-  console.log("allpolls", polls)
+  // console.log("allpolls", polls)
 
   const [selectedPoll, setSelectedPoll] = useState(false);
   const [Notify, setNotify] = useState(false);
