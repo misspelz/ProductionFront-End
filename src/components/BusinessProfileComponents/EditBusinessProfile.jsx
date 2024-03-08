@@ -15,6 +15,8 @@ import ModalButton from "../Modals/ModalButton";
 import BusinessSwitch from "./BusinessSwitch";
 import CustomDropdown from "components/Modals/CustomDropdown";
 import { useProfileDetails } from "pages/Profile/useProfileDetails";
+import { useCreateBusiness } from "pages/BusinessProfile/useCreateBusiness";
+import Spinner from "components/Spinner";
 
 const EditBusinessProfile = ({ onModalClose }) => {
   const [cover, setCover] = useState("");
@@ -23,6 +25,7 @@ const EditBusinessProfile = ({ onModalClose }) => {
   const [available, setAvailable] = useState(false);
   const [data, setData] = useState({});
 
+  const { creating, business } = useCreateBusiness();
   const { profile: userInfo } = useProfileDetails();
 
   // using this to updating the checkbox for always available
@@ -97,9 +100,19 @@ const EditBusinessProfile = ({ onModalClose }) => {
     }));
   };
 
-  console.log(userInfo);
+  const handlePhoneNumbers = (e) => {
+    setData((prev) => ({
+      ...prev,
+      phone_number: {
+        ...prev.phone_number,
+        [e.target.name]: e.target.value,
+      },
+    }));
+  };
 
-  const handleBusiness = () => {
+  const handleBusiness = (e) => {
+    e.preventDefault();
+
     const formData = new FormData();
 
     const foundedData = new Date(
@@ -117,10 +130,12 @@ const EditBusinessProfile = ({ onModalClose }) => {
     });
 
     const user = JSON.stringify({
-      email: "",
-      username: "",
-      password: "",
+      email: userInfo?.data?.user.email || "bakoaayofe@gmail.com",
+      username: "bakoayofe",
+      password: data.password,
     });
+
+    const phone_number = JSON.stringify(data.phone_number);
 
     formData.append("business_name", data.business_name);
     formData.append("category", 4);
@@ -129,8 +144,11 @@ const EditBusinessProfile = ({ onModalClose }) => {
     formData.append("founded_on", foundedData);
     formData.append("availability", availability);
     formData.append("user", user);
+    formData.append("phone_number", phone_number);
 
     console.log(Object.fromEntries(formData));
+
+    business(formData);
   };
 
   return (
@@ -225,7 +243,8 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   stallValue="Category"
                   menu={category}
                   name="category"
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  setData={setData}
                 />
               </div>
             </div>
@@ -237,18 +256,21 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   menu={day}
                   name="date_day"
                   onChange={handleChange}
+                  setData={setData}
                 />
                 <CustomDropdown
                   stallValue="Month"
                   menu={month}
                   name="date_month"
                   onChange={handleChange}
+                  setData={setData}
                 />
                 <CustomDropdown
                   stallValue="Year"
                   menu={years}
                   name="date_year"
                   onChange={handleChange}
+                  setData={setData}
                 />
               </ProfileEditOption>
 
@@ -269,16 +291,16 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   placeholder={`Phone number ${num}`}
                   key={num}
                   name={`phone${num}`}
-                  onChange={handleChange}
+                  onChange={handlePhoneNumbers}
                 />
               ))}
 
-              <button
+              <div
                 onClick={handleAddNumber}
-                className="self-end w-[166px] h-[53px] border border-gray-600 rounded-md flex justify-center items-center  gap-[1.5rem] !text-gray-500 text-[19px]"
+                className="self-end w-[166px] h-[53px] border border-gray-600 rounded-md flex justify-center items-center  gap-[1.5rem] !text-gray-500 text-[19px] cursor-pointer"
               >
                 <GoPlus /> Add another
-              </button>
+              </div>
             </div>
           </div>
 
@@ -376,7 +398,9 @@ const EditBusinessProfile = ({ onModalClose }) => {
                 </span>
               </p>
 
-              <ModalButton>Create business</ModalButton>
+              <ModalButton>
+                {creating === "pending" ? <Spinner /> : "Create Business"}
+              </ModalButton>
             </div>
           </div>
         </div>

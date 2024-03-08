@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { getUserStickers } from 'services/profileRequest';
+import { useQuery } from "@tanstack/react-query";
+import { getUserStickers } from "services/profile_business_API";
 
 export const useGetStickers = () => {
   const { status: stickerStatus, data: stickers } = useQuery({
-    queryKey: ['stickers'],
+    queryKey: ["stickers"],
     queryFn: getUserStickers,
   });
 

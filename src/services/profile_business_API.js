@@ -45,6 +45,38 @@ export const updateProfile = async (formData) => {
   }
 };
 
+export const createBusiness = async (formData) => {
+  try {
+    const response = await fetch(`${mainURL}/api/business`, {
+      ...requestOptions,
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const getCurrentActiveBusiness = async () => {
+  try {
+    const response = await fetch(`${mainURL}/api/business`, requestOptions);
+
+    const data = await response.json();
+
+    console.log(data);
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 // changing password
 export const changePassword = async (credentials) => {
   try {
@@ -52,6 +84,10 @@ export const changePassword = async (credentials) => {
       ...requestOptions,
       method: "POST",
       body: JSON.stringify(credentials),
+      headers: {
+        ...requestOptions.headers,
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();

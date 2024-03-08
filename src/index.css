@@ -156,6 +156,10 @@ img {
   width: 0vh;
 }
 
+.change_password_container_items {
+  @apply flex flex-col gap-[10px];
+}
+
 @media screen and (max-width: 1150px) {
   .edit_profile_content_direct_wrapper {
     flex-direction: column;
