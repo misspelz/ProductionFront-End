@@ -1,4 +1,4 @@
-import { Select, Space } from 'antd';
+import { Select } from "antd";
 
 const CustomDropdown = ({ stallValue, menu, name, setData }) => {
   const handleChange = (value) => {
@@ -11,10 +11,7 @@ const CustomDropdown = ({ stallValue, menu, name, setData }) => {
   return (
     <Select
       defaultValue={stallValue}
-      style={{
-        width: '100%',
-        height: '43px',
-      }}
+      className="w-full h-[43px]"
       onChange={handleChange}
       options={menu}
     />

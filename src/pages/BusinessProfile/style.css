@@ -45,7 +45,7 @@
 }
 
 .business_posts_container .posts {
-  max-width: 720px;
+  width: 100%;
   overflow-x: scroll;
   white-space: nowrap;
 
@@ -147,144 +147,46 @@
 }
 
 /* BUSINESS PROFILE MODAL */
-.business_profile_container {
-  padding: 10px 20px;
-  overflow-y: auto;
-  height: 700px;
-}
-
-.edit_business_profile_content_message {
-  text-align: center;
-  color: #4f0da3;
-  font-weight: 700;
-}
-
-.edit_business_profile_content {
-  display: flex;
-  flex-direction: column;
-  gap: 0rem;
-}
-
-.edit_business_profile_content > div {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 0;
-}
-
-.edit_business_profile_content .top_content,
-.edit_business_profile_content .bottom_content {
-  width: 100%;
-
-  display: flex;
-  gap: 20px;
-}
-
-.edit_business_profile_content .top_content > div {
-  flex: 1;
-}
-
-.business_profile_category {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.title_not_needed > label {
-  opacity: 0;
-}
-
-.create_username_input {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.create_username_input label {
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 2rem;
-}
-
-.create_username_input .wrapper {
-  display: flex;
-  align-items: center;
-
-  padding: 0 15px;
-  border: 1px solid #c6c6c6;
-  border-radius: 7px;
-  font-size: 14px;
-
-  transition: all 0.4s ease;
-}
-
-.create_username_input .wrapper:focus-within {
-  background: #f3f3f3;
-}
-
-.create_username_input .wrapper input {
-  width: 100%;
-  background: none;
-  border: none;
-}
-
-.create_username_input .wrapper input::placeholder {
-  color: #257b05;
-}
-
-.create_username_input .suppose {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.create_username_input .suppose span {
-  text-decoration: underline;
-}
-
-.business_availability {
+/* .business_availability {
   display: flex;
   flex-direction: column;
   gap: 15px;
 
   padding: 3rem 0;
-}
+} */
 
-.business_availability h1 {
+/* .business_availability h1 {
   font-size: 17px;
   font-weight: 500;
   color: #000000cc;
-}
+} */
 
-.business_availability p {
+/* .business_availability p {
   font-size: 13px;
   font-weight: 400;
   color: #00000099;
-}
+} */
 
-.business_availability .availability {
+/* .business_availability .availability {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
+} */
 
-.react_switch {
+/* .react_switch {
   border: 1px solid #d0d0d091;
-}
+} */
 
-.business_availability .uncheckedIcon {
+/* .business_availability .uncheckedIcon {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   font-size: 13px;
-  padding-right: 2;
   color: #898989;
-}
+} */
 
-.business_availability .uncheckedHandle {
+/* .business_availability .uncheckedHandle {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -292,18 +194,18 @@
   border-radius: 100%;
 
   background: #cfcfcfdf;
-}
+} */
 
-.business_availability .checkedHandleIcon {
+/* .business_availability .checkedHandleIcon {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   background: #ffff;
   border-radius: 100%;
-}
+} */
 
-.business_availability .checkedText {
+/* .business_availability .checkedText {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -311,15 +213,15 @@
   font-size: 13px;
   padding-right: 2;
   color: #ffffff;
-}
+} */
 
-.business_availability .availability .available {
+/* .business_availability .availability .available {
   display: flex;
   align-items: center;
   gap: 10px;
-}
+} */
 
-.always_available {
+/* .always_available {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -327,22 +229,22 @@
   font-size: 13px;
   font-weight: 400;
   color: #00000099;
-}
+} */
 
-.final_touch {
+/* .final_touch {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
   gap: 20px;
-}
+} */
 
-.final_touch .final_touch_mark {
+/* .final_touch .final_touch_mark {
   font-size: 19px;
-}
+} */
 
-.final_touch p {
+/* .final_touch p {
   height: 40px;
   padding: 10px;
 
@@ -356,7 +258,7 @@
   font-size: 12px;
   font-weight: 500;
   color: #11132b;
-}
+} */
 
 @media screen and (max-width: 1150px) {
   .business_profile_container {
