@@ -2,7 +2,7 @@ import axios from "axios";
 import { url } from "utils/index";
 
 export const getToken = () => {
-  const token = localStorage.getItem("authTOken");
+  const token = localStorage.getItem("authToken");
   return token;
 };
 
@@ -16,21 +16,21 @@ export const getLoginToken = () => {
  */
 
 export const Register = async (payload) => {
-  const res = await axios.post(`${url}/api/user/auth/register/`, {
+  const res = await axios.post(`${url}/api/auth/register/`, {
     ...payload,
   });
   return res;
 };
 
 export const Login = async (payload) => {
-  const res = await axios.post(`${url}/api/user/auth/login/`, { ...payload });
+  const res = await axios.post(`${url}/api/auth/login/`, { ...payload });
   return res;
 };
 
 export const UserInfoApi = async (userToken) => {
-  const res = await axios.get(`${url}/api/user/account/profile/`, {
+  const res = await axios.get(`${url}/api/account/profile/retrieve/`, {
     headers: {
-      Authorization: `Token ${userToken || getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return res;
@@ -38,7 +38,7 @@ export const UserInfoApi = async (userToken) => {
 
 export const ReSendOTP = async (verificationType) => {
   const res = await axios.get(
-    `${url}/api/user/auth/resend-otp/?verification_type=${verificationType}`,
+    `${url}/api/auth/resend-otp/?verification_type=${verificationType}`,
     {
       headers: {
         Authorization: `Token ${getToken()}`,
@@ -50,7 +50,7 @@ export const ReSendOTP = async (verificationType) => {
 
 export const VerifyOTP = async (data) => {
   const res = await axios.post(
-    `${url}/api/user/auth/verify-account/`,
+    `${url}/api/auth/verify-account/`,
     { ...data },
     {
       headers: {
