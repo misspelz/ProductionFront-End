@@ -1,14 +1,14 @@
-import { useMutation } from '@tanstack/react-query';
-import { editProfile } from 'services/profileRequest';
+import { useMutation } from "@tanstack/react-query";
+import { updateProfile } from "services/profileRequest";
 
 export const useEditProfile = () => {
-  const { status: editStatus, mutate: editing } = useMutation({
-    mutationFn: editProfile,
+  const { status: updateStatus, mutate: updating } = useMutation({
+    mutationFn: updateProfile,
 
     onSuccess: (response) => {
       console.log(response);
     },
   });
 
-  return { editStatus, editing };
+  return { updateStatus, updating };
 };

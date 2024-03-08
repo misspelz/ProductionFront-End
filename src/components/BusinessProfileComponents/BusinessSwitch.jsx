@@ -1,40 +1,56 @@
-import { useState } from "react";
 import Switch from "react-switch";
 import { TimePicker } from "antd";
+import { formatBusinessAvailabilityTime } from "utils/helper";
 
-const BusinessSwitch = ({ day }) => {
-  const [checked, setChecked] = useState();
-
+const BusinessSwitch = ({ day, type, setData, checked }) => {
   const handleChange = () => {
-    setChecked((checked) => !checked);
+    setData((prev) => ({
+      ...prev,
+      availability: {
+        ...prev.availability,
+        [type]: !checked,
+      },
+    }));
   };
 
-  const handleTimePickerChange = () => {
-    console.log("Changed!");
-  };
+  const onChange = (_, timeString) => {
+    const availableTimes = formatBusinessAvailabilityTime(timeString);
 
-  const onChange = (time, timeString) => {
-    console.log(time, timeString);
+    setData((prev) => ({
+      ...prev,
+      originalAvailability: {
+        ...prev.originalAvailability,
+        [type]: availableTimes,
+      },
+    }));
   };
 
   return (
-    <div className="available">
+    <div className="flex items-center gap-[10px]">
       <label htmlFor="small-radius-switch">
         <Switch
-          checked={checked}
+          checked={checked || false}
           onChange={handleChange}
           handleDiameter={28}
-          offColor="#ffff"
+          offColor="#fff"
           onColor="#0A75C3"
           offHandleColor="#fafafa"
           onHandleColor="#0e171e"
           height={40}
           width={70}
-          uncheckedIcon={<div className="uncheckedIcon">{day}</div>}
-          checkedIcon={<div className="checkedText">{day}</div>}
-          uncheckedHandleIcon={<div className="uncheckedHandle"></div>}
-          checkedHandleIcon={<div className="checkedHandleIcon"></div>}
-          className="react_switch"
+          uncheckedIcon={
+            <div className="react_switch_icon text-[#898989]">{day}</div>
+          }
+          checkedIcon={
+            <div className="react_switch_icon text-[#ffffff]">{day}</div>
+          }
+          uncheckedHandleIcon={
+            <div className="react_switch_handler bg-[#cfcfcfdf]"></div>
+          }
+          checkedHandleIcon={
+            <div className="react_switch_handler bg-[#fff]"></div>
+          }
+          className="border !border-[#d0d0d091]"
           id="react_switch"
         />
       </label>
@@ -44,6 +60,7 @@ const BusinessSwitch = ({ day }) => {
         format="h:mm:ss A"
         onChange={onChange}
         className="ant_range_picker"
+        disabled={checked}
       />
     </div>
   );
