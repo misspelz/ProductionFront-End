@@ -82,6 +82,7 @@ export const formatDate = (date) => {
   return new Date(date).toLocaleString("en-US", options);
 };
 
+// formatting business opening and closing info
 export const formatBusinessAvailabilityTime = (timesInCollection) => {
   const open_from = timesInCollection[0].split(" ")[0];
   const close_at = timesInCollection[1].split(" ")[0];

@@ -282,7 +282,6 @@
   .edit_business_profile_content .top_content,
   .edit_business_profile_content .bottom_content {
     flex-direction: column;
-    /* gap: 20px; */
   }
 
   .title_not_needed > label {

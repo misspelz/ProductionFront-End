@@ -3,7 +3,13 @@ import { MdEdit, MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
 import { Checkbox } from "antd";
 import { IoShieldCheckmark } from "react-icons/io5";
-import { category, day, month, years } from "utils/helper";
+import {
+  category,
+  day,
+  month,
+  validateBusinessInfo,
+  years,
+} from "utils/helper";
 
 import ModalWrapper from "../Modals/ModalWrapper";
 import ModalHeader from "../Modals/ModalHeader";
@@ -17,16 +23,24 @@ import CustomDropdown from "components/Modals/CustomDropdown";
 import { useProfileDetails } from "pages/Profile/useProfileDetails";
 import { useCreateBusiness } from "pages/BusinessProfile/useCreateBusiness";
 import Spinner from "components/Spinner";
+import ErrorMessage from "components/Modals/ErrorMessage";
+import { useModal } from "Hooks/useModal";
+import { useQueryClient } from "@tanstack/react-query";
 
-const EditBusinessProfile = ({ onModalClose }) => {
+const EditBusinessProfile = ({ type, onModalClose }) => {
   const [cover, setCover] = useState("");
   const [profile, setProfile] = useState("");
   const [addNumber, setAddNumber] = useState(1);
   const [available, setAvailable] = useState(false);
   const [data, setData] = useState({});
+  const [error, setError] = useState({});
+  const { setModal } = useModal();
 
   const { creating, business } = useCreateBusiness();
-  const { profile: userInfo } = useProfileDetails();
+  const queryClient = useQueryClient();
+  // const { profile: userInfo } = useProfileDetails();
+
+  const modalType = Boolean(type);
 
   // using this to updating the checkbox for always available
   useEffect(() => {
@@ -94,6 +108,8 @@ const EditBusinessProfile = ({ onModalClose }) => {
   };
 
   const handleChange = (e) => {
+    setError({});
+
     setData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -101,6 +117,8 @@ const EditBusinessProfile = ({ onModalClose }) => {
   };
 
   const handlePhoneNumbers = (e) => {
+    setError();
+
     setData((prev) => ({
       ...prev,
       phone_number: {
@@ -113,47 +131,115 @@ const EditBusinessProfile = ({ onModalClose }) => {
   const handleBusiness = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    // validating business required fields
+    if (!data.business_name) {
+      return setError({
+        business_name: "Business name is required!",
+      });
+    }
 
-    const foundedData = new Date(
-      `${data.date_year} ${data.date_month} ${data.date_day}`
-    );
+    if (!data.date_day || !data.date_month || !data.date_year) {
+      return setError({
+        founded_date: "Founded date is required!",
+      });
+    }
 
-    const availability = JSON.stringify({
-      monday: data.originalAvailability.monday,
-      tuesday: data.originalAvailability.tuesday,
-      wednesday: data.originalAvailability.wednesday,
-      thursday: data.originalAvailability.thursday,
-      friday: data.originalAvailability.friday,
-      saturday: data.originalAvailability.saturday,
-      sunday: data.originalAvailability.sunday,
+    if (!data.address) {
+      return setError({
+        address: "Address is required!",
+      });
+    }
+
+    if (!data.phone_number) {
+      return setError({
+        phone_number: "One phone number is required!",
+      });
+    }
+
+    if (!data.username) {
+      return setError({
+        username: "Username is required!",
+      });
+    }
+
+    if (!data.password) {
+      return setError({
+        password: "Password is required!",
+      });
+    }
+
+    if (!data.bio) {
+      return setError({
+        bio: "Bio is required!",
+      });
+    }
+
+    if (!data.availability) {
+      return setError({
+        availability: "Availability is required!",
+      });
+    }
+
+    if (Object.values(data?.originalAvailability).length < 6) {
+      return setError({
+        availability: "All availability is required!",
+      });
+    }
+
+    setError({});
+
+    const foundedDate = `${data.date_year}-${data.date_month}-${data.date_day}`;
+
+    const mail = Math.floor(Math.random() * 230 + 1);
+
+    const fullData = {
+      business_name: data.business_name,
+      address: data.address,
+      about: data.bio,
+      category_id: 1,
+      business_email: "bakoaayofe@gmail.com",
+      website_link: "https://2geda.net/",
+      founded_on: foundedDate,
+      phone_number: data.phone_number,
+      user: {
+        email: `bakoayofe${mail}@gmail.com`,
+        username: data.username,
+        password: data.password,
+      },
+      availability: data.originalAvailability,
+    };
+
+    business(fullData, {
+      onSuccess: (response) => {
+        console.log(response);
+
+        if (!response.status) {
+          if (response.message === "Validation error!") {
+            setError({
+              valError: Object.values(
+                response.data.user.non_field_errors
+              ).join(),
+            });
+          }
+        }
+
+        if (response.status) {
+          queryClient.invalidateQueries({
+            queryKey: ["business"],
+          });
+
+          return setModal({});
+        }
+      },
     });
-
-    const user = JSON.stringify({
-      email: userInfo?.data?.user.email || "bakoaayofe@gmail.com",
-      username: "bakoayofe",
-      password: data.password,
-    });
-
-    const phone_number = JSON.stringify(data.phone_number);
-
-    formData.append("business_name", data.business_name);
-    formData.append("category", 4);
-    formData.append("address", data.address);
-    formData.append("bio", data.bio);
-    formData.append("founded_on", foundedData);
-    formData.append("availability", availability);
-    formData.append("user", user);
-    formData.append("phone_number", phone_number);
-
-    console.log(Object.fromEntries(formData));
-
-    business(formData);
   };
 
   return (
     <ModalWrapper>
-      <ModalHeader header="Edit Business Profile" onModalClose={onModalClose} />
+      <ModalHeader
+        header={`${modalType ? "Edit" : "Create"} Business Profile`}
+        onModalClose={onModalClose}
+      />
 
       <form
         onSubmit={handleBusiness}
@@ -235,7 +321,18 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   placeholder="Profession or business name"
                   name="business_name"
                   onChange={handleChange}
+                  setError={setError}
                 />
+                <span>
+                  {error?.business_name && (
+                    <ErrorMessage> {error.business_name}</ErrorMessage>
+                  )}
+                </span>
+                <span>
+                  {error?.valError && (
+                    <ErrorMessage> {error.valError}</ErrorMessage>
+                  )}
+                </span>
               </div>
 
               <div className="w-full">
@@ -250,29 +347,36 @@ const EditBusinessProfile = ({ onModalClose }) => {
             </div>
 
             <div className="flex gap-[20px] w-full">
-              <ProfileEditOption header="Date Founded">
-                <CustomDropdown
-                  stallValue="Day"
-                  menu={day}
-                  name="date_day"
-                  onChange={handleChange}
-                  setData={setData}
-                />
-                <CustomDropdown
-                  stallValue="Month"
-                  menu={month}
-                  name="date_month"
-                  onChange={handleChange}
-                  setData={setData}
-                />
-                <CustomDropdown
-                  stallValue="Year"
-                  menu={years}
-                  name="date_year"
-                  onChange={handleChange}
-                  setData={setData}
-                />
-              </ProfileEditOption>
+              <div className="w-full">
+                <ProfileEditOption header="Date Founded">
+                  <CustomDropdown
+                    stallValue="Day"
+                    menu={day}
+                    name="date_day"
+                    onChange={handleChange}
+                    setData={setData}
+                  />
+                  <CustomDropdown
+                    stallValue="Month"
+                    menu={month}
+                    name="date_month"
+                    onChange={handleChange}
+                    setData={setData}
+                  />
+                  <CustomDropdown
+                    stallValue="Year"
+                    menu={years}
+                    name="date_year"
+                    onChange={handleChange}
+                    setData={setData}
+                  />
+                </ProfileEditOption>
+                <span>
+                  {error?.founded_date && (
+                    <ErrorMessage> {error.founded_date}</ErrorMessage>
+                  )}
+                </span>
+              </div>
 
               <div className="w-full">
                 <label className="opacity-0">None</label>
@@ -282,6 +386,12 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   onChange={handleChange}
                   name="address"
                 />
+
+                <span>
+                  {error?.address && (
+                    <ErrorMessage> {error.address}</ErrorMessage>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -295,6 +405,12 @@ const EditBusinessProfile = ({ onModalClose }) => {
                 />
               ))}
 
+              <span className="-mt-6">
+                {error?.phone_number && (
+                  <ErrorMessage> {error.phone_number}</ErrorMessage>
+                )}
+              </span>
+
               <div
                 onClick={handleAddNumber}
                 className="self-end w-[166px] h-[53px] border border-gray-600 rounded-md flex justify-center items-center  gap-[1.5rem] !text-gray-500 text-[19px] cursor-pointer"
@@ -307,28 +423,55 @@ const EditBusinessProfile = ({ onModalClose }) => {
           {/* MIDDLE */}
           <div className="flex flex-col gap-[20px]">
             <div className="flex gap-[20px] w-full">
-              <ProfileInput
-                placeholder="Create username"
-                name="username"
-                onChange={handleChange}
-              />
-              <ProfileInput
-                placeholder="Create Password"
-                name="password"
-                onChange={handleChange}
-              />
+              <div className="w-full">
+                <ProfileInput
+                  placeholder="Create username"
+                  name="username"
+                  onChange={handleChange}
+                />
+                <span>
+                  {error?.username && (
+                    <ErrorMessage> {error.username}</ErrorMessage>
+                  )}
+                </span>
+
+                <span>
+                  {error?.valError && (
+                    <ErrorMessage> {error.valError}</ErrorMessage>
+                  )}
+                </span>
+              </div>
+
+              <div className="w-full">
+                <ProfileInput
+                  placeholder="Create Password"
+                  name="password"
+                  onChange={handleChange}
+                />
+                <span>
+                  {error?.password && (
+                    <ErrorMessage> {error.password}</ErrorMessage>
+                  )}
+                </span>
+              </div>
             </div>
 
-            <div className="bottom_content edit_profile_input_and_textarea_container">
-              <textarea
-                placeholder="Bio"
-                className="resize-none"
-                name="bio"
-                onChange={handleChange}
-              ></textarea>
+            <div className="edit_profile_input_and_textarea_container">
+              <div className="w-full flex flex-col">
+                <textarea
+                  placeholder="Bio"
+                  className="resize-none"
+                  name="bio"
+                  onChange={handleChange}
+                ></textarea>
 
-              <span className="self-end">Max 50 words</span>
+                <span className="self-end">Max 50 words</span>
+              </div>
             </div>
+
+            <span className="-mt-6">
+              {error?.bio && <ErrorMessage> {error.bio}</ErrorMessage>}
+            </span>
           </div>
 
           {/* BOTTOM */}
@@ -387,6 +530,12 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   checked={data?.availability?.sunday}
                 />
               </div>
+
+              <span className="-mt-6">
+                {error?.availability && (
+                  <ErrorMessage> {error.availability}</ErrorMessage>
+                )}
+              </span>
             </div>
 
             <div className="flex justify-center items-center flex-col gap-[20px]">
@@ -396,6 +545,12 @@ const EditBusinessProfile = ({ onModalClose }) => {
                   Your data is protected under the Standard International User
                   Act
                 </span>
+              </p>
+
+              <p>
+                {error?.message && (
+                  <ErrorMessage> {error.message}</ErrorMessage>
+                )}
               </p>
 
               <ModalButton>

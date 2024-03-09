@@ -7,6 +7,7 @@ const mainURL = "https://development.2geda.net";
 const requestOptions = {
   headers: {
     Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+    "Content-Type": "application/json",
   },
 };
 
@@ -37,25 +38,21 @@ export const updateProfile = async (formData) => {
 
     const data = await response.json();
 
-    console.log(data);
-
     return data;
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export const createBusiness = async (formData) => {
+export const createBusiness = async (businessData) => {
   try {
-    const response = await fetch(`${mainURL}/api/business`, {
+    const response = await fetch(`${mainURL}/api/business/`, {
       ...requestOptions,
       method: "POST",
-      body: formData,
+      body: JSON.stringify(businessData),
     });
 
     const data = await response.json();
-
-    console.log(data);
 
     return data;
   } catch (err) {
@@ -68,8 +65,6 @@ export const getCurrentActiveBusiness = async () => {
     const response = await fetch(`${mainURL}/api/business`, requestOptions);
 
     const data = await response.json();
-
-    console.log(data);
 
     return data;
   } catch (err) {

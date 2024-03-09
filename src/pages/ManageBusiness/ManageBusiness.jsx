@@ -12,21 +12,17 @@ import { useModal } from "Hooks/useModal";
 import EditBusinessProfile from "components/BusinessProfileComponents/EditBusinessProfile";
 import ModalContainer from "components/Modals/ModalContainer";
 import { useCurrentBusinessLists } from "pages/BusinessProfile/useCurrentBusinessLists";
+import { useOpenModal } from "Hooks/useOpenModal";
 
 const ManageBusiness = () => {
-  const { businessesStatus, businesses } = useCurrentBusinessLists();
-  const { modal, setModal } = useModal();
   const navigate = useNavigate();
+
+  const { modal } = useModal();
+  const { handleClick } = useOpenModal();
+
+  const { businessesStatus, businesses } = useCurrentBusinessLists();
+
   const manageBusiness = [4];
-
-  const handleClick = (e) => {
-    const type = e.target.attributes.typeof.nodeValue;
-
-    setModal((prev) => ({
-      ...prev,
-      [type]: true,
-    }));
-  };
 
   console.log(businesses === "pending" ? "Loading" : businesses);
 
@@ -55,9 +51,9 @@ const ManageBusiness = () => {
             {manageBusiness.length > 0 && (
               <>
                 <div
-                  className="add_new_bussiness_btn"
+                  className="add_new_bussiness_btn clickModalOpen"
                   onClick={handleClick}
-                  typeof="setting"
+                  data-modal="setting"
                 >
                   <img src={plus} alt="Plus" />
                 </div>
