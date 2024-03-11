@@ -28,12 +28,12 @@ export const getProfileData = async () => {
 };
 
 // edit user profile
-export const updateProfile = async (formData) => {
+export const updateProfile = async (profileData) => {
   try {
     const response = await fetch(`${mainURL}/api/account/profile/update/`, {
       ...requestOptions,
       method: "PATCH",
-      body: formData,
+      body: JSON.stringify(profileData),
     });
 
     const data = await response.json();
@@ -62,11 +62,11 @@ export const createBusiness = async (businessData) => {
 
 export const getCurrentActiveBusiness = async () => {
   try {
-    const response = await fetch(`${mainURL}/api/business`, requestOptions);
+    const response = await fetch(`${mainURL}/api/business/`, requestOptions);
 
     const data = await response.json();
 
-    return data;
+    return data.data;
   } catch (err) {
     throw new Error(err);
   }

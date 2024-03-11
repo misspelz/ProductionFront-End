@@ -3,13 +3,7 @@ import { MdEdit, MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
 import { Checkbox } from "antd";
 import { IoShieldCheckmark } from "react-icons/io5";
-import {
-  category,
-  day,
-  month,
-  validateBusinessInfo,
-  years,
-} from "utils/helper";
+import { category, day, month, years } from "utils/helper";
 
 import ModalWrapper from "../Modals/ModalWrapper";
 import ModalHeader from "../Modals/ModalHeader";
@@ -26,6 +20,7 @@ import Spinner from "components/Spinner";
 import ErrorMessage from "components/Modals/ErrorMessage";
 import { useModal } from "Hooks/useModal";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const EditBusinessProfile = ({ type, onModalClose }) => {
   const [cover, setCover] = useState("");
@@ -38,6 +33,7 @@ const EditBusinessProfile = ({ type, onModalClose }) => {
 
   const { creating, business } = useCreateBusiness();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   // const { profile: userInfo } = useProfileDetails();
 
   const modalType = Boolean(type);
@@ -228,7 +224,10 @@ const EditBusinessProfile = ({ type, onModalClose }) => {
             queryKey: ["business"],
           });
 
-          return setModal({});
+          setModal({});
+
+          navigate("/manage-business");
+          return;
         }
       },
     });

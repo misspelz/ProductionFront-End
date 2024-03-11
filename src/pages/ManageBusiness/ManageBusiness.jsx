@@ -13,6 +13,7 @@ import EditBusinessProfile from "components/BusinessProfileComponents/EditBusine
 import ModalContainer from "components/Modals/ModalContainer";
 import { useCurrentBusinessLists } from "pages/BusinessProfile/useCurrentBusinessLists";
 import { useOpenModal } from "Hooks/useOpenModal";
+import { ManageBusinessSkeleton } from "components/ManageBusinessSkeleton";
 
 const ManageBusiness = () => {
   const navigate = useNavigate();
@@ -37,14 +38,18 @@ const ManageBusiness = () => {
             />
 
             <div className="bottom_box">
-              {!manageBusiness.length ? (
+              {businessesStatus === "pending" ? (
+                Array.from({ length: 20 }, (_, i) => i + 1).map((ske) => (
+                  <ManageBusinessSkeleton key={ske} />
+                ))
+              ) : businessesStatus === "error" ? (
+                "Please check your internet "
+              ) : businesses.length === 0 ? (
                 <ManageBusinessEmpty />
               ) : (
-                <div className="business_lists">
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((list) => (
-                    <ManageBusinessLists key={list + 1} />
-                  ))}
-                </div>
+                businesses.map((business, i) => (
+                  <ManageBusinessLists key={i + 1} />
+                ))
               )}
             </div>
 
