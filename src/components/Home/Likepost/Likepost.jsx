@@ -13,9 +13,26 @@ import {
 	ThumbsDown,
 } from "assets/custom-icons";
 import { EmojiHug } from "assets/custom-icons/Emojihug";
+import { useCreateReaction } from "api/hooks/feeds";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const Likepost = () => {
+/**********************************************************************************
+ * Reactions DTO to corresponding ID's
+ * Like: 1, Dislike: 2, Love/ Hug: 3, Sad: 4, Angry: 5, Surprised: 6, Laughing: 7
+***********************************************************************************/
+
+const Likepost = ({ postId }) => {
+    const { reaction, isLoading, isSuccess } = useCreateReaction({
+			postId,
+			onSuccess: (response) => {
+				console.log({ response });
+			},
+			onError: (errorResponse) => {
+				console.log({ errorResponse });
+			},
+		});
 	const [anchorEl, setAnchorEl] = useState(null);
+	// const [reactionData, setReactionData] = useState({});
 	const open = Boolean(anchorEl);
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -23,6 +40,12 @@ const Likepost = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+    const handleReact = (reactionId) => {
+        reaction({ reaction_type: reactionId });
+        handleClose();
+    }
+
 
 	return (
 		<div className="share-post-container">
@@ -35,9 +58,15 @@ const Likepost = () => {
 					background: "transparent",
 					minWidth: "fit-content",
 					padding: 0,
+					color: "#000000b9",
 				}}
+				disabled={isLoading}
 			>
-				<BiLike size={24} color="#000000b9" />
+				{isLoading ? (
+					<CircularProgress size={20} color="inherit" />
+				) : (
+					<BiLike size={24} color={isSuccess ? "blue" : "#000000b9"} />
+				)}
 			</Button>
 			<Menu
 				id="share-menu"
@@ -61,25 +90,53 @@ const Likepost = () => {
 				}}
 				className="like-post-dropdown"
 			>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(1);
+					}}
+				>
 					<ThumbsUp />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(2);
+					}}
+				>
 					<ThumbsDown />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(3);
+					}}
+				>
 					<EmojiHug />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(4);
+					}}
+				>
 					<EmojiLaughing />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(5);
+					}}
+				>
 					<EmojiSad />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(6);
+					}}
+				>
 					<EmojiAngry />
 				</MenuItem>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						handleReact(7);
+					}}
+				>
 					<EmojiSurprised />
 				</MenuItem>
 			</Menu>
