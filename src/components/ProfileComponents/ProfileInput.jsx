@@ -1,4 +1,4 @@
-const ProfileInput = ({ placeholder, onChange, name }) => {
+const ProfileInput = ({ placeholder, onChange, name, value }) => {
   return (
     <input
       type="text"
@@ -6,6 +6,7 @@ const ProfileInput = ({ placeholder, onChange, name }) => {
       placeholder={placeholder}
       onChange={onChange}
       name={name}
+      value={value}
     />
   );
 };

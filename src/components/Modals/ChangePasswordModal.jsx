@@ -1,19 +1,24 @@
-import { useState } from 'react';
-import { useChangePassword } from 'pages/Profile/useChangePassword';
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useChangePassword } from "pages/Profile/useChangePassword";
 
-import PasswordInput from '../ProfileComponents/PasswordInput';
-import ModalHeader from './ModalHeader';
-import ModalWrapper from './ModalWrapper';
-import ModalButton from './ModalButton';
-import ErrorMessage from './ErrorMessage';
-import { useDeleteAccount } from 'pages/Profile/useDeleteAccount';
-import Spinner from 'components/Spinner';
+import PasswordInput from "../ProfileComponents/PasswordInput";
+import ModalHeader from "./ModalHeader";
+import ModalWrapper from "./ModalWrapper";
+import ModalButton from "./ModalButton";
+import ErrorMessage from "./ErrorMessage";
+import { useDeleteAccount } from "pages/Profile/useDeleteAccount";
+import Spinner from "components/Spinner";
+import { useModal } from "Hooks/useModal";
+import { useNavigate } from "react-router-dom";
 
 const ChangePasswordModal = ({ onModalClose }) => {
+  const navigate = useNavigate();
+  const { setModal } = useModal();
   const [data, setData] = useState({});
   const [error, setError] = useState({});
   const { changingStatus, updatingPassword } = useChangePassword();
-  const { deleteStatus, deleteAccount } = useDeleteAccount();
+  const { deletingStatus, deleteAccount } = useDeleteAccount();
 
   // handle input change
   const handleChange = (e) => {
@@ -45,53 +50,74 @@ const ChangePasswordModal = ({ onModalClose }) => {
 
     if (!data.confirm_new_password) {
       return setError({
-        confirm: 'empty',
+        confirm: "empty",
       });
     }
 
     // Checking for same new password :)
     if (data.confirm_new_password !== data.new_password) {
       return setError({
-        confirm: 'not-same',
+        confirm: "not-same",
       });
     }
 
     const { confirm_new_password, ...others } = data;
 
     // update function
-    updatingPassword(others);
+    updatingPassword(others, {
+      onSuccess: (data) => {
+        if (data?.detail === "Invalid token.") {
+          return navigate("/Signin");
+        }
+
+        if (!data.status) {
+          return setError({
+            responseMessage: data.message,
+          });
+        }
+
+        if (data.status) {
+          setModal({});
+
+          return toast.success(data.message);
+        }
+      },
+    });
   };
 
   // delete account
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = (e) => {
+    e.preventDefault();
+
+    console.log(deletingStatus);
     deleteAccount();
   };
 
   return (
     <ModalWrapper>
-      <ModalHeader header='Change password' onModalClose={onModalClose} />
+      <ModalHeader header="Change password" onModalClose={onModalClose} />
 
-      <form className='change_password_container'>
-        <div className='change_password_container_top'>
-          <h2>Input current password</h2>
+      <form className="py-[30px] px-[20px] h-[90vh] lg:p-[20px] lg:h-auto flex flex-col gap-[30px]">
+        <div className="change_password_container_items">
+          <h2 className="text-[15px] font-normal">Input current password</h2>
 
           <PasswordInput
-            placeholder='Current Password'
+            placeholder="Current Password"
             onChange={handleChange}
-            name='old_password'
+            name="old_password"
           />
 
           {error?.old && <ErrorMessage>Old password is required!</ErrorMessage>}
         </div>
 
-        <div className='change_password_container_middle'>
-          <h2>New password</h2>
+        <div className="change_password_container_items">
+          <h2 className="text-[15px] font-normal">New password</h2>
 
           <div>
             <PasswordInput
-              placeholder='New Password'
+              placeholder="New Password"
               onChange={handleChange}
-              name='new_password'
+              name="new_password"
             />
             {error?.new && (
               <ErrorMessage>New password is required!</ErrorMessage>
@@ -100,37 +126,48 @@ const ChangePasswordModal = ({ onModalClose }) => {
 
           <div>
             <PasswordInput
-              placeholder='Confirm Password'
+              placeholder="Confirm Password"
               onChange={handleChange}
-              name='confirm_new_password'
+              name="confirm_new_password"
             />
 
-            {error?.confirm === 'empty' && (
+            {error?.confirm === "empty" && (
               <ErrorMessage>Confirm password is required!</ErrorMessage>
             )}
 
-            {error?.confirm === 'not-same' && (
+            {error?.confirm === "not-same" && (
               <ErrorMessage>
                 Password and Confirm password must be the same
               </ErrorMessage>
             )}
           </div>
 
-          <p>
+          <p className="text-[13px] font-light text-left">
             Password must contain Capital and small letters, number or symbols.
           </p>
+
+          {changingStatus !== "pending" && (
+            <p>
+              {error?.responseMessage && (
+                <ErrorMessage>{error.responseMessage}</ErrorMessage>
+              )}
+            </p>
+          )}
         </div>
 
-        <div className='change_password_container_bottom'>
+        <div className="change_password_container_items mt-[25rem] py-[5rem] px-0 lg:mt-auto">
           <ModalButton onClick={handleSubmit}>
-            {changingStatus === 'pending' ? <Spinner /> : 'Change Password'}
+            {changingStatus === "pending" ? <Spinner /> : "Change Password"}
           </ModalButton>
 
-          <button onClick={handleDeleteAccount}>
-            {deleteStatus === 'pending' ? (
-              <Spinner color='#c43d27' />
+          <button
+            onClick={handleDeleteAccount}
+            className="text-[16px] lg:text-[20px] font-light text-[#c43d27] underline"
+          >
+            {deletingStatus === "pending" ? (
+              <Spinner color="#c43d27" />
             ) : (
-              'Delete account'
+              "Delete account"
             )}
           </button>
         </div>

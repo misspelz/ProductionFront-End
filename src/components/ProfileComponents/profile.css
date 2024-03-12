@@ -203,38 +203,20 @@
 }
 
 .cta-btns {
-  max-width: 720px;
-  overflow-x: scroll; /* or overflow-x: auto; */
+  width: 100%;
+  overflow-x: scroll;
   white-space: nowrap;
 
   display: flex;
   gap: 20px;
+
+  border-bottom: 1px solid #e6e6e689;
+  padding: 10px 0;
 }
 
 .cta-btns::-webkit-scrollbar {
   width: 0vw;
   height: 0vh;
-}
-
-.profile_activity_btn {
-  padding: 10px 20px;
-  border-radius: 25px;
-  background: #4f0da3;
-
-  color: #fff;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-
-  border: none;
-  cursor: pointer;
-}
-
-.profile_activity_btn span:last-child {
-  padding: 2px;
-  border-radius: 3px;
-  background: #fff;
-  color: #4f0da3;
 }
 
 /* PROFILE POSTS ACTIVITIES */
