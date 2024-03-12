@@ -1,32 +1,23 @@
-import { useState } from 'react';
-
-import ModalHeader from './ModalHeader';
-import ModalWrapper from './ModalWrapper';
+import ModalHeader from "./ModalHeader";
+import ModalWrapper from "./ModalWrapper";
 // import camera from '../../assets/profile_images/Camera.png';
-import ModalButton from '../Modals/ModalButton';
-import { MdOutlineCameraAlt } from 'react-icons/md';
-import ConfirmationButton from './ConfirmationButton';
-import { useModal } from 'Hooks/useModal';
+import ModalButton from "../Modals/ModalButton";
+import { MdOutlineCameraAlt } from "react-icons/md";
+import ConfirmationButton from "./ConfirmationButton";
+import { useModal } from "Hooks/useModal";
+import { useOpenModal } from "Hooks/useOpenModal";
 
 const RequestVerification = ({ onModalClose }) => {
-  const { modal, setModal } = useModal();
-
-  const handleClick = (e) => {
-    const type = e.target.attributes.typeof.nodeValue;
-
-    setModal((prev) => ({
-      ...prev,
-      [type]: true,
-    }));
-  };
+  const { modal } = useModal();
+  const { handleClick } = useOpenModal();
 
   return (
     <>
       <ModalWrapper>
-        <ModalHeader header='Verification' onModalClose={onModalClose} />
+        <ModalHeader header="Verification" onModalClose={onModalClose} />
 
-        <div className='request_verification'>
-          <div className='request_verification_top'>
+        <div className="request_verification">
+          <div className="request_verification_top">
             <h2>Account Verification</h2>
             <p>
               To verify your account, certain procedures are required and that
@@ -34,49 +25,53 @@ const RequestVerification = ({ onModalClose }) => {
             </p>
           </div>
 
-          <div className='request_verification_middle'>
-            <input type='text' placeholder='Legal name' />
-            <input type='text' placeholder='Work or Profession' />
+          <div className="request_verification_middle">
+            <input type="text" placeholder="Legal name" />
+            <input type="text" placeholder="Work or Profession" />
           </div>
 
-          <div className='request_verification_bottom'>
+          <div className="request_verification_bottom">
             <p>
               Please paste Three(3) Links where your name has been mentioned and
               your picture(s) Show clearly. These context must be of a good
               reputation and contribution to the Community.
             </p>
 
-            <div className='link'>
-              <input type='text' placeholder='Link 1' />
+            <div className="link">
+              <input type="text" placeholder="Link 1" />
               <button>Paste</button>
             </div>
 
-            <div className='link'>
-              <input type='text' placeholder='Link 2' />
+            <div className="link">
+              <input type="text" placeholder="Link 2" />
               <button>Paste</button>
             </div>
 
-            <div className='link'>
-              <input type='text' placeholder='Link 3' />
+            <div className="link">
+              <input type="text" placeholder="Link 3" />
               <button>Paste</button>
             </div>
 
-            <div className='select_file'>
+            <div className="select_file">
               <p>
                 Upload a clear front picture of any Government issued ID : Show
                 details clearly.
               </p>
 
-              <input type='file' id='file' style={{ display: 'none' }} />
+              <input type="file" id="file" style={{ display: "none" }} />
 
-              <label htmlFor='file'>
-                <MdOutlineCameraAlt className='camera' />
+              <label htmlFor="file">
+                <MdOutlineCameraAlt className="camera" />
                 Select file
               </label>
             </div>
 
-            <div className='request_verification_bottom_button'>
-              <ModalButton onClick={handleClick} type='verification_sent'>
+            <div className="request_verification_bottom_button">
+              <ModalButton
+                onClick={handleClick}
+                data-modal="verification_sent"
+                className="clickModalOpen"
+              >
                 Send request
               </ModalButton>
             </div>

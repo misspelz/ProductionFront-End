@@ -1,6 +1,10 @@
 const ModalButton = ({ children, onClick, type }) => {
   return (
-    <button className='modal_btn' onClick={onClick} typeof={type}>
+    <button
+      className="modal_btn clickModalOpen"
+      onClick={onClick}
+      data-modal={type}
+    >
       {children}
     </button>
   );

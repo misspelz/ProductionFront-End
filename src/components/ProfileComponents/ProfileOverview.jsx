@@ -7,14 +7,14 @@ import ProfileActivities from "./ProfileActivities";
 import ContainerLoading from "components/ContainerLoading";
 
 const ProfileOverview = ({ heading }) => {
-  const { profileStatus, profile } = useProfileDetails();
-
-  console.log(profile);
+  const { profileStatus, profile, error } = useProfileDetails();
 
   return (
     <div className="overview">
       {profileStatus === "pending" ? (
-        <ContainerLoading />
+        <ContainerLoading height={500} unit="px" />
+      ) : error ? (
+        "Please check your network"
       ) : (
         <>
           <div className="profile_top_content">

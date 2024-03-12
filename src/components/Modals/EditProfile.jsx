@@ -11,13 +11,28 @@ import { day, genderData, month, years } from "utils/helper";
 import { useEditProfile } from "pages/Profile/useEditProfile";
 import ErrorMessage from "./ErrorMessage";
 import Spinner from "components/Spinner";
+import { useProfileDetails } from "pages/Profile/useProfileDetails";
 
 const EditProfile = ({ onModalClose }) => {
-  const [data, setData] = useState({});
+  const { profile: userInfo } = useProfileDetails();
+  const { updateStatus, updating } = useEditProfile();
+
+  const [data, setData] = useState({
+    first_name: userInfo?.data?.user?.first_name || "",
+    last_name: userInfo?.data?.user?.last_name || "",
+    occupation: userInfo?.data?.occupation || "",
+    address: {
+      city: userInfo?.data?.address?.city || "",
+    },
+    bio: userInfo?.data?.bio || "",
+    day: new Date(userInfo?.data?.date_of_birth).getDate() || "",
+    month: new Date(userInfo?.data?.date_of_birth).getMonth() || "",
+    year: new Date(userInfo?.data?.date_of_birth).getFullYear() || "",
+    gender: userInfo?.data?.gender || "",
+  });
   const [cover, setCover] = useState("");
   const [profile, setProfile] = useState("");
   const [bioValidate, setBioValidate] = useState(false);
-  const { updateStatus, updating } = useEditProfile();
 
   const handleCover = (event) => {
     const file = event.target.files[0];
@@ -59,34 +74,26 @@ const EditProfile = ({ onModalClose }) => {
       return setBioValidate(true);
     }
 
-    const formData = new FormData();
+    const dateOfBirth = `${data.year}-${data.month}-${data.day}`;
 
-    const user = JSON.stringify({
-      first_name: data.first_name,
-      last_name: data.last_name,
-    });
+    const updatingData = {
+      user: {
+        first_name: data.first_name,
+        last_name: data.last_name,
+      },
+      address: {
+        city: data.city,
+      },
+      date_of_birth: dateOfBirth,
+      bio: data.bio,
+      occupation: data.occupation,
+      gender: data.gender,
+    };
 
-    const address = JSON.stringify({
-      city: data.city,
-    });
-
-    const dateOfBirth = JSON.stringify(
-      new Date(`${data.year} ${data.month} ${data.day}`)
-    );
-
-    formData.append("media", data.media);
-    formData.append("cover_image", data.cover_image);
-    formData.append("user", user);
-    formData.append("address", address);
-    formData.append("bio", data.bio);
-    formData.append("occupation", data.occupation);
-    formData.append("date_of_birth", dateOfBirth);
-    formData.append("gender", data.gender);
-
-    console.log(Object.fromEntries(formData));
-
-    updating(formData);
+    updating(updatingData);
   };
+
+  console.log(userInfo);
 
   return (
     <ModalWrapper>
@@ -165,11 +172,13 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="First name"
               name="first_name"
               onChange={handleChange}
+              value={data?.first_name || ""}
             />
             <ProfileInput
               placeholder="Last name"
               name="last_name"
               onChange={handleChange}
+              value={data?.last_name || ""}
             />
           </div>
 
@@ -178,30 +187,32 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Occupation"
               name="occupation"
               onChange={handleChange}
+              value={data?.occupation || ""}
             />
             <ProfileInput
               placeholder="Current city"
               name="city"
               onChange={handleChange}
+              value={data?.address?.city || ""}
             />
           </div>
 
           <div className="edit_profile_content_direct_wrapper">
             <ProfileEditOption header="Date of Birth">
               <CustomDropdown
-                stallValue="Day"
+                stallValue={data?.day || "Day"}
                 menu={day}
                 name="day"
                 setData={setData}
               />
               <CustomDropdown
-                stallValue="Month"
+                stallValue={data?.month || "Month"}
                 menu={month}
                 name="month"
                 setData={setData}
               />
               <CustomDropdown
-                stallValue="Year"
+                stallValue={data?.year || "Year"}
                 menu={years}
                 name="year"
                 setData={setData}
@@ -210,7 +221,7 @@ const EditProfile = ({ onModalClose }) => {
 
             <ProfileEditOption header="Gender">
               <CustomDropdown
-                stallValue="Gender"
+                stallValue={data?.gender || "Gender"}
                 menu={genderData}
                 name="gender"
                 setData={setData}
@@ -223,7 +234,8 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Bio"
               onChange={handleChange}
               name="bio"
-              className="!w-full h-24 resize-none lg:h-[100px] xl:h-[200px]"
+              className="!w-full h-[80px] resize-none lg:h-[100px] xl:h-[120px]"
+              value={data?.bio}
             ></textarea>
 
             <span className="self-end">Max 50 words</span>

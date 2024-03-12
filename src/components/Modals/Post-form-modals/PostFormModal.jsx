@@ -19,7 +19,7 @@ import HashtagModal from "../HashTagModal";
 import TagFriends from "../TagFriends";
 import data from "utils/tag.json";
 import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
-import { useCreateFeedsPost } from "api/hooks/feeds";
+import { useCreateFeedsPost, useCreatePostFile } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
 
 const topFriends = [
@@ -46,7 +46,7 @@ const PostFormModal = ({
 	const hashtags = ["#programming", "#technology", "#art", "#travel"];
 	const [checkedFriends, setCheckedFriends] = useState([]);
 	const [images, setImages] = useState([]);
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [selectedFile, setSelectedFile] = useState([]);
 	const [audioFile, setAudioFile] = useState([]);
 	const [word, setWord] = useState([]);
 	const [excel, setExcel] = useState([]);
@@ -54,6 +54,7 @@ const PostFormModal = ({
 	const [music, setMusic] = useState([]);
 	const [contentText, setContentText] = useState(null);
 	const [location, setLocation] = useState(null);
+	const [postFileData, setPostFileData] = useState(null);
 
 	const handleFriendCheck = (img) => {
 		if (checkedFriends.includes(img)) {
@@ -107,16 +108,42 @@ const PostFormModal = ({
 		setIsTagsFrd(false);
 	};
 
-	const { createPost, isLoading, isError } = useCreateFeedsPost({
+	const addFileFn = useCreatePostFile({
+		postFileData: postFileData,
 		onSuccess: (response) => {
 			console.log({ response });
+			handleCloseMainContainerClick();
 			Swal.fire({
 				icon: "success",
 				title: "Post Successful!",
 				text: "Your post has been successfully posted.",
 				confirmButtonText: "OK",
 			}).then(() => {
-				handleCloseMainContainerClick();
+				// window.location.reload();
+			});
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+	const { createPost, isLoading, isError } = useCreateFeedsPost({
+		onSuccess: (response) => {
+			console.log({ response });
+			// console.log({ fileData });
+			for (const value of postFileData.values()) {
+				console.log(value);
+			}
+			if (postFileData) {
+				addFileFn.postFile(response?.data?.post?.id);
+				return;
+			}
+			handleCloseMainContainerClick();
+			Swal.fire({
+				icon: "success",
+				title: "Post Successful!",
+				text: "Your post has been successfully posted.",
+				confirmButtonText: "OK",
+			}).then(() => {
 				// window.location.reload();
 			});
 		},
@@ -126,42 +153,42 @@ const PostFormModal = ({
 	});
 
 	const handlePost = () => {
-		const FormData = require("form-data");
 		let data = new FormData();
-
-		if (selectedIcon === "word") {
-			data.append("media", word[0]);
-		} else if (selectedIcon === "photo") {
-			data.append("media", images[0]);
-		} else if (selectedIcon === "exe") {
-			data.append("media", exe[0]);
-		} else if (selectedIcon === "excel") {
-			data.append("media", excel[0]);
-		} else if (selectedIcon === "rec") {
-			data.append("media", audioFile[0]);
-		} else if (selectedIcon === "music") {
-			data.append("media", music[0]);
-		} else if (selectedIcon === "allfiles") {
-			data.append("media", selectedFile);
-		} else if (selectedIcon === "location") {
-			data.append("media", location);
+		let textData = new FormData();
+		if (exe?.[0]) {
+			data.append("files", exe[0]);
+		}
+		if (word?.[0]) {
+			data.append("files", word[0]);
+		}
+		if (excel?.[0]) {
+			data.append("files", excel[0]);
+		}
+		if (location) {
+			data.append("location", location);
+		}
+		if (audioFile?.[0]) {
+			data.append("files", audioFile[0]);
 		}
 
-		images.map((image) => {
-			return data.append("media", image);
-		});
+		if (images.length > 0) {
+			images.map((image) => {
+				return data.append("files", image);
+			});
+		}
+		if (selectedFile.length > 0) {
+			selectedFile.map((file) => {
+				return data.append("files", file);
+			});
+		}
 
-		data.append("content", contentText);
+		data.append("hashtags", addedTags);
+		textData.append("text_content", contentText);
 		// data.append("url", "https://example.com");
-		data.append("hashtags", hashtags);
-		data.append("file_type", ["images", "audio", "text"]);
-		data.append("is_business_post", "True");
-		// data.append("reaction", []);
-		// data.append("comments", []);
-		// data.append("timestamp", []);
-		// data.append("user", []);
+		// data.append("is_business_post", "True");
 		// data.append("tagged_users", TagFriends);
-		createPost(data);
+		setPostFileData(data);
+		createPost(textData);
 	};
 
 	return (
@@ -208,8 +235,8 @@ const PostFormModal = ({
 					)}
 					{selectedIcon === "allfiles" && (
 						<PostFormFilesModal
-							selectedFile={selectedFile}
-							setSelectedFile={setSelectedFile}
+							selectedFiles={selectedFile}
+							setSelectedFiles={setSelectedFile}
 						/>
 					)}
 				</div>
@@ -303,8 +330,8 @@ const PostFormModal = ({
 						className="post-btn"
 						type="submit"
 						onClick={handlePost}
-						name={isLoading ? "Posting" : "Post"}
-						disabled={isLoading}
+						name={isLoading || addFileFn.isLoading ? "Posting" : "Post"}
+						disabled={isLoading || addFileFn.isLoading}
 					/>
 				</div>
 			</div>

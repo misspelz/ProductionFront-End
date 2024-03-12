@@ -23,10 +23,11 @@
     gap: 1rem;
 }
 
-.post-display-images img{
+.post-display-images img,
+.post-display-images video{
     width: 100%;
     margin-bottom: .8rem;
-    height: 180px;
+    height: auto;
     object-fit: cover;
 }
 

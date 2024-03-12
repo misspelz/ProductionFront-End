@@ -60,7 +60,7 @@ const BusinessSwitch = ({ day, type, setData, checked }) => {
         format="h:mm:ss A"
         onChange={onChange}
         className="ant_range_picker"
-        disabled={checked}
+        disabled={!checked}
       />
     </div>
   );

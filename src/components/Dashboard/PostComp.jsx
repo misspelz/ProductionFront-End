@@ -7,6 +7,7 @@ import Sharepost from "components/Home/Sharepost/Sharepost";
 import Likepost from "components/Home/Likepost/Likepost";
 import { Link } from "react-router-dom";
 import BlankProfile from "assets/images/blank-profile-image.png";
+import { useGetTotalReactions } from "api/hooks/feeds";
 
 const PostComp = ({
 	index,
@@ -22,9 +23,34 @@ const PostComp = ({
 	post_reaction_count,
 	post_comment_count,
 	time_since,
+    postData,
 	postID,
 }) => {
+	const { data } = useGetTotalReactions(postID);
+    const totalReactions = data ? Object
+			.values(data?.reactions)
+			?.reduce((acc, cur) => acc + cur) : 0
 	const [commentList, setCommentList] = useState([]);
+	const convertPostTime = (timeStamp) => {
+		let renderedTime = "";
+		const dateCreated = new Date(timeStamp);
+		const currentDate = new Date();
+		const timeDifference = currentDate.getTime() - dateCreated.getTime();
+
+		// Convert milliseconds to seconds
+		const secondsPassed = Math.floor(timeDifference / 1000);
+		if (secondsPassed < 60) {
+			renderedTime = `${secondsPassed} secs ago`;
+		} else if (secondsPassed < 3600) {
+			renderedTime = `${Math.floor(secondsPassed / 60)} mins ago`;
+		} else if (secondsPassed < 86400) {
+			renderedTime = `${Math.floor(secondsPassed / 3600)} hrs ago`;
+		} else {
+			renderedTime = `${Math.floor(secondsPassed / 86400)} days ago`;
+		}
+
+		return renderedTime;
+	};
 
 	return (
 		<div className={`postcom ${redmar}`}>
@@ -58,7 +84,9 @@ const PostComp = ({
 							)}
 						</div>
 					</div>
-					{time_since && <div className="time-posted">{time_since}</div>}
+					{time_since && (
+						<div className="time-posted">{convertPostTime(time_since)}</div>
+					)}
 				</div>
 				<hr className="feed-hr" />
 				<Link to={`/Home/${postID}`} className="post-body-box">
@@ -84,34 +112,28 @@ const PostComp = ({
 						<div className="smil">&#x1F60A;</div>
 					</div>
 					<div className="liker-name-and-total">
-						{reaction && reaction.length > 3
+						{totalReactions}
+						{/* {reaction && reaction.length > 3
 							? `${reaction[0].user.username} and ${post_reaction_count - 1}`
-							: post_reaction_count}
+							: post_reaction_count} */}
 					</div>
 				</div>
 				<div className="post-likes-box">
 					<div className="posted-likes-cont">
 						<div className="icon-text">
-							<Likepost />
-							<div className="con-test">
-								{post_reaction_count && post_reaction_count}
-							</div>
+							<Likepost postId={postID} />
+							<span className="text-[12px]">{reaction?.like_count}</span>
 						</div>
 						<div className="icon-text">
 							<BiMessageAlt size={22} color="#000000b9" />
-							<div className="con-test">
-								{post_comment_count > 0 ? post_comment_count : 0}
-							</div>
+							<span className="text-[12px]">{post_comment_count ?? 0}</span>
 						</div>
 
 						<div className="icon-text">
-							<Sharepost />
-							<div className="con-test">
-								{post_reaction_count && post_reaction_count}
-							</div>
+							<Sharepost postId={postID} postData={postData} />
 						</div>
 					</div>
-					<PostMenu />
+					<PostMenu postId={postID} />
 				</div>
 			</div>
 			<Comment
