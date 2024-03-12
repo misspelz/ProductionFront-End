@@ -10,11 +10,14 @@ import ArtistTabCard from "../Components/ArtistTabCard";
 import ArtistProfile from "../Pages/ArtistProfile";
 import Modal from "../Components/Modals/ModalWrapper1";
 import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 export default function RightSider() {
   const [activeTab, setActiveTab] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [albums, setAlbums] = useState([])
+  const [artists, setArtists] = useState([])
 
   const handleOpenModal = () => setIsOpen(true);
   const handleCloseModal = () => setIsOpen(false);
@@ -30,14 +33,31 @@ export default function RightSider() {
         },
       })
       .then((res) => {
-        setAlbums(JSON.stringify(res?.data?.data));
+        setAlbums(res?.data.data);
         console.log(albums + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
       });
   };
 
+  const GetArtists = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/artists/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setArtists(res?.data?.data);
+        console.log(artists + "artist state===");
+        console.log(JSON.stringify(res.data) + "artists====");
+      });
+  };
+
+
   useEffect(()=>{
     GetAlbums()
+    GetArtists()
   },[])
   return (
     <div className="bg-white lg:px-10 xl:px-10 md:px-5 pt-10 w-auto h-full mx-10">
@@ -197,8 +217,8 @@ export default function RightSider() {
       )}
 
       {activeTab === 2 && (
-        <div className="grid grid-cols-1 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2">
-          <AlbumCard
+        <div className={albums.length>0?`grid grid-cols-1 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2`:null}>
+          {/* <AlbumCard
             img={require("../Assets/Image2.jpeg")}
             title={"Are we annoyed?"}
             artist={"Billie Eilish"}
@@ -227,12 +247,27 @@ export default function RightSider() {
             img={require("../Assets/Image2.jpeg")}
             title={"Are we annoyed?"}
             artist={"Billie Eilish"}
+          /> */}
+          {albums.length>0?albums.map(album=>{
+            return <AlbumCard
+            img={require("../Assets/Image2.jpeg")}
+            title={"Are we annoyed?"}
+            artist={"Billie Eilish"}
           />
+          }):<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
         </div>
       )}
 
       {activeTab === 3 && (
-        <div className="grid grid-cols-1 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+        <div className={artists>0?"grid grid-cols-1 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3":null}>
+          {/* <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
@@ -243,8 +278,17 @@ export default function RightSider() {
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
-          <ArtistTabCard onClick={handleOpenModal} />
-          <ArtistTabCard onClick={handleOpenModal} />
+          <ArtistTabCard onClick={handleOpenModal} /> */}
+          {artists>0?artists.map(artist=>{
+            return(<ArtistTabCard onClick={handleOpenModal} />)
+          }):<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
         </div>
       )}
 

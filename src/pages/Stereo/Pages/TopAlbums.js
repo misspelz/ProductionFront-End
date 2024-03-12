@@ -13,6 +13,7 @@ export default function TopAlbums() {
     const [activeTab, setActiveTab] = useState(0);
   const navigation = useNavigate()
   
+  
 
   const handleTabClick = (index) => {
     setActiveTab(index);

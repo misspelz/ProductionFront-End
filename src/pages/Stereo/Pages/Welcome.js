@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LayoutMain from "../Layout/LayoutMain";
 import Header1 from "../Components/Header1";
 import TrendingCard from "../Components/TrendingCard";
@@ -7,12 +7,37 @@ import Player from "../Assets/Mini player.svg";
 import Logo from "../Assets/2gedaLogo.svg";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useNavigate, useNavigation } from "react-router-dom";
+import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 export default function Welcome() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [show, setShow] = useState(false);
   const navigation = useNavigate()
+
+  const [trendingSongs, setTrendingSongs] = useState([]);
+  const authToken = localStorage.getItem("authToken")
+
+  const GetTrendingSongs = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/trending/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setTrendingSongs(res?.data?.data);
+        console.log(trendingSongs + "trending state===");
+        console.log(JSON.stringify(res.data) + "trending====");
+      });
+  };
+
+  useEffect(() => {
+    GetTrendingSongs();
+  }, []);
   const closeModal = () => {
     setIsOpen(!isOpen);
   };
@@ -52,14 +77,25 @@ export default function Welcome() {
             <span className="font-medium text-base">Listen to trending songs</span>
 
             <div
-              className="flex overflow-x-scroll gap-2 mt-3"
+              className={trendingSongs?.length>0?`flex overflow-x-scroll gap-2 mt-3`:null}
               style={{ scrollbarWidth: "none" }}>
+                {trendingSongs?.length>0?trendingSongs?.map(res=>{
+                  return (
+                  <TrendingCard category={res.title}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+              {/* <TrendingCard />
               <TrendingCard />
               <TrendingCard />
               <TrendingCard />
               <TrendingCard />
-              <TrendingCard />
-              <TrendingCard />
+              <TrendingCard /> */}
             </div>
           </section>
           <section className="px-4 mt-5">

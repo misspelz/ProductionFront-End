@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header1 from "../Components/Header1";
 
 import RightArrow from "../Assets/icon-park_right.svg";
@@ -17,11 +17,33 @@ import TopTracks from "./StereoHomeTabs/TopTracks";
 import Charts from "./StereoHomeTabs/Charts";
 import Artists from "./StereoHomeTabs/Artists";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function StereoHome() {
   const [activeTab, setActiveTab] = useState(0);
+  const [topAlbums, setTopAlbums] = useState([])
+  const authToken = localStorage.getItem("authToken")
   const navigation = useNavigate()
   
+
+  const GetTopAlbums = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/album/top-album/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setTopAlbums(JSON.stringify(res?.data?.data));
+        console.log(topAlbums + "topAlbums state===");
+        console.log(JSON.stringify(res.data) + "topAlbums====");
+      });
+  };
+
+  useEffect(()=>{
+    GetTopAlbums()
+  },[])
 
   const handleTabClick = (index) => {
     setActiveTab(index);
