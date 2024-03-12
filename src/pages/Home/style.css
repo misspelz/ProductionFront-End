@@ -19,6 +19,7 @@
 .left-side-container {
   width: 52%;
 }
+
 .main-containe {
   display: flex;
   margin-top: 20px;
@@ -36,11 +37,11 @@
   margin: 1.1rem 0 !important;
 }
 
-.MuiTabs-indicator{
+.MuiTabs-indicator {
   background: white !important;
 }
 .Mui-selected {
-  padding: .8rem .6rem !important;
+  padding: 0.8rem 0.6rem !important;
   margin: auto 0 !important;
   min-height: fit-content !important;
   height: fit-content !important;

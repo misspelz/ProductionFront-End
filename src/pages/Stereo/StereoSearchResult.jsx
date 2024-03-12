@@ -3,6 +3,7 @@ import { BiSearch } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import QuickPickCol from "../../components/StereoComp/QuickPickCol";
 import ArtisitStereoSearchResult from "../../components/StereoComp/ArtisitStereoSearchResult";
+import LayoutMain from "./Layout/LayoutMain";
 
 const DataPlay = [
   {
@@ -26,30 +27,31 @@ const StereoSearchResult = ({ handleStrSearchClose }) => {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <div className="quik-container-box">
+    <LayoutMain>
+    <div className="quik-container-box bg-white ml-10 px-3 py-10">
       <div className="profile-dot-bx flex red-wid">
-        <div className="prof-back flex">
-          <AiOutlineArrowLeft onClick={handleStrSearchClose} />
+        <div className="prof-back flex items-center">
+          <AiOutlineArrowLeft size={24} onClick={handleStrSearchClose} />
           <div className="head-line bus-dir">Search</div>
         </div>
       </div>
-      <div className="search-container-right flex">
-        <BiSearch className="search-icon-right" />
+      <div className="relative mt-4">
         <input
           type="text"
-          className="right-inp-sear"
+          className="w-full pl-12 bg-[#F5F5F5] border-none rounded-3xl"
           placeholder="Search here"
         />
+        <BiSearch size={16} className="absolute top-5 ml-4" />
       </div>
-      <div className="select-what-display w-dis">
-        <div className="ma-ma-wd flex">
+      <div className="mt-3">
+        <div className="flex items-center gap-20">
           {DataPlay.map((item, index) => (
             <div
               key={index}
               className={`tab-item ${
                 item.text === activeListTab
                   ? "sel-act inc-wid"
-                  : "anot-wid add-bor  inc-wid"
+                  : "anot-wid  inc-wid"
               }`}
               onClick={() => handleListTabClick(item.text)}
             >
@@ -59,7 +61,7 @@ const StereoSearchResult = ({ handleStrSearchClose }) => {
         </div>
       </div>
       {activeListTab === "All" ? (
-        <div className="picks-row-cont">
+        <div className="picks-row-cont mt-5">
           <QuickPickCol />
           <QuickPickCol />
           <ArtisitStereoSearchResult />
@@ -78,6 +80,7 @@ const StereoSearchResult = ({ handleStrSearchClose }) => {
         </div>
       ) : null}
     </div>
+    </LayoutMain>
   );
 };
 

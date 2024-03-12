@@ -1,11 +1,12 @@
-import business from '../../assets/profile_images/business_image.png';
-import dots from '../../assets/profile_images/DotsThree.png';
+import { Link } from "react-router-dom";
+import business from "../../assets/profile_images/business_image.png";
+import dots from "../../assets/profile_images/DotsThree.png";
 
 const ManageBusinessLists = () => {
   return (
-    <div className='business_list'>
-      <div className='business_list_left'>
-        <img src={business} alt='' />
+    <Link className="business_list">
+      <div className="business_list_left">
+        <img src={business} alt="" />
 
         <div>
           <h1>McDonald’s</h1>
@@ -13,8 +14,8 @@ const ManageBusinessLists = () => {
         </div>
       </div>
 
-      <img src={dots} alt='Three Dots' className='business_list_right' />
-    </div>
+      <img src={dots} alt="Three Dots" className="business_list_right" />
+    </Link>
   );
 };
 

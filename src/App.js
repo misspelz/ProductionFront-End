@@ -60,6 +60,14 @@ import Histories from "./pages/Rewards/Histories";
 import Payment from "./pages/Rewards/Payment";
 import Payouts from "./pages/Rewards/Payouts";
 import Rewards from "./pages/Rewards/Rewards";
+import Welcome from "pages/Stereo/Pages/Welcome";
+import StereoHome from "pages/Stereo/Pages/Home";
+import BigHit from "pages/Stereo/Pages/bigHit";
+import More from "pages/Stereo/Pages/More";
+import TopAlbums from "pages/Stereo/Pages/TopAlbums";
+import StereoSearchResult from "pages/Stereo/StereoSearchResult";
+import UploadMusic from "pages/Stereo/Pages/UploadMusic";
+import RecentUploads from "pages/Stereo/Pages/UploadMusic/recentUploads";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -222,10 +230,40 @@ function App() {
             path="/EditProfile"
             element={<ProtectedRoutes element={<EditProfile />} />}
           />
+          {/* stereo routes start */}
           <Route
             path="/stereo"
-            element={<ProtectedRoutes element={<Stereo />} />}
+            element={<ProtectedRoutes element={<Welcome />} />}
           />
+          <Route
+            path="/stereo/home"
+            element={<ProtectedRoutes element={<StereoHome />} />}
+          />
+          <Route
+            path="/stereo/bighit"
+            element={<ProtectedRoutes element={<BigHit />} />}
+          />
+          <Route
+            path="/stereo/quickpicks"
+            element={<ProtectedRoutes element={<More />} />}
+          />
+          <Route
+            path="/stereo/topAlbums"
+            element={<ProtectedRoutes element={<TopAlbums />} />}
+          />
+          <Route
+            path="/stereo/search"
+            element={<ProtectedRoutes element={<StereoSearchResult />} />}
+          />
+          <Route
+            path="/stereo/artistIndex"
+            element={<ProtectedRoutes element={<UploadMusic />} />}
+          />
+          <Route
+            path="/stereo/artist/recentUploads"
+            element={<ProtectedRoutes element={<RecentUploads />} />}
+          />
+          {/* stereo routes end */}
           <Route
             path="/bussprofile"
             element={<ProtectedRoutes element={<BusinessProfile />} />}

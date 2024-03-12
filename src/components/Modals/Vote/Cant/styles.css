@@ -33,7 +33,7 @@
 
 p {
     font-size: 1.3rem;
-    text-align: center;
+    /* text-align: center; commented by stereo please give a unique className or ID*/
     color: #444;
 }
 
