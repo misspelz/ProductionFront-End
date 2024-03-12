@@ -23,10 +23,80 @@ import DashMessage from "components/Dashboard/DasMess";
 import SelectCategory from "components/Dashboard/SelectCategory";
 import PostImage2 from "assets/images/post-speech.png";
 import { useGetPostById } from "api/hooks/feeds";
+import { PiMicrosoftPowerpointLogo } from "react-icons/pi";
+import { SiMicrosoftword, SiMicrosoftexcel } from "react-icons/si";
+// import { FaFileAlt } from "react-icons/fa";
+import {
+	BsFillFileEarmarkPdfFill,
+	BsAndroid2,
+	// BsFiletypeExe,
+} from "react-icons/bs";
+
+const domainUrl = "https://development.2geda.net";
+
+const DisplayMedia = ({ mediaFile }) => {
+	const renderFileIcon = (fileType) => {
+		if (fileType?.endsWith("pdf")) {
+			return <BsFillFileEarmarkPdfFill className="icon-dw pdf" size={24} />;
+		}
+		if (fileType?.endsWith("doc") || fileType?.endsWith("docx")) {
+			return <SiMicrosoftword className="icon-dw word" size={24} />;
+		}
+		if (fileType?.endsWith("xls") || fileType?.endsWith("xlsx")) {
+			return <SiMicrosoftexcel className="icon-dw excel" size={24} />;
+		}
+		if (fileType?.endsWith("ppt")) {
+			return <PiMicrosoftPowerpointLogo className="icon-dw prese" size={24} />;
+		}
+		if (fileType?.endsWith("exe")) {
+			return <PiMicrosoftPowerpointLogo className="icon-dw prese" size={24} />;
+		}
+		if (fileType?.endsWith("apk")) {
+			return <BsAndroid2 className="icon-dw apk" size={24} />;
+		}
+	};
+	if (mediaFile?.file_type?.includes("audio")) {
+		const fileName = mediaFile.file.split("/")[3];
+		return (
+			<div>
+				<p>{fileName}</p>
+				<audio controls>
+					<source src={domainUrl + mediaFile.file} type={mediaFile.file_type} />
+				</audio>
+			</div>
+		);
+	}
+	if (mediaFile?.file_type?.includes("image")) {
+		return <img src={domainUrl + mediaFile.file} alt="" />;
+	}
+	if (mediaFile?.file_type?.includes("video")) {
+		return (
+			<video width="100%" height="180" controls>
+				<source src={domainUrl + mediaFile.file} type={mediaFile.file_type} />
+				Your browser does not support the video tag.
+			</video>
+		);
+	}
+	if (mediaFile?.file_type?.includes("application")) {
+		const fileName = mediaFile.file.split("/")[3];
+		return (
+			<a
+				href={domainUrl + mediaFile.file}
+				rel="noopener noreferrer"
+				download
+				className="document-media"
+			>
+				<div>{renderFileIcon(mediaFile?.file)}</div>
+				<span>{fileName}</span>
+			</a>
+		);
+	}
+};
 
 const FeedDetail = () => {
 	const { feedId } = useParams();
-    const { data, isLoading, isError, isSuccess} = useGetPostById()
+	const { data, isLoading, isError, isSuccess } = useGetPostById(feedId);
+	console.log({ data });
 	const navigate = useNavigate();
 	const [showCommentInput, setShowCommentInput] = useState(false);
 	const [showRecInput, setShowRecInput] = useState(false);
@@ -158,7 +228,6 @@ const FeedDetail = () => {
 			<div className="main-containe">
 				<div className="left-side-container">
 					<div className="feed-detail-container">
-						{feedId}
 						<div className="feed-top">
 							<FaArrowLeftLong
 								size={20}
@@ -173,15 +242,12 @@ const FeedDetail = () => {
 						<hr className="feed_hr" />
 						<div className="post-preview-container">
 							<div className="post-display-images">
-								<img src={PostImage2} />
+								{data?.files?.map((file) => (
+									<DisplayMedia mediaFile={file} key={file?.file_id} />
+								))}
 							</div>
 							<div className="post-display-content">
-								<p>
-									Lorem ipsum dolor sit amet consectetur adipisicing elit.
-									Assumenda nulla, consequatur iste eum harum nemo autem
-									officiis. Error reprehenderit corrupti a amet officiis,
-									inventore officia. Nostrum nemo vel a similique.
-								</p>
+								<p>{data?.text_content}</p>
 							</div>
 						</div>
 						<div className="comm-bx-pos">

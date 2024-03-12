@@ -103,7 +103,8 @@
     width: 100%;
     flex-wrap: wrap;
 }
-.post-img-cont-box {
+.post-img-cont-box,
+.post-audio-cont-box {
     display: flex;
     width: 100%;
     gap: 10px;
@@ -120,6 +121,7 @@
 }
 
 .im-vi-bxb img,
+.file-item,
 video {
     width: 160px;
     height: 100px;
@@ -167,6 +169,50 @@ video {
     margin-bottom: 10px;
     cursor: pointer;
 }
+
+.file-content {
+    position: relative;
+    background: #f5f5f5;
+    margin-bottom: 5px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: .6rem;
+    width: 140px;
+}
+
+.file-content-name {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+    width: 80%;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-file-item {
+    position: absolute;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 300;
+    border-radius: 3.333px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px;
+    right: 4px;
+    cursor: pointer;
+    top: 4px;
+    z-index: 111111;
+}
+
+.word-doc-item,
+.excel-doc-item,
+.location-item {
+    width: 100%;
+}
 .dra-im {
     width: 100%;
     background: #f5f5f5;
@@ -187,8 +233,8 @@ video {
 .or-dr {
     color: rgba(0, 0, 0, 0.8);
     font-size: 14px;
-    word-wrap: break-word;
 }
+
 .add-new-pic-or {
     font-size: 20px;
     display: flex;
@@ -203,12 +249,9 @@ video {
     font-size: 12px;
 }
 
-.post-audio-cont-box audio {
-    width: 100%;
-    margin-bottom: 10px;
-}
 .icon-dw {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
+    font-size: 18px;
 }
 
 .rec-bbtn {
@@ -228,6 +271,7 @@ video {
 }
 
 .active {
+    background-color: white;
     width: 100%;
 }
 
