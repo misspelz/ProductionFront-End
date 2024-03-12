@@ -44,6 +44,23 @@ export const updateProfile = async (profileData) => {
   }
 };
 
+// Get user posts
+export const getUserPosts = async (parameter) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/feeds/post/?filter=${parameter}`,
+      requestOptions
+    );
+
+    const data = await response.json();
+
+    return data.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+// create new business
 export const createBusiness = async (businessData) => {
   try {
     const response = await fetch(`${mainURL}/api/business/`, {
@@ -60,6 +77,7 @@ export const createBusiness = async (businessData) => {
   }
 };
 
+// get all current active business
 export const getCurrentActiveBusiness = async () => {
   try {
     const response = await fetch(`${mainURL}/api/business/`, requestOptions);
@@ -93,7 +111,7 @@ export const changePassword = async (credentials) => {
   }
 };
 
-// changing password
+// delete account
 export const deleteUserAccount = async () => {
   try {
     const response = await fetch(`${mainURL}/api/auth/delete-account/`, {
@@ -109,7 +127,7 @@ export const deleteUserAccount = async () => {
   }
 };
 
-// changing password
+// get stickers
 export const getUserStickers = async () => {
   try {
     const response = await fetch(`${mainURL}/api/my-stickers/`, requestOptions);

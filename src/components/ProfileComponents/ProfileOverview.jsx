@@ -12,7 +12,7 @@ const ProfileOverview = ({ heading }) => {
   return (
     <div className="overview">
       {profileStatus === "pending" ? (
-        <ContainerLoading />
+        <ContainerLoading height={500} unit="px" />
       ) : error ? (
         "Please check your network"
       ) : (

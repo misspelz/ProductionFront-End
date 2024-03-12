@@ -1,9 +1,9 @@
-import Spinner from './Spinner';
+import Spinner from "./Spinner";
 
-const ContainerLoading = () => {
+const ContainerLoading = ({ height, unit }) => {
   return (
-    <div className='loading_container'>
-      <Spinner color='#4f0da3' />
+    <div className={`h-[200px] flex justify-center items-center`}>
+      <Spinner color="#4f0da3" />
     </div>
   );
 };
