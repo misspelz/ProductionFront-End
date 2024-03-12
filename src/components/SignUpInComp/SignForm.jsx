@@ -86,6 +86,12 @@ const SignForm = () => {
     }
   }, [email, username, password]);
 
+  const isPasswordValid = () => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
   return (
     <div className="sign-form">
       <div className="create-ead-txt text-red-500">Create an Account</div>
@@ -129,6 +135,12 @@ const SignForm = () => {
             )}
           </div>
         </div>
+        {password && !isPasswordValid() && (
+          <div className="error-msg text-[12px] text-red-500">
+            Password must contain at least 8 characters, one uppercase letter,
+            one lowercase letter, one number, and one special character.
+          </div>
+        )}
         <div className="btn-continu">
           {isLoading ? (
             <Lottie
@@ -140,6 +152,7 @@ const SignForm = () => {
             />
           ) : (
             <ActionButton
+              disabled={!isPasswordValid()}
               onClick={signupUser}
               label={"Continue"}
               bg={"pruplr"}

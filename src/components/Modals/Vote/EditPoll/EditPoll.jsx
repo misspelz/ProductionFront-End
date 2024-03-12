@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
-import "./CreatePoll.css";
+import React, { useState, useEffect, useContext } from "react";
+import "./EditPoll.css";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { CreatePollApi } from "api/services/auth&poll";
+import { UpdatePollApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import { ModalContext } from "Context/ModalContext";
 
@@ -22,88 +22,84 @@ const durationOptions = [
   }),
 ];
 
-const CreatePoll = ({ onClose, fetchPolls }) => {
+const EditPoll = ({ onClose, fetchPolls }) => {
   const { singlePoll } = useContext(ModalContext);
-
+  // console.log("singlePoll", singlePoll);
   const [isLoading, setIsLoading] = useState(false);
-  const initialPollData = {
+
+  const [pollData, setPollData] = useState({
     question: "",
     poll_type: "",
-    // poll_access: "",
-    close_time: new Date().toISOString(),
+    close_time: "",
     is_paid: false,
     amount: "0",
-    options: [""],
-  };
+    options: [{ option_id: null, content: "" }],
+  });
 
-  const [pollData, setPollData] = useState(
-    singlePoll ? { ...singlePoll } : initialPollData
-  );
-
-  console.log("pollData", pollData);
+  // console.log("editpoll", pollData);
 
   const handleInputChange = (name, value) => {
-    if (name === "is_paid" && !value) {
-      setPollData((prevState) => ({
-        ...prevState,
-        is_paid: false,
-        amount: "0",
-      }));
-    } else if (name === "poll_type" && value === "Free") {
-      setPollData((prevState) => ({
-        ...prevState,
-        poll_type: "Free",
-        amount: "0",
-        is_paid: false,
-      }));
-    } else if (name === "poll_type" && value === "Paid") {
-      setPollData((prevState) => ({
-        ...prevState,
-        poll_type: "Paid",
-        is_paid: true,
-      }));
-    } else if (name === "poll_duration") {
-      const durationInMs =
-        durationOptions.find((option) => option.label === value)?.value || 0;
-      const now = new Date();
-      const closeTime = new Date(now.getTime() + durationInMs);
-
-      const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
-
-      setPollData((prevState) => ({
-        ...prevState,
-        close_time: formattedCloseTime,
-      }));
-    } else if (name === "options") {
-      const updatedOptions = value.map((option) => {
-        if (typeof option === "string") {
-          return { content: option };
-        } else {
-          return option;
-        }
-      });
-      setPollData((prevState) => ({
-        ...prevState,
-        options: updatedOptions,
-      }));
-    } else {
-      setPollData((prevState) => ({ ...prevState, [name]: value }));
+    if (singlePoll) {
+      switch (name) {
+        case "is_paid":
+          setPollData((prevState) => ({
+            ...prevState,
+            is_paid: value,
+            amount: value ? prevState.amount : "0",
+          }));
+          break;
+        case "poll_type":
+          setPollData((prevState) => ({
+            ...prevState,
+            poll_type: value,
+            amount: value === "Free" ? "0" : prevState.amount,
+            is_paid: value === "Free" ? false : prevState.is_paid,
+          }));
+          break;
+        case "close_time":
+          const durationInMs =
+            durationOptions.find((option) => option.label === value)?.value ||
+            0;
+          const now = new Date();
+          const closeTime = new Date(now.getTime() + durationInMs);
+          const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
+          setPollData((prevState) => ({
+            ...prevState,
+            close_time: formattedCloseTime,
+          }));
+          break;
+        case "options":
+          const updatedOptions = value.map((option) => {
+            if (typeof option === "string") {
+              return {
+                ...pollData.options.find((opt) => opt.content === option),
+              }; // Preserve option_id if exists
+            } else {
+              return option;
+            }
+          });
+          setPollData((prevState) => ({
+            ...prevState,
+            options: updatedOptions,
+          }));
+          break;
+        default:
+          setPollData((prevState) => ({ ...prevState, [name]: value }));
+          break;
+      }
     }
   };
 
-  const handleCreatePoll = async (e) => {
+  const handleUpdatePoll = async (e) => {
     e.preventDefault();
 
     const missingFields = [];
     if (!pollData.question) missingFields.push("question");
-    if (!pollData.options) missingFields.push("options");
+    if (!pollData.options || pollData.options.length < 2)
+      missingFields.push("options");
     if (!pollData.poll_type) missingFields.push("poll type");
     if (!pollData.close_time) missingFields.push("poll duration");
-    // if (!pollData.poll_access) missingFields.push("poll access");
-    if (pollData.options && pollData.options.length < 2) {
-      toast.error("At least two options are required.");
-      return;
-    }
+
     if (missingFields.length > 0) {
       toast.error(`Missing required fields: ${missingFields.join(", ")}`);
       return;
@@ -112,32 +108,49 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     try {
       setIsLoading(true);
 
-      const resp = await CreatePollApi(pollData);
+      const resp = await UpdatePollApi(pollData, singlePoll.id);
 
       if (resp.data.status) {
-        toast.success("Poll created successfully");
+        toast.success("Poll updated successfully");
+        onClose();
       }
     } catch (error) {
-      console.log("createt", error);
-      toast.error(error.response.data.message || "Something went wrong!");
+      console.log("update poll error", error);
+      toast.error(error.response?.data?.message || "Something went wrong!");
     } finally {
       fetchPolls();
       setIsLoading(false);
-      onClose();
     }
   };
 
   const handleDeleteOption = (index) => {
-    const updatedOptions = [...pollData.options];
-    updatedOptions.splice(index, 1);
-    setPollData((prevState) => ({
-      ...prevState,
-      options: updatedOptions,
-    }));
+    if (singlePoll) {
+      const updatedOptions = [...pollData.options];
+      updatedOptions.splice(index, 1);
+      setPollData((prevState) => ({
+        ...prevState,
+        options: updatedOptions,
+      }));
+    }
   };
 
+  useEffect(() => {
+    if (singlePoll) {
+      const { question, options, poll_type, close_time } = singlePoll;
+      if (question && options) {
+        setPollData((prevState) => ({
+          ...prevState,
+          question,
+          poll_type,
+          close_time,
+          options: options.map((opt) => ({ ...opt, option_id: opt.id })),
+        }));
+      }
+    }
+  }, [singlePoll]);
+
   return (
-    <form className="form-wrapper" onSubmit={handleCreatePoll}>
+    <form className="form-wrapper" onSubmit={handleUpdatePoll}>
       <div
         className="createTop"
         style={{
@@ -149,12 +162,10 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
       >
         <FaArrowLeftLong
           style={{ fontSize: "20px" }}
-          onClick={() => onClose(false)}
+          onClick={() => onClose()}
           className="cursor-pointer"
         />
-        <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-          Create Poll
-        </span>
+        <span style={{ fontSize: "20px", fontWeight: "bold" }}>Edit Poll</span>
       </div>
       <div className="form-field">
         <label htmlFor="question">Poll question</label>
@@ -286,10 +297,10 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         type="submit"
         disabled={isLoading}
       >
-        {isLoading ? "Loading..." : "Create Poll"}
+        {isLoading ? "Loading..." : "Update Poll"}
       </button>
     </form>
   );
 };
 
-export default CreatePoll;
+export default EditPoll;
