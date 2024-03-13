@@ -27,7 +27,6 @@ const StereoSearchResult = ({ handleStrSearchClose }) => {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <LayoutMain>
     <div className="quik-container-box bg-white ml-10 px-3 py-10">
       <div className="profile-dot-bx flex red-wid">
         <div className="prof-back flex items-center">
@@ -80,7 +79,6 @@ const StereoSearchResult = ({ handleStrSearchClose }) => {
         </div>
       ) : null}
     </div>
-    </LayoutMain>
   );
 };
 

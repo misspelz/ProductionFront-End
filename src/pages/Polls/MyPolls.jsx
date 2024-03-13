@@ -299,29 +299,20 @@ const MyPolls = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <div className=" lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
-        {!Notify && !CastVote && !showMyPolls && (
-          <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
-            <div className="flex gap-3 items-center">
-              <FaArrowLeftLong
-                size={20}
-                onClick={goBack}
-                className="cursor-pointer text-lg mb-[0.5rem]"
-              />
-              <h1>My Polls</h1>
-            </div>
-
-            <img
-              src={images[currentIndex]}
-              alt="slider-pics"
-              className="mt-6 w-full lg:mt-10"
+    <div className="lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
+      {!Notify && !CastVote && !showMyPolls && (
+        <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
+          <div className="flex gap-3 items-center">
+            <FaArrowLeftLong
+              size={20}
+              onClick={goBack}
+              className="cursor-pointer text-lg mb-[0.5rem]"
             />
 
             <FindPolls
-              // onSearch={onSearch}
+             
               onFetchPolls={onFetchPolls}
-              // searchText={searchText}
+           
             />
 
             <div className="pb-[40px] ">
@@ -365,7 +356,6 @@ const MyPolls = () => {
               />
             </Dialog>
           </div>
-        )}
 
         {/* MOBILE */}
         {CastVote && (
@@ -408,8 +398,36 @@ const MyPolls = () => {
             // showCreateModal={handleShowCreateModal}
           />
         </div>
+        </div>
+      )}
+
+      {showMyPolls && (
+        <div className="px-4 lg:hidden pb-[40px]">
+          <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+
+          <img
+            src={images[currentIndex]}
+            alt="slider-pics"
+            className="mt-6 w-full lg:mt-10"
+          />
+          <FindPolls
+            onSearch={onSearch}
+            onFetchPolls={onFetchPolls}
+            searchText={searchText}
+          />
+          <MyPollsCategories viewType={viewType} setViewType={setViewType} />
+          {renderPolls()}
+        </div>
+      )}
+
+      {/* WEB */}
+      <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+        <PollsNotification
+          setNotify={setNotify}
+          showCreateModal={() => setShowCreateModal((prev) => !prev)}
+        />
       </div>
-    </MainLayout>
+    </div>
   );
 };
 

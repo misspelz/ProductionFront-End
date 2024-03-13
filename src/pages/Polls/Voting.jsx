@@ -337,7 +337,7 @@ const Voting = () => {
   }, []);
 
   return (
-    <MainLayout>
+    <>
       {!selectedPoll && (
         <div className=" bg-[#f5f5f5]  w-full pt-36 lg:px-10 gap-6 ">
           <div className="">
@@ -785,7 +785,7 @@ const Voting = () => {
           </div>
         </Modal>
       )} */}
-    </MainLayout>
+    </>
   );
 };
 export default Voting;

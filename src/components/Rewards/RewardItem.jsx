@@ -1,19 +1,19 @@
-import ooniCoin from '../../assets/profile_images/Ooni_Coin.svg';
+import ooniCoin from "../../assets/profile_images/Ooni_coin.png";
 
 const RewardItem = ({ title, icon, text, length, amount }) => {
   return (
-    <li className='other_lists_type'>
+    <li className="other_lists_type">
       <div>
-        <div className='reward_left'>
-          <div className='icon'>
-            <img src={icon} alt='' />
+        <div className="reward_left">
+          <div className="icon">
+            <img src={icon} alt="" />
           </div>
 
-          <div className='text'>
+          <div className="text">
             <h1>
               {title} &nbsp;&nbsp;&nbsp;
               <span>
-                <img src={ooniCoin} alt='' /> <span>+ {amount}</span>
+                <img src={ooniCoin} alt="" /> <span>+ {amount}</span>
               </span>
             </h1>
 
@@ -21,11 +21,11 @@ const RewardItem = ({ title, icon, text, length, amount }) => {
           </div>
         </div>
 
-        <button className='reward_right'>Claim</button>
+        <button className="reward_right">Claim</button>
       </div>
 
-      <div className='progress_wrapper'>
-        <div className='progress'></div>
+      <div className="progress_wrapper">
+        <div className="progress"></div>
       </div>
 
       <div>
