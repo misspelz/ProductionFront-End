@@ -179,7 +179,7 @@ export default function UploadMusicSider() {
           </button>
           <span className="font-bold text-xl text-black">Upload</span>
           </div>
-          <button onClick={()=>setUpload2(!upload2)} className="w-[16] h-[16]"><HiXMark size={16}/></button>
+          <button onClick={()=>setUpload4(!upload4)} className="w-[16] h-[16]"><HiXMark size={16}/></button>
         </div>
         <div className="flex flex-col items-center justify-center mt-8 gap-3">
           <span className="font-medium text-base">Your song has been uploaded!</span>
