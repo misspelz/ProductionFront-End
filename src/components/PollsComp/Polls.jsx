@@ -4,6 +4,7 @@ import { BsEye } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaVoteYea } from "react-icons/fa";
 import { ModalContext } from "Context/ModalContext";
+import { formatDate } from "utils/helper";
 
 export const Polls = ({
   onClick,
@@ -37,11 +38,7 @@ export const Polls = ({
     const closeDate = new Date(closeTime);
     const currentDate = new Date();
 
-    // console.log("Current Date:", currentDate);
-    // console.log("Close Date:", closeDate);
-
     const isReached = currentDate.getTime() >= closeDate.getTime();
-    // console.log("Is Close Time Reached:", isReached);
 
     return isReached;
   };
@@ -68,7 +65,9 @@ export const Polls = ({
             {authorName}
           </span>
         </div>
-        <span className="text-[#403F3F] text-[12px]">{createdAt}</span>
+        <span className="text-[#403F3F] text-[12px]">
+          {formatDate(createdAt)}
+        </span>
       </div>
 
       <h6 className="text-[12px] lg:text-[14px] mt-4 text-[#000]">
@@ -96,11 +95,13 @@ export const Polls = ({
           <img src="images/time.png" alt="time-icon" />
           <div className="text-[#000] text-[12px] lg:text-[14px]   font-[500]">
             {isClosed ? (
-              <span className="text-orange-600">Closed</span>
-            ) : isCloseTimeReached(daysRemaining) ? (
+              <span className="text-orange-600">Ended</span>
+            ) : isCloseTimeReached(formatDate(daysRemaining)) ? (
               <span className="text-red-600">Ended</span>
             ) : (
-              <span className="text-yellow-600">Ends: {daysRemaining}</span>
+              <span className="text-yellow-600">
+                Ends: {formatDate(daysRemaining)}
+              </span>
             )}
           </div>
         </div>
@@ -122,7 +123,7 @@ export const Polls = ({
               </div>
             </div>
             <button
-              className="w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl  !font-normal bg-[#000] hover:bg-[#F5F5F5] hover:text-[#000] transition duration-500"
+              className="w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl  !font-normal bg-[#000] hover:bg-[#F5F5F5] hover:text-[#000] transition duration-500 uppercase"
               onClick={onView}
             >
               View result
@@ -159,12 +160,18 @@ export const Polls = ({
                 </div>
               )}
             </div>
-            <button
-              className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal hover:bg-red-600 hover:text-white transition duration-500"
-              onClick={onClose}
-            >
-              Close poll
-            </button>
+            {isClosed ? (
+              <div className="text-black font-bold flex items-center justify-center w-full h-[30px] lg:h-[40px] rounded-[15px] text-lg sm:text-xl bg-[#F5F5F5]">
+                CLOSED
+              </div>
+            ) : (
+              <button
+                className="bg-[#F5F5F5] w-full h-[30px] lg:h-[40px] flex justify-center items-center rounded-[15px] text-lg sm:text-xl text-[#403f3f] !font-normal hover:bg-red-600 hover:text-white transition duration-500 uppercase"
+                onClick={onClose}
+              >
+                Close poll
+              </button>
+            )}
           </div>
         </div>
       )}

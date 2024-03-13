@@ -1,5 +1,5 @@
 import React from "react";
-import { IoIosNotificationsOutline } from "react-icons/io"; 
+import { IoIosNotificationsOutline } from "react-icons/io";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
@@ -7,12 +7,11 @@ export const CreateCastActions = ({
   HandleNotification,
   HandleCastVote,
   showCreateModal,
-
 }) => {
   const nav = useNavigate();
 
   return (
-    <div className="px-4 mt-12 lg:hidden">
+    <div className="px-4 lg:hidden">
       <div
         className="flex items-center gap-6 cursor-pointer"
         onClick={showCreateModal}
