@@ -25,62 +25,54 @@ const ManageBusiness = () => {
 
   const manageBusiness = [4];
 
-  console.log(businesses === "pending" ? "Loading" : businesses);
-
   return (
-    <div className="home-container">
-      <MainLayout>
-        <div className="profile_container">
-          <div className="manage_business">
-            <ModalHeader
-              header="Manage Businesses"
-              onModalClose={() => navigate(-1)}
-            />
+    <div className="profile_container">
+      <div className="manage_business">
+        <ModalHeader
+          header="Manage Businesses"
+          onModalClose={() => navigate(-1)}
+        />
 
-            <div className="bottom_box">
-              {businessesStatus === "pending" ? (
-                Array.from({ length: 20 }, (_, i) => i + 1).map((ske) => (
-                  <ManageBusinessSkeleton key={ske} />
-                ))
-              ) : businessesStatus === "error" ? (
-                "Please check your internet "
-              ) : businesses.length === 0 ? (
-                <ManageBusinessEmpty />
-              ) : (
-                businesses.map((business, i) => (
-                  <ManageBusinessLists key={i + 1} />
-                ))
-              )}
+        <div className="bottom_box">
+          {businessesStatus === "pending" ? (
+            Array.from({ length: 20 }, (_, i) => i + 1).map((ske) => (
+              <ManageBusinessSkeleton key={ske} />
+            ))
+          ) : businessesStatus === "error" ? (
+            "Please check your internet "
+          ) : businesses.length === 0 ? (
+            <ManageBusinessEmpty />
+          ) : (
+            businesses.map((business, i) => <ManageBusinessLists key={i + 1} />)
+          )}
+        </div>
+
+        {manageBusiness.length > 0 && (
+          <>
+            <div
+              className="add_new_bussiness_btn clickModalOpen"
+              onClick={handleClick}
+              data-modal="setting"
+            >
+              <img src={plus} alt="Plus" />
             </div>
 
-            {manageBusiness.length > 0 && (
-              <>
-                <div
-                  className="add_new_bussiness_btn clickModalOpen"
-                  onClick={handleClick}
-                  data-modal="setting"
-                >
-                  <img src={plus} alt="Plus" />
-                </div>
-
-                {modal.setting && (
-                  <ModalContainer type="setting">
-                    <EditBusinessProfile />
-                  </ModalContainer>
-                )}
-              </>
+            {modal.setting && (
+              <ModalContainer type="setting">
+                <EditBusinessProfile />
+              </ModalContainer>
             )}
-          </div>
+          </>
+        )}
+      </div>
 
-          <div className="profile_ads">
-            <ProfileAds />
-          </div>
+      <div className="profile_ads">
+        <ProfileAds />
+      </div>
 
-          <div className="profile_users">
-            <ProfileStickersAndMessages />
-          </div>
-        </div>
-      </MainLayout>
+      <div className="profile_users">
+        <ProfileStickersAndMessages />
+      </div>
     </div>
   );
 };

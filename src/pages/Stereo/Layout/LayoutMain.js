@@ -48,7 +48,7 @@ export default function LayoutMain({ children }) {
         <div class="h-32 rounded-lg bg-gray-200"></div>
       </div> */}
 
-      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      {/* <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
         {isCollapsed ? (
           <div className="col-span-2 top-0">
             <Sider />
@@ -76,6 +76,16 @@ export default function LayoutMain({ children }) {
             <Sider />
           </div>
         ) : null}
+        {children}
+      </div> */}
+
+      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      <div className="col-span-7">{children}</div>
+      <div className="col-span-5">
+              <RightSider />
+            </div>
+      </div>
+      <div className="sm:hidden block">
         {children}
       </div>
     </div>

@@ -6,7 +6,7 @@ import ModalHeader from "components/Modals/ModalHeader";
 import PayoutModal from "components/Modals/PayoutModal";
 import RewardHeader from "components/Rewards/RewardHeader";
 import ModalButton from "components/Modals/ModalButton";
-import coin from "../../assets/profile_images/Ooni_Coin.svg";
+import coin from "../../assets/profile_images/Ooni_coin.png";
 import { useOpenModal } from "Hooks/useOpenModal";
 
 const Payment = () => {

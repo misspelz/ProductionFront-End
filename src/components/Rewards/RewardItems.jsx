@@ -4,7 +4,7 @@ import { useRewards } from 'pages/Rewards/useRewards';
 
 import RewardItem from './RewardItem';
 import loginSymbol from '../../assets/profile_images/symbols_login.svg';
-import ooniCoin from '../../assets/profile_images/Ooni_Coin.svg';
+import ooniCoin from "../../assets/profile_images/Ooni_coin.png";
 import createPost from '../../assets/profile_images/post-creation.svg';
 import comments from '../../assets/profile_images/comments.svg';
 import chat from '../../assets/profile_images/chat.svg';

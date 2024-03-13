@@ -6,7 +6,7 @@ const SuccessPoll = () => {
       <div className="searchEmpty-bbox ddwn">
         <div className="empt-box-sea">
           <img src="images/em2.png" alt="" />
-          <div className="notin-is">Your payment has been conirmed</div>
+          <div className="notin-is">Your payment has been confirmed</div>
 
           <div className="choose-act-btn">
             <ActionButton label={"continue to polls"} bg={"wid"} />

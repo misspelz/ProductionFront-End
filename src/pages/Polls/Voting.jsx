@@ -133,8 +133,6 @@ const Voting = () => {
     handleAllPolls();
   }, []);
 
- 
-
   const renderPolls = () => {
     switch (viewType) {
       // case "private":
@@ -208,7 +206,7 @@ const Voting = () => {
         const allPolls = polls.filter(
           (poll) => poll?.options?.length > 1 && !poll.is_closed
         );
-        
+
         if (isLoading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
@@ -330,7 +328,7 @@ const Voting = () => {
   }, [searchText]);
 
   return (
-    <MainLayout>
+    <>
       {!selectedPoll && (
         <div className=" bg-[#f5f5f5]  w-full pt-36 lg:px-10 gap-6 ">
           <div className="">
@@ -775,7 +773,7 @@ const Voting = () => {
           </div>
         </Modal>
       )} */}
-    </MainLayout>
+    </>
   );
 };
 export default Voting;
