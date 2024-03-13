@@ -50,104 +50,100 @@ const CategoryPage = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className="commerce-container">
-      <MainLayout>
-        <form action="">
-          {isModalOpen && (
-            <div className="modal-full-container">
-              <SellItem
-                handleCloseMainContainerClick={handleCloseMainContainerClick}
-                handleSellContainerClick={handleSellContainerClick}
-                handleSellPromoteClick={handleSellPromoteClick}
-                handleCloseSellPromoteClick={handleCloseSellPromoteClick}
-                isPromoteModalOpen={isPromoteModalOpen}
-              />
-            </div>
-          )}
-          {isPModalOpen && (
-            <div className="modal-full-container">
-              <SellItemStepTwo
-                handleCloseMainContainerClick={handleCloseSellContainerClick}
-                handleSellPreviewClick={handleSellPreviewClick}
-              />
-            </div>
-          )}
-          {isPreviewModalOpen && (
-            <div className="modal-full-container">
-              <SellItemStepThree
-                handleCloseMainContainerClick={handleCloseSellPreviewClick}
-              />
-            </div>
-          )}
-        </form>
-        <div className="full-commerce-box">
-          <div className="left-commerce-cont back-left">
-            <div className="sell-manage-cont">
-              <div className="btn-sell-pro">
-                <button
-                  className="sell-item-comm inc"
-                  onClick={handleMainContainerClick}
-                >
-                  Sell an item
-                </button>
-              </div>
-              <div className="btn-sell-pro ">
-                <button className="sell-item-comm mann inc">
-                  Manage store
-                </button>
-              </div>
-            </div>
-            {isProductOpen && (
-              <ProjectDetail handleProductClose={handleProductClose} />
-            )}
-            {!isProductOpen && (
-              <>
-                <CategorySearchComp label={"AutoMobiles"} />
-                <div className="all-row-cat-select">
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                </div>
-                <div className="prod-ads">
-                  <img src="images/ads5.png" alt="" />
-                </div>
-                <div className="all-row-cat-select">
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                  <CategoryMajorCard handleProductClick={handleProductClick} />
-                </div>{" "}
-              </>
-            )}
+    <>
+      <form action="">
+        {isModalOpen && (
+          <div className="modal-full-container">
+            <SellItem
+              handleCloseMainContainerClick={handleCloseMainContainerClick}
+              handleSellContainerClick={handleSellContainerClick}
+              handleSellPromoteClick={handleSellPromoteClick}
+              handleCloseSellPromoteClick={handleCloseSellPromoteClick}
+              isPromoteModalOpen={isPromoteModalOpen}
+            />
           </div>
-          <div className="rightSide-commerce">
+        )}
+        {isPModalOpen && (
+          <div className="modal-full-container">
+            <SellItemStepTwo
+              handleCloseMainContainerClick={handleCloseSellContainerClick}
+              handleSellPreviewClick={handleSellPreviewClick}
+            />
+          </div>
+        )}
+        {isPreviewModalOpen && (
+          <div className="modal-full-container">
+            <SellItemStepThree
+              handleCloseMainContainerClick={handleCloseSellPreviewClick}
+            />
+          </div>
+        )}
+      </form>
+      <div className="full-commerce-box">
+        <div className="left-commerce-cont back-left">
+          <div className="sell-manage-cont">
             <div className="btn-sell-pro">
               <button
-                className="sell-item-comm"
+                className="sell-item-comm inc"
                 onClick={handleMainContainerClick}
               >
                 Sell an item
               </button>
             </div>
-            <div className="btn-sell-pro">
-              <button className="sell-item-comm mann">Manage store</button>
+            <div className="btn-sell-pro ">
+              <button className="sell-item-comm mann inc">Manage store</button>
             </div>
-            <SelectCategory />
-            <TopSeller />
-            <Shortcart />
           </div>
+          {isProductOpen && (
+            <ProjectDetail handleProductClose={handleProductClose} />
+          )}
+          {!isProductOpen && (
+            <>
+              <CategorySearchComp label={"AutoMobiles"} />
+              <div className="all-row-cat-select">
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+              </div>
+              <div className="prod-ads">
+                <img src="images/ads5.png" alt="" />
+              </div>
+              <div className="all-row-cat-select">
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+                <CategoryMajorCard handleProductClick={handleProductClick} />
+              </div>{" "}
+            </>
+          )}
         </div>
-      </MainLayout>
-    </div>
+        <div className="rightSide-commerce">
+          <div className="btn-sell-pro">
+            <button
+              className="sell-item-comm"
+              onClick={handleMainContainerClick}
+            >
+              Sell an item
+            </button>
+          </div>
+          <div className="btn-sell-pro">
+            <button className="sell-item-comm mann">Manage store</button>
+          </div>
+          <SelectCategory />
+          <TopSeller />
+          <Shortcart />
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -42,79 +42,75 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
-      <MainLayout>
-        <div className="main-containe">
-          <div className="left-side-container">
-            <FirstSide />
-            <img src="images/jumia.png" alt="" className="ads-img" />
-            <LifestyleStatus />
-            <Box className="feeds-tabs-main-container">
-              <Box
-                sx={{
-                  maxWidth: { xs: 320, sm: 580 },
-                  bgcolor: "background.paper",
-                  alignItems: "center",
-                }}
-              >
-                <Tabs
-                  value={activeTab}
-                  onChange={handleChange}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  className="custom-tabs"
-                  aria-label="scrollable tabs"
-                >
-                  <Tab label="All posts" />
-                  <Tab label="Images" />
-                  <Tab label="Videos" />
-                  <Tab label="Products" />
-                  <Tab label="Voice notes" />
-                  <Tab label="Location" />
-                  <Tab label="Music" />
-                  <Tab label="Files" />
-                </Tabs>
-              </Box>
-              <CustomTabPanel value={activeTab} index={0}>
-                <Feeds />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={1}>
-                <Feedimages />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={2}>
-                <Feedvideos />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={3}>
-                <FeedsProducts />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={4}>
-                <FeedsVoice />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={5}>
-                <FeedLocations />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={6}>
-                <FeedsMusic />
-              </CustomTabPanel>
-              <CustomTabPanel value={activeTab} index={7}>
-                <Feedfiles />
-              </CustomTabPanel>
-            </Box>
-          </div>
-          <div className="middle-side-container">
-            <img src="images/ads1.png" alt="" />
-            <img src="images/ads2.png" alt="" />
-            <img src="images/ads3.png" alt="" />
-          </div>
-          <div className="right-side-container">
-            <SelectCategory />
-            <Follower />
-            <div className="mess-bxx-conn">
-              <DashMessage />
-            </div>
-          </div>
+    <div className="main-containe">
+      <div className="left-side-container">
+        <FirstSide />
+        <img src="images/jumia.png" alt="" className="ads-img" />
+        <LifestyleStatus />
+        <Box className="feeds-tabs-main-container">
+          <Box
+            sx={{
+              maxWidth: { xs: 320, sm: 580 },
+              bgcolor: "background.paper",
+              alignItems: "center",
+            }}
+          >
+            <Tabs
+              value={activeTab}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              className="custom-tabs"
+              aria-label="scrollable tabs"
+            >
+              <Tab label="All posts" />
+              <Tab label="Images" />
+              <Tab label="Videos" />
+              <Tab label="Products" />
+              <Tab label="Voice notes" />
+              <Tab label="Location" />
+              <Tab label="Music" />
+              <Tab label="Files" />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={activeTab} index={0}>
+            <Feeds />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={1}>
+            <Feedimages />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={2}>
+            <Feedvideos />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={3}>
+            <FeedsProducts />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={4}>
+            <FeedsVoice />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={5}>
+            <FeedLocations />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={6}>
+            <FeedsMusic />
+          </CustomTabPanel>
+          <CustomTabPanel value={activeTab} index={7}>
+            <Feedfiles />
+          </CustomTabPanel>
+        </Box>
+      </div>
+      <div className="middle-side-container">
+        <img src="images/ads1.png" alt="" />
+        <img src="images/ads2.png" alt="" />
+        <img src="images/ads3.png" alt="" />
+      </div>
+      <div className="right-side-container">
+        <SelectCategory />
+        <Follower />
+        <div className="mess-bxx-conn">
+          <DashMessage />
         </div>
-      </MainLayout>
+      </div>
     </div>
   );
 };

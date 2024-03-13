@@ -288,120 +288,115 @@ const MyPolls = () => {
   // }, [searchText, onFetchPolls]);
 
   return (
-    <MainLayout>
-      <div className=" lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
-        {!Notify && !CastVote && !showMyPolls && (
-          <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
-            <div className="flex gap-3 items-center">
-              <FaArrowLeftLong
-                size={20}
-                onClick={goBack}
-                className="cursor-pointer text-lg mb-[0.5rem]"
-              />
-              <h1>My Polls</h1>
-            </div>
-
-            <img
-              src={images[currentIndex]}
-              alt="slider-pics"
-              className="mt-6 w-full lg:mt-10"
+    <div className="lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
+      {!Notify && !CastVote && !showMyPolls && (
+        <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
+          <div className="flex gap-3 items-center">
+            <FaArrowLeftLong
+              size={20}
+              onClick={goBack}
+              className="cursor-pointer text-lg mb-[0.5rem]"
             />
-
-            <FindPolls
-              onSearch={onSearch}
-              onFetchPolls={onFetchPolls}
-              searchText={searchText}
-            />
-
-            <div className="pb-[40px] ">
-              <MyPollsCategories
-                viewType={viewType}
-                setViewType={setViewType}
-              />
-              {renderPolls()}
-            </div>
-            <Dialog
-              open={showCreateModal}
-              onClose={() => setShowCreateModal((prev) => !prev)}
-              fullWidth
-            >
-              <CreatePoll
-                onClose={setShowCreateModal}
-                fetchPolls={handleMyPolls}
-                selectedPoll={selectedPoll}
-              />
-            </Dialog>
-            <Dialog open={showCloseModal} onClose={handleShowcloseModal}>
-              <ClosePoll
-                closeModal={handleShowcloseModal}
-                singlePoll={singlePoll}
-                singleClosePoll={singleClosePoll}
-              />
-            </Dialog>
-            <Dialog open={showDeleteModal} onClose={handleShowDeleteModal}>
-              <DeletePoll
-                closeModal={handleShowDeleteModal}
-                singlePoll={singlePoll}
-                singleDeletePoll={singleDeletePoll}
-              />
-            </Dialog>
-            <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
-              <PollResult
-                closeModal={handleViewResults}
-                singlePollResult={singlePollResult}
-              />
-            </Dialog>
+            <h1>My Polls</h1>
           </div>
-        )}
 
-        {/* MOBILE */}
-        {CastVote && (
-          <div className="px-4 lg:hidden pb-[40px]">
-            <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+          <img
+            src={images[currentIndex]}
+            alt="slider-pics"
+            className="mt-6 w-full lg:mt-10"
+          />
 
-            <img
-              src={images[currentIndex]}
-              alt="slider-pics"
-              className="mt-6 w-full lg:mt-10"
+          <FindPolls
+            onSearch={onSearch}
+            onFetchPolls={onFetchPolls}
+            searchText={searchText}
+          />
+
+          <div className="pb-[40px] ">
+            <MyPollsCategories viewType={viewType} setViewType={setViewType} />
+            {renderPolls()}
+          </div>
+          <Dialog
+            open={showCreateModal}
+            onClose={() => setShowCreateModal((prev) => !prev)}
+            fullWidth
+          >
+            <CreatePoll
+              onClose={setShowCreateModal}
+              fetchPolls={handleMyPolls}
+              selectedPoll={selectedPoll}
             />
-            {/* <FindPolls
+          </Dialog>
+          <Dialog open={showCloseModal} onClose={handleShowcloseModal}>
+            <ClosePoll
+              closeModal={handleShowcloseModal}
+              singlePoll={singlePoll}
+              singleClosePoll={singleClosePoll}
+            />
+          </Dialog>
+          <Dialog open={showDeleteModal} onClose={handleShowDeleteModal}>
+            <DeletePoll
+              closeModal={handleShowDeleteModal}
+              singlePoll={singlePoll}
+              singleDeletePoll={singleDeletePoll}
+            />
+          </Dialog>
+          <Dialog open={viewResults} onClose={handleViewResults} fullWidth>
+            <PollResult
+              closeModal={handleViewResults}
+              singlePollResult={singlePollResult}
+            />
+          </Dialog>
+        </div>
+      )}
+
+      {/* MOBILE */}
+      {CastVote && (
+        <div className="px-4 lg:hidden pb-[40px]">
+          <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+
+          <img
+            src={images[currentIndex]}
+            alt="slider-pics"
+            className="mt-6 w-full lg:mt-10"
+          />
+          {/* <FindPolls
               onSearch={onSearch}
               onFetchPolls={onFetchPolls}
               searchText={searchText}
             /> */}
-            <MyPollsCategories viewType={viewType} setViewType={setViewType} />
-            {renderPolls()}
-          </div>
-        )}
-
-        {showMyPolls && (
-          <div className="px-4 lg:hidden pb-[40px]">
-            <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
-
-            <img
-              src={images[currentIndex]}
-              alt="slider-pics"
-              className="mt-6 w-full lg:mt-10"
-            />
-            <FindPolls
-              onSearch={onSearch}
-              onFetchPolls={onFetchPolls}
-              searchText={searchText}
-            />
-            <MyPollsCategories viewType={viewType} setViewType={setViewType} />
-            {renderPolls()}
-          </div>
-        )}
-
-        {/* WEB */}
-        <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
-          <PollsNotification
-            setNotify={setNotify}
-            showCreateModal={() => setShowCreateModal((prev) => !prev)}
-          />
+          <MyPollsCategories viewType={viewType} setViewType={setViewType} />
+          {renderPolls()}
         </div>
+      )}
+
+      {showMyPolls && (
+        <div className="px-4 lg:hidden pb-[40px]">
+          <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+
+          <img
+            src={images[currentIndex]}
+            alt="slider-pics"
+            className="mt-6 w-full lg:mt-10"
+          />
+          <FindPolls
+            onSearch={onSearch}
+            onFetchPolls={onFetchPolls}
+            searchText={searchText}
+          />
+          <MyPollsCategories viewType={viewType} setViewType={setViewType} />
+          {renderPolls()}
+        </div>
+      )}
+
+      {/* WEB */}
+      <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+        <PollsNotification
+          setNotify={setNotify}
+          showCreateModal={() => setShowCreateModal((prev) => !prev)}
+        />
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
