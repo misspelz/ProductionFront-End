@@ -4,6 +4,8 @@ import Ad from "../../Assets/AD.jpeg";
 import Modal from "../../Components/Modals/ModalWrapper1";
 import ArtistProfile from "../ArtistProfile";
 import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../../Assets/nothing_here.json"
 
 export default function Artists() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,14 +18,14 @@ export default function Artists() {
     axios
       .get(`https://development.2geda.net/api/stereo/artists/`, {
         headers: {
-          Authorization: `Token ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
         },
       })
       .then((res) => {
-        setArtists(JSON.stringify(res?.data?.data));
-        console.log(artists + "artist state===");
-        console.log(JSON.stringify(res.data) + "artists====");
+        setArtists(res.data.data);
+        console.log(JSON.stringify(artists) + "artist state===");
+        console.log(JSON.stringify(res.data.data) + "artists====");
       });
   };
 
@@ -32,7 +34,18 @@ export default function Artists() {
   }, []);
   return (
     <div className="mx-4">
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      <div className={artists.length>0?`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6`:null}>
+        {artists.length>0?artists.map(artist =>{
+          return(<ArtistTabCard onClick={handleOpenModal} />)
+        }):<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+        {/* <ArtistTabCard onClick={handleOpenModal} />
         <ArtistTabCard onClick={handleOpenModal} />
         <ArtistTabCard onClick={handleOpenModal} />
         <ArtistTabCard onClick={handleOpenModal} />
@@ -55,8 +68,7 @@ export default function Artists() {
         <ArtistTabCard onClick={handleOpenModal} />
         <ArtistTabCard onClick={handleOpenModal} />
         <ArtistTabCard onClick={handleOpenModal} />
-        <ArtistTabCard onClick={handleOpenModal} />
-        <ArtistTabCard onClick={handleOpenModal} />
+        <ArtistTabCard onClick={handleOpenModal} /> */}
       </div>
       {/* ad */}
       <div className="mt-4" style={{}}>

@@ -49,7 +49,7 @@ export default function UploadMusicLayout({ children }) {
         <div class="h-32 rounded-lg bg-gray-200"></div>
       </div> */}
 
-      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      {/* <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
         {isCollapsed ? (
           <div className="col-span-2 top-0">
             <Sider />
@@ -78,7 +78,13 @@ export default function UploadMusicLayout({ children }) {
           </div>
         ) : null}
         {children}
-      </div>
+      </div> */}
+      <div className="grid grid-cols-12">
+            <div className="col-span-7">{children}</div>
+            <div className="col-span-5">
+              <UploadMusicSider />
+            </div>
+          </div>
     </div>
   );
 }

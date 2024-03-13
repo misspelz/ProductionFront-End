@@ -2,7 +2,7 @@ import axios from "axios";
 import { url } from "utils/index";
 
 export const getToken = () => {
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("authTOken");
   return token;
 };
 

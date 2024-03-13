@@ -61,6 +61,7 @@ const MyPolls = () => {
   const [singleDeletePoll, setSingleDeletePoll] = useState(false);
   const [singlePollResult, setSinglePollResult] = useState(false);
   const [viewResults, setViewResults] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const nav = useNavigate();
 
@@ -241,25 +242,6 @@ const MyPolls = () => {
     );
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(goToNextImage, 3000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    handleMyPolls();
-    handleActivePolls();
-    handleEndedPolls();
-  }, []);
-
-  // const [searchText, setSearchText] = useState("");
-
-  // const onSearch = (text) => {
-  //   setSearchText(text);
-  //   // onFetchPolls(text);
-  // };
-
   const onFetchPolls = async (text) => {
     try {
       const res = await FindUserPollsApi(text);
@@ -275,6 +257,22 @@ const MyPolls = () => {
       toast.error(error.response.data.message || "Something went wrong!");
     }
   };
+
+  const onSearch = (text) => {
+    setSearchText(text);
+  };
+
+  useEffect(() => {
+    handleMyPolls();
+    handleActivePolls();
+    handleEndedPolls();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(goToNextImage, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const closeExpiredPolls = async () => {
@@ -309,11 +307,7 @@ const MyPolls = () => {
               className="cursor-pointer text-lg mb-[0.5rem]"
             />
 
-            <FindPolls
-             
-              onFetchPolls={onFetchPolls}
-           
-            />
+            <FindPolls onFetchPolls={onFetchPolls} />
 
             <div className="pb-[40px] ">
               <MyPollsCategories
@@ -357,21 +351,24 @@ const MyPolls = () => {
             </Dialog>
           </div>
 
-        {/* MOBILE */}
-        {CastVote && (
-          <div className="px-4 lg:hidden pb-[40px]">
-            {/* <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} /> */}
-            <img
-              src={images[currentIndex]}
-              alt="slider-pics"
-              className="mt-6 w-full lg:mt-10"
-            />
-            <MyPollsCategories viewType={viewType} setViewType={setViewType} />
-            {renderPolls()}
-          </div>
-        )}
+          {/* MOBILE */}
+          {CastVote && (
+            <div className="px-4 lg:hidden pb-[40px]">
+              {/* <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} /> */}
+              <img
+                src={images[currentIndex]}
+                alt="slider-pics"
+                className="mt-6 w-full lg:mt-10"
+              />
+              <MyPollsCategories
+                viewType={viewType}
+                setViewType={setViewType}
+              />
+              {renderPolls()}
+            </div>
+          )}
 
-        {/* {showMyPolls && (
+          {/* {showMyPolls && (
           <div className="px-4 lg:hidden pb-[40px]">
             // <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
 
@@ -390,20 +387,24 @@ const MyPolls = () => {
           </div>
         )} */}
 
-        {/* WEB */}
-        <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
-          <PollsNotification
-            setNotify={setNotify}
-            handleShowCreateModal={handleShowCreateModal}
-            // showCreateModal={handleShowCreateModal}
-          />
-        </div>
+          {/* WEB */}
+          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+            <PollsNotification
+              setNotify={setNotify}
+              handleShowCreateModal={handleShowCreateModal}
+              // showCreateModal={handleShowCreateModal}
+            />
+          </div>
         </div>
       )}
 
       {showMyPolls && (
         <div className="px-4 lg:hidden pb-[40px]">
-          <FindPolls onSearch={onSearch} onFetchPolls={onFetchPolls} />
+          <FindPolls
+            onSearch={onSearch}
+            onFetchPolls={onFetchPolls}
+            searchText={searchText}
+          />
 
           <img
             src={images[currentIndex]}

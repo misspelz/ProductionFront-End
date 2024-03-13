@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ModalWrapper2 = ({ children, onCancel, isOpen, closeModal }) => {
+const ModalWrapper2 = ({ children, onCancel, isOpen, closeModal, header }) => {
   //   const [isOpen, setIsOpen] = useState(false);
 
   //   const openModal = () => setIsOpen(true);
@@ -19,7 +19,7 @@ const ModalWrapper2 = ({ children, onCancel, isOpen, closeModal }) => {
           id="modelConfirm"
           className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
           <div className="relative top-40 mx-auto shadow-xl rounded-none bg-white max-w-xl">
-            <div className="flex justify-between px-5 py-5 items-center">
+            {header?<div className="flex justify-between px-5 py-5 items-center">
               <div></div>
               <div className="text-center items-center">
                 <p className="text-xl font-bold">Edit profile</p>
@@ -42,7 +42,7 @@ const ModalWrapper2 = ({ children, onCancel, isOpen, closeModal }) => {
                   </svg>
                 </button>
               </div>
-            </div>
+            </div>:null}
             {/* Pass any children as content within the modal */}
             {children}
           </div>

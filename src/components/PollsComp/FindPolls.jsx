@@ -1,9 +1,9 @@
 import { IoIosSearch } from "react-icons/io";
 
-export const FindPolls = ({ onSearch, onFetchPolls }) => {
+export const FindPolls = ({ onSearch, onFetchPolls, searchText }) => {
   const handleSearchChange = (e) => {
-    const searchText = e.target.value;
-    // onSearch(searchText);
+    searchText = e.target.value;
+    onSearch(searchText);
     onFetchPolls(searchText);
   };
 
