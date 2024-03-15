@@ -62,7 +62,7 @@ const ProfileActivities = () => {
         <ContainerLoading height={80} unit="px" />
       ) : userPostsStatus === "pending" ? (
         <ContainerError height={80} unit="px" />
-      ) : userPosts.posts.length === 0 ? (
+      ) : userPosts?.posts?.length === 0 ? (
         <EmptyResults type="posts" />
       ) : (
         <div className="profile_posts">

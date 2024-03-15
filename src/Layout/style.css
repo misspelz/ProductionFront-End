@@ -39,7 +39,7 @@
 
 .app_main {
   padding: 1rem 1.5rem;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .layout-container {

@@ -284,7 +284,7 @@ function App() {
 
             <Route
               path="manage-business"
-              element={<ProtectedRoutes manageManageBusiness />}
+              element={<ProtectedRoutes element={<ManageBusiness />} />}
             />
 
             <Route element={<ProtectedRoutes element={<RewardLayout />} />}>

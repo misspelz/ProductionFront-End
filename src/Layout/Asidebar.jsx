@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { BiSolidHome } from "react-icons/bi";
 import { BsPersonCircle, BsTicketFill } from "react-icons/bs";
 import { IoChatbubbleEllipsesOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineHowToVote } from "react-icons/md";
+import { ModalContext } from "Context/ModalContext";
+import toast from "react-hot-toast";
 
 const nav_item_style = {
   active:
@@ -14,6 +16,16 @@ const nav_item_style = {
 
 export const Asidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const nav = useNavigate();
+  const { setIsAuthenticated } = useContext(ModalContext);
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("2gedaUserInfo");
+    setIsAuthenticated(false);
+    nav("/");
+    toast.success("Successfully Logged Out");
+  };
 
   return (
     <aside className={isCollapsed ? "sidebar-container  nil" : "app_aside"}>
@@ -79,7 +91,10 @@ export const Asidebar = () => {
         </NavLink>
       </div>
 
-      <button className="flex items-center space-x-2 text-[15px] text-white">
+      <button
+        className="flex items-center space-x-2 text-[15px] text-white"
+        onClick={handleLogout}
+      >
         <IoLogOutOutline className="text-[23px]" />
         <span>Sign out</span>
       </button>

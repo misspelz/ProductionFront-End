@@ -7,16 +7,10 @@ GLOBAL STYLING
 } */
 
 /* PROFILE CONTAINER */
-.profile_container {
-  width: 85%;
-  height: 100%;
-  background: #e6e6e6e1;
-  position: absolute;
-  padding: 110px 20px 0px 20px;
-
+/* .profile_container {
   display: flex;
   gap: 10px;
-}
+} */
 
 /* PROFILE CONTAINER LEFT CONTENT */
 .profile_overview {

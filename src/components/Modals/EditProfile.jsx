@@ -234,7 +234,7 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Bio"
               onChange={handleChange}
               name="bio"
-              className="!w-full h-[80px] resize-none lg:h-[100px] xl:h-[120px]"
+              className="!w-full h-[80px] resize-none lg:h-[70px] xl:h-[90px]"
               value={data?.bio}
             ></textarea>
 

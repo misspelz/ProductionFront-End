@@ -23,17 +23,15 @@ const ManageBusiness = () => {
 
   const { businessesStatus, businesses } = useCurrentBusinessLists();
 
-  const manageBusiness = [4];
-
   return (
-    <div className="profile_container">
-      <div className="manage_business">
+    <div className="grid grid-cols-12 gap-4 overflow-hidden">
+      <div className="overflow-auto h-[90vh] col-span-8 relative">
         <ModalHeader
           header="Manage Businesses"
           onModalClose={() => navigate(-1)}
         />
 
-        <div className="bottom_box">
+        <div className="bottom_box mt-2">
           {businessesStatus === "pending" ? (
             Array.from({ length: 20 }, (_, i) => i + 1).map((ske) => (
               <ManageBusinessSkeleton key={ske} />
@@ -43,14 +41,16 @@ const ManageBusiness = () => {
           ) : businesses.length === 0 ? (
             <ManageBusinessEmpty />
           ) : (
-            businesses.map((business, i) => <ManageBusinessLists key={i + 1} />)
+            businesses.map((business, i) => (
+              <ManageBusinessLists businessData={business} key={i + 1} />
+            ))
           )}
         </div>
 
-        {manageBusiness.length > 0 && (
+        {businesses.length > 0 && (
           <>
             <div
-              className="add_new_bussiness_btn clickModalOpen"
+              className="absolute bottom-[20px] right-[20px] w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#4f0da3] cursor-pointer clickModalOpen"
               onClick={handleClick}
               data-modal="setting"
             >
@@ -66,11 +66,11 @@ const ManageBusiness = () => {
         )}
       </div>
 
-      <div className="profile_ads">
+      <div className="cursor-pointer col-span-1">
         <ProfileAds />
       </div>
 
-      <div className="profile_users">
+      <div className="col-span-3">
         <ProfileStickersAndMessages />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RequestVerification from "../Modals/RequestVerification";
 import logo from "../../assets/profile_images/2geda.png";
 import { useModal } from "../../Hooks/useModal";
@@ -13,6 +13,9 @@ import { useOpenModal } from "Hooks/useOpenModal";
 const DesktopProfileOptions = ({ setDesktopProfileOptions, type }) => {
   const { modal } = useModal();
   const { handleClick } = useOpenModal();
+  const { pathname } = useLocation();
+
+  console.log(pathname === "/business-profile");
 
   return (
     <div className="profileOptions">
@@ -49,7 +52,7 @@ const DesktopProfileOptions = ({ setDesktopProfileOptions, type }) => {
         </li>
         {modal.setting && (
           <ModalContainer type="setting">
-            {type === "business" ? (
+            {pathname === "/business-profile" ? (
               <EditBusinessProfile type="edit" />
             ) : (
               <EditProfile />

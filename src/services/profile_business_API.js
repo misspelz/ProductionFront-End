@@ -127,24 +127,15 @@ export const deleteUserAccount = async () => {
   }
 };
 
-// get stickers
-export const getUserStickers = async () => {
-  try {
-    const response = await fetch(`${mainURL}/api/my-stickers/`, requestOptions);
-
-    const data = await response.json();
-
-    return data;
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-// get current logged in user rewards
-export const getRewards = async () => {
+/**
+ * --------------------
+ * IMEI & SERIAL NUMBER
+ * --------------------
+ */
+export const getGadgets = async () => {
   try {
     const response = await fetch(
-      `${mainURL}/api/reward/get-all/`,
+      `${mainURL}/api/account/profile/phones/`,
       requestOptions
     );
 
@@ -156,11 +147,97 @@ export const getRewards = async () => {
   }
 };
 
-// get current logged in user rewards
-export const getClaimedHistory = async () => {
+export const createGadget = async (info) => {
+  try {
+    const response = await fetch(`${mainURL}/api/account/profile/phones/`, {
+      ...requestOptions,
+      method: "POST",
+      body: JSON.stringify(info),
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const updateGadget = async (id) => {
   try {
     const response = await fetch(
-      `${mainURL}/api/reward/claim/history/`,
+      `${mainURL}/api/account/profile/phones/${id}`,
+      {
+        ...requestOptions,
+        method: "PATCH",
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const deleteGadget = async (id) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profile/phones/${id}`,
+      {
+        ...requestOptions,
+        method: "DELETE",
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+/**
+ * --------------------
+ * REWARDS
+ * --------------------
+ */
+export const getRewards = async () => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profile/rewards/`,
+      requestOptions
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const getRewardsById = async (reward_id) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profile/rewards/${reward_id}/`,
+      requestOptions
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const claimReward = async (reward_id) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profile/rewards/${reward_id}/claim/`,
       requestOptions
     );
 

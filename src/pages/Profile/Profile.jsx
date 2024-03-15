@@ -5,16 +5,16 @@ import ProfileStickersAndMessages from "../../components/ProfileComponents/Profi
 
 const Profile = () => {
   return (
-    <div className="profile_container">
-      <div className="profile_overview">
-        <ProfileOverview heading="Personal" />
+    <div className="grid grid-cols-12 gap-4 overflow-hidden">
+      <div className="overflow-auto h-[90vh] col-span-8">
+        <ProfileOverview />
       </div>
 
-      <div className="profile_ads">
+      <div className="cursor-pointer col-span-1">
         <ProfileAds />
       </div>
 
-      <div className="profile_users">
+      <div className="col-span-3">
         <ProfileStickersAndMessages />
       </div>
     </div>
