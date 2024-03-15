@@ -162,10 +162,16 @@
     grid-template-columns: 1fr;
   }
 
+  .app_main {
+    padding: 0;
+  }
+
   .app_aside {
     display: none;
-    /* transform: translateX(-100rem); */
-    /* grid-row: 0; */
+  }
+
+  .app_header {
+    display: none;
   }
 
   /* REWARD LAYOUT STYLING STARTS HERE */
