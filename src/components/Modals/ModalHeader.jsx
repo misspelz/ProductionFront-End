@@ -8,7 +8,7 @@ const ModalHeader = ({ header, onModalClose }) => {
         <FaArrowLeft className="text-[#222222] text-[20px]" />
       </button>
 
-      <h2 className="title text-[#000] text-[20px] font-normal">{header}</h2>
+      <h2 className="title text-[#000] text-[17px] font-normal">{header}</h2>
 
       <img
         src={logo}

@@ -39,7 +39,7 @@
 
 .app_main {
   padding: 1rem 1.5rem;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .layout-container {
@@ -158,6 +158,22 @@
 }
 
 @media only screen and (max-width: 1150px) {
+  .app_layout {
+    grid-template-columns: 1fr;
+  }
+
+  .app_main {
+    padding: 0;
+  }
+
+  .app_aside {
+    display: none;
+  }
+
+  .app_header {
+    display: none;
+  }
+
   /* REWARD LAYOUT STYLING STARTS HERE */
   .reward_container {
     width: 100%;

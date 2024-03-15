@@ -2,15 +2,17 @@ import { Link } from "react-router-dom";
 import business from "../../assets/profile_images/business_image.png";
 import dots from "../../assets/profile_images/DotsThree.png";
 
-const ManageBusinessLists = () => {
+const ManageBusinessLists = ({ businessData }) => {
+  console.log(businessData);
+
   return (
-    <Link className="business_list">
+    <Link className="business_list no-underline">
       <div className="business_list_left">
         <img src={business} alt="" />
 
         <div>
-          <h1>McDonald’s</h1>
-          <p>Food and Drinks</p>
+          <h1>{businessData?.business_name}</h1>
+          <p>{businessData?.user?.email}</p>
         </div>
       </div>
 

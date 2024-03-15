@@ -4,6 +4,7 @@ import { getUserPosts } from "services/profile_business_API";
 
 export const useAllUserPosts = () => {
   const [searchParams] = useSearchParams();
+
   const tab = searchParams.get("tab");
   const currentTab = tab ? tab : "all";
 

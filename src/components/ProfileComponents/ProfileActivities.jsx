@@ -13,37 +13,37 @@ const ProfileActivities = () => {
     <div className="profile_activities">
       <div className="cta-btns">
         <ProfileActivityButton
-          count={tab === "all" ? userPosts?.posts.length : ""}
+          count={tab === "all" ? userPosts?.posts?.length : ""}
           param="all"
         >
           All Posts
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "images" ? userPosts?.posts.length : ""}
+          count={tab === "images" ? userPosts?.posts?.length : ""}
           param="images"
         >
           Images
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "videos" ? userPosts?.posts.length : ""}
+          count={tab === "videos" ? userPosts?.posts?.length : ""}
           param="videos"
         >
           Videos
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "voice_notes" ? userPosts?.posts.length : ""}
+          count={tab === "voice_notes" ? userPosts?.posts?.length : ""}
           param="voice_notes"
         >
           Voice note
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "locations" ? userPosts?.posts.length : ""}
+          count={tab === "locations" ? userPosts?.posts?.length : ""}
           param="locations"
         >
           Location
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "musics" ? userPosts?.posts.length : ""}
+          count={tab === "musics" ? userPosts?.posts?.length : ""}
           param="musics"
         >
           Music
@@ -62,7 +62,7 @@ const ProfileActivities = () => {
         <ContainerLoading height={80} unit="px" />
       ) : userPostsStatus === "pending" ? (
         <ContainerError height={80} unit="px" />
-      ) : userPosts.posts.length === 0 ? (
+      ) : userPosts?.posts?.length === 0 ? (
         <EmptyResults type="posts" />
       ) : (
         <div className="profile_posts">

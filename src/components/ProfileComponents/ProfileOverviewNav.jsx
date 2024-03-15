@@ -1,46 +1,34 @@
-import { useState } from 'react';
-import { FaArrowLeft } from 'react-icons/fa6';
+import { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
 
-import DesktopProfileOptions from './DesktopProfileOptions';
-import MobileProfileOptions from './MobileProfileOptions';
-// import backArrow from '../../assets/profile_images/back-arrow.svg';
-import optionIcon from '../../assets/profile_images/option-icon.svg';
-import mobileOption from '../../assets/profile_images/mobileOptionIcon.svg';
+import DesktopProfileOptions from "./DesktopProfileOptions";
+import optionIcon from "../../assets/profile_images/option-icon.svg";
 
 const ProfileOverviewNav = ({ type }) => {
   const [desktopProfileOptions, setDesktopProfileOptions] = useState(false);
-  const [mobileProfileOptions, setMobileProfileOptions] = useState(false);
 
   const handleDesktopProfileOptions = () => {
     setDesktopProfileOptions(true);
   };
 
-  const handleMobileProfileOptions = () => {
-    setMobileProfileOptions(true);
-  };
-
   return (
-    <nav className='profile_nav'>
-      <div className='profile_nav_left_btn'>
+    <nav className="hidden lg:flex justify-between items-center">
+      <div className="flex items-center gap-[10px]">
         <button>
-          <FaArrowLeft className='arrow_back' />
+          <FaArrowLeft className="text-[#767676] text-[17px]" />
         </button>
-        <span>{type} Profile</span>
+        <span className="text-[#000] text-center text-[20px] font-normal">
+          {type} Profile
+        </span>
       </div>
 
-      <div className='profile_nav_middle_btn'>Profile</div>
-
-      <div className='option_cta'>
-        <button className='profile_nav_right_btn'>
+      <div className="relative">
+        <button>
           <img
             src={optionIcon}
-            alt='Option'
+            alt="Option"
             onClick={handleDesktopProfileOptions}
-          />
-          <img
-            src={mobileOption}
-            alt='Option'
-            onClick={handleMobileProfileOptions}
+            className="w-[24px] h-[24px] hidden lg:block"
           />
         </button>
 
@@ -51,12 +39,6 @@ const ProfileOverviewNav = ({ type }) => {
           />
         )}
       </div>
-
-      {/* MOBILE VERSION */}
-      <MobileProfileOptions
-        mobileProfileOptions={mobileProfileOptions}
-        setMobileProfileOptions={setMobileProfileOptions}
-      />
     </nav>
   );
 };

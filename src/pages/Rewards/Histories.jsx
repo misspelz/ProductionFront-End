@@ -4,13 +4,13 @@ import historyIcon from "../../assets/profile_images/history.svg";
 import ooniIcon from "../../assets/profile_images/Ooni_coin.png";
 import ModalHeader from "components/Modals/ModalHeader";
 import { useNavigate } from "react-router-dom";
-import { useHistory } from "./useHistory";
+import { useReward } from "./useReward";
 
 const Histories = () => {
-  const { status, claimedHistory } = useHistory();
+  const { rewardStatus, getReward } = useReward();
   const navigate = useNavigate();
 
-  console.log(claimedHistory);
+  console.log(getReward);
 
   return (
     <div className="rewards">

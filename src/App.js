@@ -120,8 +120,6 @@ function App() {
         />
 
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Home /> : <Landing />} />
-
           {/* AUTH */}
           <Route index path="/Signup" element={<Signup />} />
           <Route index path="/Signin" element={<Signin />} />
@@ -130,6 +128,11 @@ function App() {
 
           {/* Below are the pages with aside containers */}
           <Route element={<AppLayout />}>
+            <Route
+              path="/"
+              element={isAuthenticated ? <Home /> : <Landing />}
+            />
+
             <Route element={<Navigate replace to="home" />} />
             <Route
               path="/home"
@@ -284,7 +287,7 @@ function App() {
 
             <Route
               path="manage-business"
-              element={<ProtectedRoutes manageManageBusiness />}
+              element={<ProtectedRoutes element={<ManageBusiness />} />}
             />
 
             <Route element={<ProtectedRoutes element={<RewardLayout />} />}>

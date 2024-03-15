@@ -15,8 +15,8 @@ const PhoneImei = ({ onModalClose, title, type }) => {
     <ModalWrapper>
       <ModalHeader header={title} onModalClose={onModalClose} />
 
-      <div className="gadget_container">
-        <div className="phone_container">
+      <div className="px-[15px] h-[90vh] overflow-y-auto mb-0 py-[10px] lg:px-[10px] lg:h-[60vh] overflow-auto lg:mb-[1.5rem]">
+        <div className="flex flex-col gap-[15px] py-[20px]">
           {Array.from({ length: 8 }, (_, i) => i + 1).map((_, i) => (
             <IMELPhone key={i} />
           ))}
@@ -25,12 +25,12 @@ const PhoneImei = ({ onModalClose, title, type }) => {
 
       {/* ADDITIONAL BUTTON */}
       <div
-        className="imei_serial_addition clickModalOpen"
+        className="absolute shadow-lg bottom-[30px] right-[30px] z-[99] w-[50px] h-[50px] p-[13px] flex flex-col items-center justify-center rounde-[50px] bg-[#4f0da3] self-end cursor-pointer text-[#fff] clickModalOpen"
         id="btn"
         data-modal="input"
         onClick={handleClick}
       >
-        <AiOutlinePlus id="plus" />
+        <AiOutlinePlus className="text-[20px]" />
       </div>
 
       {modal.input && (
