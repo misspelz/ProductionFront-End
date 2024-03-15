@@ -18,13 +18,12 @@ export const createFeedsPost = async (postData) => {
 };
 
 export const createPostFile = async (postId, postFileData) => {
-	console.log("postFileData from services", postFileData);
 	const response = post(`/feeds/post/${postId}/file/`, postFileData, config);
 	return (await response).data;
 };
 
 export const createComment = async (postId, commentData) => {
-	const response = post(`/feeds/post/${postId}/comments/`, commentData);
+	const response = post(`/feeds/post/${postId}/comments/`, commentData, config);
 	return (await response).data;
 };
 
@@ -39,17 +38,35 @@ export const createReply = async (postId, commentId, replyData) => {
 export const feedsRepost = async (postId, postData) => {
 	const response = post(`/feeds/post/${postId}/repost/`, postData);
 	return (await response).data;
-    
 };
 
 export const savePost = async (postId) => {
 	const response = post(`/feeds/post/${postId}/save/`);
 	return (await response).data;
-    
+};
+
+export const promotePost = async (promoteData) => {
+	const response = post(`/feeds/post/promote/`, promoteData);
+	return (await response).data;
+};
+
+export const reportPost = async (reportData) => {
+	const response = post(`/feeds/post/report/`, reportData);
+	return (await response).data;
 };
 
 export const createReaction = async (postId, reactionData) => {
 	const response = post(`/feeds/post/${postId}/reactions/`, reactionData);
+	return (await response).data;
+};
+
+export const createCommentReaction = async (postId, commentId, reactionData) => {
+	const response = post(`/feeds/post/${postId}/comments/${commentId}/reactions/`, reactionData);
+	return (await response).data;
+};
+
+export const createStatus = async (statusData) => {
+	const response = post(`/feeds/status/`, statusData);
 	return (await response).data;
 };
 
@@ -73,12 +90,20 @@ export const getTotalReactions = async (postId) => {
 	return (await response).data;
 };
 
+export const getTotalCommentReactions = async (postId, commentId) => {
+	const response = get(`/feeds/post/${postId}/comments/${commentId}/reactions/`);
+	return (await response).data;
+};
+
+export const getComments = async (postId) => {
+	const response = get(`/feeds/post/${postId}/comments/`);
+	return (await response).data;
+};
+
 export const getCommentReplies = async (postId, commentId) => {
 	const response = get(`/feeds/post/${postId}/comments/${commentId}/replies/`);
 	return (await response).data;
 };
-
-// feeds/post/1/comments/1/replies/
 
 /**DELETE HTTP REQUESTS*/
 //none here at the moment

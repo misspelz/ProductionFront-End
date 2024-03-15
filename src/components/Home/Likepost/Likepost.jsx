@@ -13,7 +13,7 @@ import {
 	ThumbsDown,
 } from "assets/custom-icons";
 import { EmojiHug } from "assets/custom-icons/Emojihug";
-import { useCreateReaction } from "api/hooks/feeds";
+import { useCreateCommentReaction, useCreateReaction } from "api/hooks/feeds";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /**********************************************************************************
@@ -21,7 +21,7 @@ import CircularProgress from "@mui/material/CircularProgress";
  * Like: 1, Dislike: 2, Love/ Hug: 3, Sad: 4, Angry: 5, Surprised: 6, Laughing: 7
 ***********************************************************************************/
 
-const Likepost = ({ postId }) => {
+const Likepost = ({ postId, commentId, isComment }) => {
     const { reaction, isLoading, isSuccess } = useCreateReaction({
 			postId,
 			onSuccess: (response) => {
@@ -31,6 +31,17 @@ const Likepost = ({ postId }) => {
 				console.log({ errorResponse });
 			},
 		});
+    
+        const commentReaction = useCreateCommentReaction({
+					postId,
+                    commentId,
+					onSuccess: (response) => {
+						console.log({ response });
+					},
+					onError: (errorResponse) => {
+						console.log({ errorResponse });
+					},
+				});
 	const [anchorEl, setAnchorEl] = useState(null);
 	// const [reactionData, setReactionData] = useState({});
 	const open = Boolean(anchorEl);

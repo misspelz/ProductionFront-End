@@ -223,7 +223,21 @@
   width: 80%;
   padding: 10px;
 }
-.com-btn {
+
+.reply-btn {
+    width: 80%;
+    border: none;
+    background: #4f0da3;
+    color: #fff;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.com-btn{
   border: none;
   background: #4f0da3;
   color: #fff;
@@ -231,7 +245,22 @@
   height: 50px;
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
+
+.com-btn:disabled,
+.reply-btn:disabled {
+    background: var(--primary-color-light);
+    color: #fff;
+    font-style: italic;
+    pointer-events: none;
+    cursor: default;
+    font-weight: normal;
+}
+
 .inp-coment {
   display: flex;
   gap: 20px;

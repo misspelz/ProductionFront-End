@@ -6,16 +6,17 @@ import SmallTicketPromoteCard from "components/Dashboard/smallTicketsPromoted";
 import MovieSlider from "components/Home/Movieslider/MovieSlider";
 import Stick from "components/Dashboard/Stick";
 import PostImage from "assets/images/sample-post-image.png";
-import PostAvatar from "assets/images/sample-avatar.png";
 import MovieDashCard from "components/Home/Movieslider/MovieCards";
 import { useGetAllFeeds } from "api/hooks/feeds";
-import { setupAxios } from "api/index";
 
 const Feeds = () => {
 	const { data, isLoading, isError } = useGetAllFeeds();
-    console.log("feeds data", data)
-
-    useEffect(() => {setupAxios()}, []);
+	console.log("feeds data", data);
+	// useEffect(() => {
+    //     if (isError) {
+    //         window.location.href = "/Signin";
+    //     } 
+	// }, [isError]);
 
 	if (!isLoading && !isError && !data) {
 		return <h3>No feeds available</h3>;
@@ -28,18 +29,16 @@ const Feeds = () => {
 
 	return (
 		<div style={{ maxWidth: "560px" }}>
-			<PostComp
-				postID={data?.posts?.[0]?.id}
-				creator={data?.posts?.[0]?.user}
-				comment={"some random comment"}
-				media={data?.posts?.[0]?.files}
-				hashtag={"hashtag"}
-				content={data?.posts?.[0]?.text_content}
-				reaction={data?.posts?.[0]?.reaction}
-				post_comment_count={4}
-				postData={data?.posts?.[0]}
-				time_since={data?.posts?.[0]?.created_at}
-			/>
+			{data?.posts?.length > 0 && (
+				<PostComp
+					postData={
+						data?.posts?.[0]?.is_repost
+							? data?.posts?.[0]?.repost
+							: data?.posts?.[0]
+					}
+					shared={data?.posts?.[0]?.is_repost}
+				/>
+			)}
 
 			{data?.posts?.length > 1 && (
 				<>
@@ -50,16 +49,12 @@ const Feeds = () => {
 					</div>
 
 					<PostComp
-						postID={data?.posts?.[1]?.id}
-						creator={data?.posts?.[1]?.user}
-						comment={"some random comment"}
-						media={data?.posts?.[1]?.files}
-						hashtag={"hashtag"}
-						content={data?.posts?.[1]?.text_content}
-						reaction={data?.posts?.[1]?.reaction}
-						post_comment_count={4}
-						postData={data?.posts?.[1]}
-						time_since={data?.posts?.[1]?.created_at}
+						postData={
+							data?.posts?.[1]?.is_repost
+								? data?.posts?.[1]?.repost
+								: data?.posts?.[1]
+						}
+						shared={data?.posts?.[1]?.is_repost}
 					/>
 				</>
 			)}
@@ -79,17 +74,12 @@ const Feeds = () => {
 						))}
 					</div>
 					<PostComp
-						postID={data?.posts?.[2]?.id}
-						creator={data?.posts?.[2]?.user}
-						comment={"some random comment"}
-						media={data?.posts?.[2]?.files}
-						hashtag={"hashtag"}
-						content={data?.posts?.[2]?.text_content}
-						reaction={data?.posts?.[2]?.reaction}
-						post_comment_count={4}
-						postData={data?.posts?.[2]}
-						time_since={data?.posts?.[2]?.created_at}
-						shared
+						postData={
+							data?.posts?.[2]?.is_repost
+								? data?.posts?.[2]?.repost
+								: data?.posts?.[2]
+						}
+						shared={data?.posts?.[2]?.is_repost}
 					/>
 				</>
 			)}
@@ -102,16 +92,12 @@ const Feeds = () => {
 						))}
 					</div>
 					<PostComp
-						postID={data?.posts?.[3]?.id}
-						creator={data?.posts?.[3]?.user}
-						comment={"some random comment"}
-						media={data?.posts?.[3]?.files}
-						hashtag={"hashtag"}
-						content={data?.posts?.[3]?.text_content}
-						reaction={data?.posts?.[3]?.reaction}
-						post_comment_count={4}
-						postData={data?.posts?.[3]}
-						time_since={data?.posts?.[3]?.created_at}
+						postData={
+							data?.posts?.[3]?.is_repost
+								? data?.posts?.[3]?.repost
+								: data?.posts?.[3]
+						}
+						shared={data?.posts?.[3]?.is_repost}
 					/>
 				</>
 			)}
@@ -124,16 +110,12 @@ const Feeds = () => {
 						))}
 					</div>
 					<PostComp
-						postID={data?.posts?.[4]?.id}
-						creator={data?.posts?.[4]?.user}
-						comment={"some random comment"}
-						media={data?.posts?.[4]?.files}
-						hashtag={"hashtag"}
-						content={data?.posts?.[4]?.text_content}
-						reaction={data?.posts?.[4]?.reaction}
-						post_comment_count={4}
-						postData={data?.posts?.[4]}
-						time_since={data?.posts?.[4]?.created_at}
+						postData={
+							data?.posts?.[4]?.is_repost
+								? data?.posts?.[4]?.repost
+								: data?.posts?.[4]
+						}
+						shared={data?.posts?.[4]?.is_repost}
 					/>
 				</>
 			)}
@@ -156,17 +138,8 @@ const Feeds = () => {
 
 			{data?.posts?.slice(5)?.map((post) => (
 				<PostComp
-					key={post?.id}
-					postID={post?.id}
-					creator={post?.user}
-					comment={"some random comment"}
-					media={post?.files}
-					hashtag={"hashtag"}
-					content={post?.text_content}
-					reaction={post?.reaction}
-					post_comment_count={4}
-					postData={post}
-					time_since={post?.created_at}
+					postData={post?.is_repost ? post?.repost : post}
+					shared={post.is_repost}
 				/>
 			))}
 		</div>

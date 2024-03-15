@@ -4,18 +4,26 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	createComment,
+	createCommentReaction,
 	createFeedsPost,
 	createPostFile,
 	createReaction,
 	createReply,
+	createStatus,
 	feedsRepost,
 	getAllFeedsPost,
+	getCommentReplies,
+	getComments,
 	getPostById,
+	getTotalCommentReactions,
 	getTotalReactions,
-    savePost,
+	promotePost,
+	reportPost,
+	savePost,
 } from "api/services/feeds";
 
 const feedsKey = "feed";
+const commentKey = "comment";
 const reactionKey = "reaction";
 
 /**CREATE FEEDS DATA HOOKS */
@@ -79,7 +87,8 @@ export const useCreateComment = (options) => {
 
 export const useCreateReply = (options) => {
 	const mutation = useMutation({
-		mutationFn: (replyData) => createReply(options.postId, options.commentId, replyData),
+		mutationFn: (replyData) =>
+			createReply(options.postId, options.commentId, replyData),
 		onSuccess: (data) => {
 			options.onSuccess && options.onSuccess(data);
 		},
@@ -89,7 +98,7 @@ export const useCreateReply = (options) => {
 	});
 
 	return {
-		comment: mutation.mutate,
+		reply: mutation.mutate,
 		isSuccess: mutation.isSuccess,
 		isError: mutation.isError,
 		isLoading: mutation.isPending,
@@ -134,6 +143,44 @@ export const useSavePost = (options) => {
 	};
 };
 
+export const usePromotePost = (options) => {
+	const mutation = useMutation({
+		mutationFn: (promoteData) => promotePost(promoteData),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		promote: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
+export const useReportPost = (options) => {
+	const mutation = useMutation({
+		mutationFn: (reportData) => reportPost(reportData),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		report: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
 /**CREATE FEEDS REACTION HOOKS */
 
 export const useCreateReaction = (options) => {
@@ -152,6 +199,47 @@ export const useCreateReaction = (options) => {
 		isSuccess: mutation.isSuccess,
 		isError: mutation.isError,
 		isLoading: mutation.isPending,
+	};
+};
+
+export const useCreateCommentReaction = (options) => {
+	const mutation = useMutation({
+		mutationFn: (reactionData) =>
+			createCommentReaction(options.postId, options.commentId, reactionData),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		reaction: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
+/**CREATE FEEDS STATUS HOOKS */
+
+export const useCreateStatus = (options) => {
+	const mutation = useMutation({
+		mutationFn: (statusData) => createStatus(statusData),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		create: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending
 	};
 };
 
@@ -189,10 +277,55 @@ export const useGetPostById = (postId) => {
 	};
 };
 
+export const useGetComments = (postId) => {
+	const response = useQuery({
+		queryKey: [commentKey, postId],
+		queryFn: () => getComments(postId),
+		enabled: postId !== undefined,
+	});
+
+	return {
+		isError: response.isError,
+		isLoading: response.isLoading,
+		isSuccess: response.isSuccess,
+		data: response.data ? response.data?.data : undefined,
+	};
+};
+
+export const useGetCommentReplies = (params) => {
+	const response = useQuery({
+		queryKey: [commentKey, params?.postId, params?.commentId],
+		queryFn: () => getCommentReplies(params?.postId, params?.commentId),
+		enabled: params?.postId !== undefined,
+	});
+
+	return {
+		isError: response.isError,
+		isLoading: response.isLoading,
+		isSuccess: response.isSuccess,
+		data: response.data ? response.data?.data : undefined,
+	};
+};
+
 export const useGetTotalReactions = (postId) => {
 	const response = useQuery({
 		queryKey: [reactionKey, postId],
 		queryFn: () => getTotalReactions(postId),
+	});
+
+	return {
+		isError: response.isError,
+		isLoading: response.isLoading,
+		isSuccess: response.isSuccess,
+		data: response.data ? response.data?.data : undefined,
+	};
+};
+
+export const useGetTotalCommentReactions = (params) => {
+	const response = useQuery({
+		queryKey: [reactionKey, params?.postId, params?.commentId],
+		queryFn: () => getTotalCommentReactions(params?.postId, params?.commentId),
+		enabled: params?.commentId !== undefined,
 	});
 
 	return {

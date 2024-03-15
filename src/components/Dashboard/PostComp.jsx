@@ -8,100 +8,77 @@ import Likepost from "components/Home/Likepost/Likepost";
 import { Link } from "react-router-dom";
 import BlankProfile from "assets/images/blank-profile-image.png";
 import { useGetTotalReactions } from "api/hooks/feeds";
+import { convertPostTime } from "utils/helper";
 
 const PostComp = ({
-	index,
-	disnone,
-	redmar,
-	creator,
-	comment,
-	media,
-	hashtag,
-	content,
-	reaction,
 	shared,
-	post_reaction_count,
-	post_comment_count,
-	time_since,
-    postData,
-	postID,
+    postData
 }) => {
-	const { data } = useGetTotalReactions(postID);
+	const { data } = useGetTotalReactions(postData?.id);
     const totalReactions = data ? Object
 			.values(data?.reactions)
 			?.reduce((acc, cur) => acc + cur) : 0
 	const [commentList, setCommentList] = useState([]);
-	const convertPostTime = (timeStamp) => {
-		let renderedTime = "";
-		const dateCreated = new Date(timeStamp);
-		const currentDate = new Date();
-		const timeDifference = currentDate.getTime() - dateCreated.getTime();
-
-		// Convert milliseconds to seconds
-		const secondsPassed = Math.floor(timeDifference / 1000);
-		if (secondsPassed < 60) {
-			renderedTime = `${secondsPassed} secs ago`;
-		} else if (secondsPassed < 3600) {
-			renderedTime = `${Math.floor(secondsPassed / 60)} mins ago`;
-		} else if (secondsPassed < 86400) {
-			renderedTime = `${Math.floor(secondsPassed / 3600)} hrs ago`;
-		} else {
-			renderedTime = `${Math.floor(secondsPassed / 86400)} days ago`;
-		}
-
-		return renderedTime;
-	};
 
 	return (
-		<div className={`postcom ${redmar}`}>
+		<div className={`postcom`}>
 			{shared && (
 				<div className="flex items-center justify-between bg-[#4f0da3] py-2 px-4 rounded-t-full">
 					<p className="m-0 text-[#fff]">
-						Joseph Dimeji <span className="text-[#aa71f4] ml-1"> shared</span>
+						{postData?.user?.username}{" "}
+						<span className="text-[#aa71f4] ml-1"> shared</span>
 					</p>
-					<span className="text-[#aa71f4]">2m ago</span>
+					<span className="text-[#aa71f4]">
+						{convertPostTime(postData?.created_at)}
+					</span>
 				</div>
 			)}
 			<div className="post-comp-container">
 				<div className="profile-time">
-					<div className="post-profile" style={{}}>
-						{creator && (
-							<img src={creator.cover_image ?? BlankProfile} alt="" />
+					<div className="post-profile">
+						{postData?.user && (
+							<img src={postData?.user.cover_image ?? BlankProfile} alt="" />
 						)}
 						<div className="post-profile-details">
-							{creator && creator.username && (
-								<div className="post-profile-name">{creator.username}</div>
+							{postData?.user && postData?.user?.username && (
+								<div className="post-profile-name">
+									{postData?.user.username}
+								</div>
 							)}
 
-							{creator && creator.username && (
+							{/* {creator && creator.username && (
 								<div className="autor-ooby">Pharmacist</div>
-							)}
+							)} */}
 
-							{creator && creator.address && (
+							{/* {creator && creator.address && (
 								<div className="autor-location">
 									{creator.address.current_city},{creator.address.country}
 								</div>
-							)}
+							)} */}
 						</div>
 					</div>
-					{time_since && (
-						<div className="time-posted">{convertPostTime(time_since)}</div>
+					{postData && (
+						<div className="time-posted">
+							{convertPostTime(postData?.created_at)}
+						</div>
 					)}
 				</div>
 				<hr className="feed-hr" />
-				<Link to={`/Home/${postID}`} className="post-body-box">
+				<Link to={`/Home/${postData?.id}`} className="post-body-box">
 					<div>
-						{content && (
+						{postData?.text_content && (
 							<div className="post-body-text">
-								{content}
+								{postData?.text_content}
 								<br />
 								<br />
 							</div>
 						)}
 					</div>
 				</Link>
-				<Link to={`/Home/${postID}`}>
-					<div>{media && <PostmediaGrid media={media} />}</div>
+				<Link to={`/Home/${postData?.id}`}>
+					<div>
+						{postData?.files && <PostmediaGrid media={postData?.files} />}
+					</div>
 				</Link>
 				<div className="post-likes-co">
 					<div className="likes-per-post">
@@ -121,27 +98,27 @@ const PostComp = ({
 				<div className="post-likes-box">
 					<div className="posted-likes-cont">
 						<div className="icon-text">
-							<Likepost postId={postID} />
-							<span className="text-[12px]">{reaction?.like_count}</span>
+							<Likepost postId={postData?.id} />
+							<span className="text-[12px]">
+								{postData?.reaction?.like_count}
+							</span>
 						</div>
 						<div className="icon-text">
 							<BiMessageAlt size={22} color="#000000b9" />
-							<span className="text-[12px]">{post_comment_count ?? 0}</span>
+							<span className="text-[12px]">{0}</span>
 						</div>
 
 						<div className="icon-text">
-							<Sharepost postId={postID} postData={postData} />
+							<Sharepost postId={postData?.id} postData={postData} />
 						</div>
 					</div>
-					<PostMenu postId={postID} />
+					<PostMenu postId={postData?.id} />
 				</div>
 			</div>
 			<Comment
-				index={index}
 				setCommentList={setCommentList}
 				commentList={commentList}
-				disnone={disnone}
-				postID={postID}
+				postID={postData?.id}
 			/>
 		</div>
 	);

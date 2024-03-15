@@ -83,7 +83,8 @@ function ScrollToTop() {
 function App() {
   useEffect(() => {
     setupAxios();
-  });
+    console.log("setup axios called from Appjs");
+  }, []);
 
   const { isAuthenticated } = useContext(ModalContext);
 
