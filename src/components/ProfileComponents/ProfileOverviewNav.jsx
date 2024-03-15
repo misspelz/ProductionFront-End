@@ -30,7 +30,7 @@ const ProfileOverviewNav = ({ type }) => {
         </span>
       </div>
 
-      <div className="lg:hidden">Profile</div>
+      {/* <div className="lg:hidden">Profile</div> */}
 
       <div className="relative">
         <button>
@@ -38,7 +38,7 @@ const ProfileOverviewNav = ({ type }) => {
             src={optionIcon}
             alt="Option"
             onClick={handleDesktopProfileOptions}
-            className="w-[24px] h-[24px]"
+            className="w-[24px] h-[24px] hidden lg:block"
           />
           <img
             src={mobileOption}
