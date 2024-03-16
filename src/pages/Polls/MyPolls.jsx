@@ -62,6 +62,7 @@ const MyPolls = () => {
   const [singlePollResult, setSinglePollResult] = useState(false);
   const [viewResults, setViewResults] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [findPolls, setFindPolls] = useState([]);
 
   const nav = useNavigate();
 
@@ -131,7 +132,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (filteredActivePolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             filteredActivePolls &&
@@ -165,7 +166,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (filteredEndedPolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             filteredEndedPolls &&
@@ -200,7 +201,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             allPolls.length > 0 &&
@@ -232,6 +233,131 @@ const MyPolls = () => {
     }
   };
 
+  const renderFindPolls = () => {
+    switch (viewType) {
+      case "active":
+        const filteredActivePolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredActivePolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            filteredActivePolls &&
+            filteredActivePolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+      case "ended":
+        const filteredEndedPolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredEndedPolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            filteredEndedPolls &&
+            filteredEndedPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+      case "all":
+      default:
+        const allFindPolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (allFindPolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            allFindPolls.length > 0 &&
+            allFindPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+    }
+  };
+
+  const isSearching = searchText.trim() !== "";
+
+  const renderPollsOrFindPolls = () => {
+    if (isSearching) {
+      return renderFindPolls();
+    } else {
+      return renderPolls();
+    }
+  };
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = ["images/fifa.png", AD1, AD2, AD3, AD4];
@@ -248,9 +374,7 @@ const MyPolls = () => {
       console.log("finduserpollsres", res);
 
       if (res?.data?.status) {
-        setPolls(res?.data?.data);
-        setActivePolls(res?.data?.data);
-        setEndedPolls(res?.data?.data);
+        setFindPolls(res?.data?.data);
       }
     } catch (error) {
       console.log("finduserpollserror", error);
@@ -297,25 +421,34 @@ const MyPolls = () => {
   }, []);
 
   return (
-    <div className="lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
+    <div className="lg:bg-[#f5f5f5] lg:flex w-full  lg:px-10 lg:gap-6 ">
       {!Notify && !CastVote && !showMyPolls && (
         <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
-          <div className="flex gap-3 items-center">
-            <FaArrowLeftLong
-              size={20}
-              onClick={goBack}
-              className="cursor-pointer text-lg mb-[0.5rem]"
-            />
+          <div className="flex flex-col gap-3 ">
+            <div className="flex gap-6 items-center">
+              <FaArrowLeftLong
+                size={20}
+                onClick={goBack}
+                className="cursor-pointer text-lg mb-[0.5rem]"
+              />
 
-            <FindPolls onFetchPolls={onFetchPolls} />
+              <h1>My Polls</h1>
+            </div>
+
+            <FindPolls
+              onSearch={onSearch}
+              onFetchPolls={onFetchPolls}
+              searchText={searchText}
+            />
 
             <div className="pb-[40px] ">
               <MyPollsCategories
                 viewType={viewType}
                 setViewType={setViewType}
               />
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
             </div>
+
             <Dialog open={showCreateModal} onClose={HandleClose} fullWidth>
               <CreatePoll onClose={HandleClose} fetchPolls={handleMyPolls} />
             </Dialog>
@@ -364,7 +497,7 @@ const MyPolls = () => {
                 viewType={viewType}
                 setViewType={setViewType}
               />
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
             </div>
           )}
 
@@ -388,7 +521,7 @@ const MyPolls = () => {
         )} */}
 
           {/* WEB */}
-          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
             <PollsNotification
               setNotify={setNotify}
               handleShowCreateModal={handleShowCreateModal}
@@ -417,7 +550,7 @@ const MyPolls = () => {
             searchText={searchText}
           />
           <MyPollsCategories viewType={viewType} setViewType={setViewType} />
-          {renderPolls()}
+          {renderPollsOrFindPolls()}
         </div>
       )}
 

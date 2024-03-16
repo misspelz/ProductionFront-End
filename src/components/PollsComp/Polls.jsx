@@ -27,20 +27,17 @@ export const Polls = ({
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
 
-  const totalNumVotes =
-    options && options?.reduce((total, option) => total + option.votes, 0);
-
   const toggleShowAction = () => {
     setShowAction(!showAction);
   };
 
+  const totalNumVotes =
+    options && options.reduce((total, option) => total + option.votes, 0);
+
   const isCloseTimeReached = (closeTime) => {
     const closeDate = new Date(closeTime);
     const currentDate = new Date();
-
-    const isReached = currentDate.getTime() >= closeDate.getTime();
-
-    return isReached;
+    return currentDate.getTime() >= closeDate.getTime();
   };
 
   return (
@@ -74,26 +71,25 @@ export const Polls = ({
         {question}
       </h6>
 
-      {options
-        ? options.map((o, index) => (
-            <Poll
-              key={o.id}
-              title={o.content}
-              allVotes={o.votes}
-              totalVotes={totalNumVotes}
-              id={o.id}
-              cast={cast}
-              handleOptionChange={handleOptionChange}
-              selectedOptionId={selectedOptionId}
-              onClick={() => setShowAction(true)}
-            />
-          ))
-        : null}
+      {options &&
+        options.map((o, index) => (
+          <Poll
+            key={o.id}
+            title={o.content}
+            allVotes={o.votes}
+            totalVotes={totalNumVotes}
+            id={o.id}
+            cast={cast}
+            handleOptionChange={handleOptionChange}
+            selectedOptionId={selectedOptionId}
+            onClick={() => toggleShowAction(index)}
+          />
+        ))}
 
       <div className="flex justify-between mt-4">
         <div className="flex gap-2 items-center">
           <img src="images/time.png" alt="time-icon" />
-          <div className="text-[#000] text-[12px] lg:text-[14px]   font-[500]">
+          <div className="text-[#000] text-[12px] lg:text-[14px] font-[500]">
             {isClosed ? (
               <span className="text-orange-600">Ended</span>
             ) : isCloseTimeReached(formatDate(daysRemaining)) ? (
@@ -140,9 +136,11 @@ export const Polls = ({
                   </span>
                 </div>
               </div>
-              <div onClick={toggleShowAction}>
+              {/* Pass the index to toggleShowAction */}
+              <div onClick={() => toggleShowAction()}>
                 <CiMenuKebab className="text-black text-xl" />
               </div>
+              {/* Show actions based on the corresponding index */}
               {showAction && (
                 <div className="absolute flex flex-col gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[2rem]">
                   <button
@@ -160,6 +158,7 @@ export const Polls = ({
                 </div>
               )}
             </div>
+            {/* Render closed or close poll button based on isClosed */}
             {isClosed ? (
               <div className="text-black font-bold flex items-center justify-center w-full h-[30px] lg:h-[40px] rounded-[15px] text-lg sm:text-xl bg-[#F5F5F5]">
                 CLOSED

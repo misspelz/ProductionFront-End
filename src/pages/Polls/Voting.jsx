@@ -149,7 +149,7 @@ const Voting = () => {
         if (isLoading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return allPolls.length > 0 ? (
             allPolls
@@ -171,7 +171,7 @@ const Voting = () => {
                 />
               ))
           ) : (
-            <p className="mt-20">No polls to display</p>
+            <p className="mt-20 text-center">No polls to display</p>
           );
         }
     }
@@ -499,7 +499,7 @@ const Voting = () => {
               </Dialog>
             </div>
 
-            <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+            <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
               <PollsNotification
                 setNotify={setNotify}
                 handleShowCreateModal={handleShowCreateModal}
