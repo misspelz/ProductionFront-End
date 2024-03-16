@@ -1,10 +1,6 @@
 import { BiSolidHome } from "react-icons/bi";
-// import { CgMediaLive } from "react-icons/cg";
 import { BsPersonCircle, BsTicketFill } from "react-icons/bs";
 import { IoChatbubbleEllipsesOutline, IoLogOutOutline } from "react-icons/io5";
-// import { IoIosPeople, IoMdBook } from "react-icons/io";
-// import { PiBookDuotone } from "react-icons/pi";
-// import { AiOutlineMessage } from "react-icons/ai";
 import { ModalContext } from "Context/ModalContext";
 import { useContext } from "react";
 import toast from "react-hot-toast";

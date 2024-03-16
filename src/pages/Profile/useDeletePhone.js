@@ -4,7 +4,11 @@ import { deleteGadget as deleteGadgeAPI } from "services/profile_business_API";
 export const useDeletePhone = () => {
   const queryClient = useQueryClient();
 
-  const { gadgetStatus, deleteGadget } = useMutation({
+  const {
+    gadgetStatus,
+    deleteGadget,
+    error: deleteGadgetError,
+  } = useMutation({
     mutationFn: deleteGadgeAPI,
 
     onSuccess: (response) => {
@@ -18,5 +22,5 @@ export const useDeletePhone = () => {
     },
   });
 
-  return { gadgetStatus, deleteGadget };
+  return { gadgetStatus, deleteGadget, deleteGadgetError };
 };

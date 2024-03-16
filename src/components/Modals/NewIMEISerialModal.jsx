@@ -6,13 +6,26 @@ import ModalHeader from "./ModalHeader";
 import ModalButton from "./ModalButton";
 import CustomDropdown from "./CustomDropdown";
 import Spinner from "components/Spinner";
+import { useUpdateGadget } from "pages/Profile/useUpdateGadget";
 
 const inputStyle =
   "rounded-[8px] border border-[#acacaca9] py-[10px] text-[14px] !text-[#000] placeholder:text-[#000] placeholder:text-[14px]";
 
-const NewIMEISerialModal = ({ type, title, onModalClose }) => {
+const NewIMEISerialModal = ({
+  type,
+  title,
+  onModalClose,
+  edit,
+  name,
+  id_number,
+  category,
+  id,
+}) => {
   const [data, setData] = useState({});
   const { gadgetStatus, createGadget } = useCreateGadget();
+  const { gadgetStatus: updatingStatus, updateGadget } = useUpdateGadget();
+
+  const editingPhone = Boolean(edit);
 
   const handleChange = (e) => {
     setData((data) => ({ ...data, [e.target.name]: e.target.value }));
@@ -20,6 +33,10 @@ const NewIMEISerialModal = ({ type, title, onModalClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (editingPhone) {
+      return updateGadget(id);
+    }
 
     createGadget(data);
   };
@@ -39,6 +56,7 @@ const NewIMEISerialModal = ({ type, title, onModalClose }) => {
             className={inputStyle}
             onChange={handleChange}
             name="phone_name"
+            defaultValue={name || data?.phone_name}
           />
 
           <input
@@ -47,20 +65,26 @@ const NewIMEISerialModal = ({ type, title, onModalClose }) => {
             className={inputStyle}
             onChange={handleChange}
             name="id_number"
+            defaultValue={id_number || data?.id_number}
           />
 
           <CustomDropdown
-            stallValue={"Select category"}
+            stallValue={editingPhone ? category : "Select category"}
             menu={[
               { label: "Imei", value: "imei" },
               { label: "Serial", value: "serial_number" },
             ]}
             setData={setData}
             name="category"
+            defaultValue={category || data?.category}
           />
 
           <ModalButton>
-            {gadgetStatus === "pending" ? <Spinner /> : "Save"}
+            {gadgetStatus === "pending" || updatingStatus === "pending" ? (
+              <Spinner />
+            ) : (
+              "Save"
+            )}
           </ModalButton>
         </form>
       </div>

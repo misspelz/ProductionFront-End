@@ -10,7 +10,7 @@ const Profile = () => {
     <div className="lg:grid lg:grid-cols-12 gap-4 overflow-hidden">
       <ProfileHeader type="Personal Profile" navigate="/" />
 
-      <div className="px-6 lg:p-0 overflow-auto h-[93vh] col-span-8">
+      <div className="px-6 lg:p-0 lg:pb-6 overflow-auto h-[93vh] col-span-8">
         <ProfileOverview />
       </div>
 
@@ -18,7 +18,7 @@ const Profile = () => {
         <ProfileAds />
       </div>
 
-      <div className="col-span-3 hidden lg:block ">
+      <div className="col-span-3 hidden lg:block">
         <ProfileStickersAndMessages />
       </div>
     </div>
