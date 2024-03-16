@@ -24,9 +24,7 @@ const EditProfile = ({ onModalClose }) => {
     first_name: userInfo?.data?.user?.first_name || "",
     last_name: userInfo?.data?.user?.last_name || "",
     occupation: userInfo?.data?.occupation || "",
-    address: {
-      city: userInfo?.data?.address?.city || "",
-    },
+    city: userInfo?.data?.address?.city || "",
     bio: userInfo?.data?.bio || "",
     day: new Date(userInfo?.data?.date_of_birth).getDate() || "",
     month: new Date(userInfo?.data?.date_of_birth).getMonth() + 1 || "",
@@ -88,10 +86,6 @@ const EditProfile = ({ onModalClose }) => {
     formData.append("first_name", data?.first_name);
     formData.append("last_name", data?.last_name);
     formData.append("city", data?.address?.city);
-    // formData.append("country", data?.address?.city);
-    // formData.append("state", data?.address?.city);
-    // formData.append("street_address", data?.address?.city);
-    // formData.append("zip_code", 567890);
     formData.append("date_of_birth", dateOfBirth);
     formData.append("bio", data.bio);
     formData.append("occupation", data.occupation);
@@ -101,8 +95,6 @@ const EditProfile = ({ onModalClose }) => {
 
     updating(formData);
   };
-
-  console.log(mainURL + data?.cover_image);
 
   return (
     <ModalWrapper>
@@ -119,7 +111,7 @@ const EditProfile = ({ onModalClose }) => {
                 <img
                   src={cover}
                   alt="User"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover "
                 />
               ) : (
                 <div
@@ -165,8 +157,8 @@ const EditProfile = ({ onModalClose }) => {
                 <div
                   className="w-full h-full rounded-[80%] border-[#4f0da3] bg-[#f3f3f3]"
                   style={{
-                    background: data?.cover_image
-                      ? `url('${mainURL}${data?.cover_image}')`
+                    background: data?.profile_picture
+                      ? `url('${mainURL}${data?.profile_picture}')`
                       : "#4f0da3",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
@@ -222,7 +214,7 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Current city"
               name="city"
               onChange={handleChange}
-              value={data?.address?.city || ""}
+              value={data?.city || ""}
             />
           </div>
 
