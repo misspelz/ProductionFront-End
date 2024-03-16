@@ -22,11 +22,16 @@ import { IconButton, InputAdornment, OutlinedInput } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { IoTextOutline } from "react-icons/io5";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import { useCreateStatus } from "api/hooks/feeds";
+import Custombutton from "components/Custom-button/Custombutton";
 
 const LifestyleStatus = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
 	const [inputCaption, setInputCaption] = useState(false);
+	const [statusCaption, setStatusCaption] = useState("");
+	const [images, setImages] = useState([]);
+	// const [taggedUsers, setTaggedUsers] = useState([]);
 	const handleCloseModal = () => setIsOpen(false);
 	const pagination = {
 		clickable: true,
@@ -36,24 +41,35 @@ const LifestyleStatus = () => {
 		},
 	};
 
-	const [images, setImages] = useState([]);
-
-	const handleImageChange = (event) => {
-		const fileList = event.target.files;
-		const imageList = [];
-
-		for (let i = 0; i < fileList.length; i++) {
-			const imageURL = URL.createObjectURL(fileList[i]);
-			imageList.push(imageURL);
-		}
-
-		setImages(imageList);
+	const { create, isLoading } = useCreateStatus({
+		onSuccess: (response) => {
+			console.log({ response });
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+	const handleImageChange = (e) => {
+		const fileList = Array.from(e.target.files);
+		setImages([...images, ...fileList]);
 	};
 
 	const deleteImage = (index) => {
 		const updatedImages = [...images];
 		updatedImages.splice(index, 1);
 		setImages(updatedImages);
+	};
+
+	const handleShareStatus = () => {
+		let data = new FormData();
+        if(images.length > 0) {
+            images.map((image) => {
+                data.append("file", image);
+            })
+        }
+        data.append("caption", statusCaption);
+		data.append("tagged_users", "1");
+		create(data);
 	};
 
 	useEffect(() => {
@@ -131,6 +147,7 @@ const LifestyleStatus = () => {
 									<input
 										id="upload-status"
 										type="file"
+										accept="image/*"
 										multiple
 										onChange={handleImageChange}
 										style={{ display: "none" }}
@@ -263,6 +280,7 @@ const LifestyleStatus = () => {
 												<input
 													id="upload-status"
 													type="file"
+													accept="image/*"
 													multiple
 													onChange={handleImageChange}
 													style={{ display: "none" }}
@@ -308,9 +326,7 @@ const LifestyleStatus = () => {
 															</div>
 															<div className="lifestyle-caption">
 																<p>
-																	Lifestyle caption is displayed here, with a
-																	very lengthy text, Lorem ipsum, dolor sit amet
-																	consectetur adipisicing elit. Sequi aliquid
+																	{statusCaption}
 																</p>
 															</div>
 															{inputCaption && (
@@ -321,6 +337,9 @@ const LifestyleStatus = () => {
 																			placeholder="Start typing"
 																			variant="standard"
 																			size="small"
+																			onChange={(e) => 
+                                                                                setStatusCaption(e.target.value)
+                                                                            }
 																		/>
 																		<MdCancel
 																			size={20}
@@ -328,6 +347,7 @@ const LifestyleStatus = () => {
 																			style={{ cursor: "pointer" }}
 																			onClick={() => {
 																				setInputCaption(false);
+                                                                                setStatusCaption("")
 																			}}
 																		/>
 																	</div>
@@ -341,10 +361,19 @@ const LifestyleStatus = () => {
 																	</button>
 																</div>
 															)}
-															<img src={image} alt="lifestyle-media" />
-															<button className="share-lifestyle-btn">
-																Share lifestyle
-															</button>
+															<img
+																src={URL.createObjectURL(image)}
+																alt="lifestyle-media"
+															/>
+															<Custombutton
+																type={"button"}
+																name={
+																	isLoading ? "Sharing..." : "Share lifestyle"
+																}
+																className={"share-lifestyle-btn"}
+																disabled={isLoading}
+																onClick={handleShareStatus}
+															/>
 														</div>
 													</SwiperSlide>
 												))}

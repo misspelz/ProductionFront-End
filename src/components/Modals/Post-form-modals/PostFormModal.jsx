@@ -116,10 +116,10 @@ const PostFormModal = ({
 			Swal.fire({
 				icon: "success",
 				title: "Post Successful!",
-				text: "Your post has been successfully posted.",
+				text: "Your media post has been successfully posted.",
 				confirmButtonText: "OK",
 			}).then(() => {
-				// window.location.reload();
+				window.location.reload();
 			});
 		},
 		onError: (errorResponse) => {
@@ -129,7 +129,6 @@ const PostFormModal = ({
 	const { createPost, isLoading, isError } = useCreateFeedsPost({
 		onSuccess: (response) => {
 			console.log({ response });
-			// console.log({ fileData });
 			for (const value of postFileData.values()) {
 				console.log(value);
 			}
@@ -141,10 +140,10 @@ const PostFormModal = ({
 			Swal.fire({
 				icon: "success",
 				title: "Post Successful!",
-				text: "Your post has been successfully posted.",
+				text: "Your text content post has been successfully posted.",
 				confirmButtonText: "OK",
 			}).then(() => {
-				// window.location.reload();
+				window.location.reload();
 			});
 		},
 		onError: (errorResponse) => {
@@ -165,7 +164,7 @@ const PostFormModal = ({
 			data.append("files", excel[0]);
 		}
 		if (location) {
-			data.append("location", location);
+			textData.append("location", location);
 		}
 		if (audioFile?.[0]) {
 			data.append("files", audioFile[0]);
@@ -182,7 +181,7 @@ const PostFormModal = ({
 			});
 		}
 
-		data.append("hashtags", addedTags);
+		textData.append("hashtags", addedTags);
 		textData.append("text_content", contentText);
 		// data.append("url", "https://example.com");
 		// data.append("is_business_post", "True");
