@@ -1,7 +1,7 @@
 import { getTokenFromLocalStorage } from "utils/token";
 
 // MAIN URL
-const mainURL = "https://development.2geda.net";
+export const mainURL = "https://development.2geda.net";
 
 // request options
 const requestOptions = {
@@ -15,7 +15,7 @@ const requestOptions = {
 export const getProfileData = async () => {
   try {
     const response = await fetch(
-      `${mainURL}/api/account/profile/retrieve`,
+      `${mainURL}/api/account/profiles/retrieve`,
       requestOptions
     );
 
@@ -30,13 +30,18 @@ export const getProfileData = async () => {
 // edit user profile
 export const updateProfile = async (profileData) => {
   try {
-    const response = await fetch(`${mainURL}/api/account/profile/update/`, {
+    const response = await fetch(`${mainURL}/api/account/profiles/update/`, {
       ...requestOptions,
       method: "PATCH",
-      body: JSON.stringify(profileData),
+      body: profileData,
+      headers: {
+        Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+      },
     });
 
     const data = await response.json();
+
+    console.log(data);
 
     return data;
   } catch (err) {
@@ -45,6 +50,7 @@ export const updateProfile = async (profileData) => {
 };
 
 // Get user posts
+
 export const getUserPosts = async (parameter) => {
   try {
     const response = await fetch(
@@ -54,7 +60,7 @@ export const getUserPosts = async (parameter) => {
 
     const data = await response.json();
 
-    return data.data;
+    return data;
   } catch (err) {
     throw new Error(err);
   }

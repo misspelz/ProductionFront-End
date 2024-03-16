@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
 import cover from "../../assets/profile_images/cover-photo.jpeg";
 import mainProfile from "../../assets/profile_images/main-profile.webp";
+import { mainURL } from "services/profile_business_API";
 
 const ProfileOverviewDetails = ({ data }) => {
   const [profileState, setProfileState] = useState(false);
@@ -31,12 +32,7 @@ const ProfileOverviewDetails = ({ data }) => {
     : "Address unknown";
 
   return (
-    <div
-      style={{
-        paddingLeft: "20px",
-        paddingRight: "20px",
-      }}
-    >
+    <div className="px-0 lg:px-[20px]">
       {profileState && (
         <div className="user_profile_image">
           <div className="cancel_btn">
@@ -47,22 +43,28 @@ const ProfileOverviewDetails = ({ data }) => {
 
           <div className="user_image_container">
             <img
-              src={profile_picture ? profile_picture : mainProfile}
+              src={
+                profile_picture ? `${mainURL}${profile_picture}` : mainProfile
+              }
               alt="Profile"
             />
           </div>
         </div>
       )}
 
-      <div className="cover_image">
-        <img src={cover_image ? cover_image : cover} alt="Cover" />
+      <div className="cover_image border">
+        <img
+          src={cover_image ? `${mainURL}${cover_image}` : cover}
+          alt="Cover"
+        />
       </div>
 
       <div className="profile_details">
         <img
-          src={profile_picture ? profile_picture : mainProfile}
+          src={profile_picture ? `${mainURL}${profile_picture}` : mainProfile}
           alt="Profile"
           onClick={handleProfileImage}
+          className="border"
         />
 
         <h1>{name}</h1>

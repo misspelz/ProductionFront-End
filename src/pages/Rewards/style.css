@@ -1,9 +1,9 @@
 /* REWARD HEADER */
-.rewards {
+/* .rewards {
   max-height: 100%;
 
   background-color: #ffff;
-}
+} */
 
 .reward_header {
   display: flex;
@@ -312,14 +312,14 @@
 }
 
 .reward_refer_box_top_left h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 16px;
   font-weight: 500;
   color: #ffffff;
 }
 
 .reward_refer_box_top_left p {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 12px;
   font-weight: 400;
   color: #ffffff;

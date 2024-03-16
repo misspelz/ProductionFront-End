@@ -15,8 +15,6 @@ const DesktopProfileOptions = ({ setDesktopProfileOptions, type }) => {
   const { handleClick } = useOpenModal();
   const { pathname } = useLocation();
 
-  console.log(pathname === "/business-profile");
-
   return (
     <div className="profileOptions">
       <div className="profileOptions_top">

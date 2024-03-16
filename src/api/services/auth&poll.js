@@ -28,7 +28,7 @@ export const Login = async (payload) => {
 };
 
 export const UserInfoApi = async (userToken) => {
-  const res = await axios.get(`${url}/api/account/profile/retrieve/`, {
+  const res = await axios.get(`${url}/api/account/profiles/retrieve/`, {
     headers: {
       Authorization: `Bearer ${userToken || getToken()}`,
     },

@@ -19,8 +19,6 @@ const MobileProfileOptions = ({
   const { handleClick } = useOpenModal();
   const { pathname } = useLocation();
 
-  console.log(pathname === "/business-profile");
-
   return (
     <div
       className={`profileOptionsMobile ${
