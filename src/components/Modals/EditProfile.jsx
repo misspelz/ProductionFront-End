@@ -12,6 +12,7 @@ import { useEditProfile } from "pages/Profile/useEditProfile";
 import ErrorMessage from "./ErrorMessage";
 import Spinner from "components/Spinner";
 import { useProfileDetails } from "pages/Profile/useProfileDetails";
+import { mainURL } from "services/profile_business_API";
 
 const EditProfile = ({ onModalClose }) => {
   const { profile: userInfo } = useProfileDetails();
@@ -101,6 +102,8 @@ const EditProfile = ({ onModalClose }) => {
     updating(formData);
   };
 
+  console.log(mainURL + data?.cover_image);
+
   return (
     <ModalWrapper>
       <ModalHeader header="Edit profile" onModalClose={onModalClose} />
@@ -123,8 +126,10 @@ const EditProfile = ({ onModalClose }) => {
                   className={`w-full h-full flex justify-center items-center flex-col text-white gap-[10px]`}
                   style={{
                     background: data?.cover_image
-                      ? data?.cover_image
+                      ? `url('${mainURL}${data?.cover_image}')`
                       : "#4f0da3",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}
                 >
                   <MdOutlineAddPhotoAlternate className="text-[20px]" />
@@ -157,7 +162,16 @@ const EditProfile = ({ onModalClose }) => {
                   className="absolute w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <div className="w-full h-full rounded-[80%] border-[#4f0da3] bg-[#f3f3f3]"></div>
+                <div
+                  className="w-full h-full rounded-[80%] border-[#4f0da3] bg-[#f3f3f3]"
+                  style={{
+                    background: data?.cover_image
+                      ? `url('${mainURL}${data?.cover_image}')`
+                      : "#4f0da3",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
               )}
 
               <input
