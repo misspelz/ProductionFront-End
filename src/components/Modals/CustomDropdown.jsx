@@ -14,6 +14,7 @@ const CustomDropdown = ({ stallValue, menu, name, setData }) => {
       className="w-full h-[43px]"
       onChange={handleChange}
       options={menu}
+      // value={}
     />
   );
 };

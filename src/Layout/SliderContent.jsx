@@ -14,7 +14,7 @@ const nav_item_style = {
     "flex space-x-4 text-[14px] font-light items-center no-underline text-[#c47efb]",
 };
 
-export const SliderContent = () => {
+export const SliderContent = ({ setSlider }) => {
   const nav = useNavigate();
   const { setIsAuthenticated } = useContext(ModalContext);
 
@@ -24,6 +24,9 @@ export const SliderContent = () => {
     setIsAuthenticated(false);
     nav("/");
     toast.success("Successfully Logged Out");
+
+    // setting slider to false if true
+    setSlider(false);
   };
 
   return (

@@ -1,6 +1,14 @@
+import { useClaimReward } from "pages/Rewards/useClaimReward";
 import ooniCoin from "../../assets/profile_images/Ooni_coin.png";
+import Spinner from "components/Spinner";
 
 const RewardItem = ({ title, icon, text, length, amount }) => {
+  const { claming, claimReward } = useClaimReward();
+
+  const handleClaimCoin = () => {
+    claimReward(4); // the id(4) is just static argument for now
+  };
+
   return (
     <li className="other_lists_type">
       <div>
@@ -21,7 +29,9 @@ const RewardItem = ({ title, icon, text, length, amount }) => {
           </div>
         </div>
 
-        <button className="reward_right">Claim</button>
+        <button className="reward_right" onClick={handleClaimCoin}>
+          {claming === "pending" ? <Spinner /> : "Claim"}
+        </button>
       </div>
 
       <div className="progress_wrapper">

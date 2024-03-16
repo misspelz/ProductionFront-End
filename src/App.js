@@ -127,19 +127,21 @@ function App() {
           <Route index path="/verify" element={<Verify />} />
 
           {/* Below are the pages with aside containers */}
-          <Route element={<AppLayout />}>
-            <Route
-              path="/"
-              element={isAuthenticated ? <Home /> : <Landing />}
-            />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate replace to="Home" /> : <Landing />
+            }
+          />
 
-            <Route element={<Navigate replace to="home" />} />
+          <Route element={<AppLayout />}>
+            <Route element={<Navigate replace to="Home" />} />
             <Route
-              path="/home"
+              path="/Home"
               element={<ProtectedRoutes element={<Home />} />}
             />
 
-            <Route path="/home/:feedId" element={<FeedDetail />} />
+            <Route path="/Home/:feedId" element={<FeedDetail />} />
 
             {/* Below are poll routes */}
             <Route

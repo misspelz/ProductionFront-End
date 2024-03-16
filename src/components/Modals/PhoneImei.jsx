@@ -6,10 +6,12 @@ import { useModal } from "../../Hooks/useModal";
 import NewIMEISerialModal from "./NewIMEISerialModal";
 import ModalContainer from "./ModalContainer";
 import { useOpenModal } from "Hooks/useOpenModal";
+import { useGadgets } from "pages/Profile/useGadgets";
 
 const PhoneImei = ({ onModalClose, title, type }) => {
   const { modal } = useModal();
   const { handleClick } = useOpenModal();
+  const { gadgetStatus, gadgets } = useGadgets();
 
   return (
     <ModalWrapper>
@@ -17,9 +19,18 @@ const PhoneImei = ({ onModalClose, title, type }) => {
 
       <div className="px-[15px] h-[90vh] overflow-y-auto mb-0 py-[10px] lg:px-[10px] lg:h-[60vh] overflow-auto lg:mb-[1.5rem]">
         <div className="flex flex-col gap-[15px] py-[20px]">
-          {Array.from({ length: 8 }, (_, i) => i + 1).map((_, i) => (
-            <IMELPhone key={i} />
-          ))}
+          {gadgetStatus === "pending"
+            ? "Loading...."
+            : gadgets.data.map((gadget, i) => (
+                <IMELPhone
+                  key={i + 1}
+                  name={gadget.phone_name}
+                  id_number={gadget.id_number}
+                  id={gadget.id}
+                  type={type}
+                  category={gadget.category}
+                />
+              ))}
         </div>
       </div>
 

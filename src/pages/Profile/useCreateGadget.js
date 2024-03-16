@@ -12,7 +12,10 @@ export const useCreateGadget = () => {
 
     onSuccess: (data) => {
       if (data.status) {
-        setModal({});
+        setModal((modal) => ({
+          ...modal,
+          input: false,
+        }));
 
         queryClient.invalidateQueries({
           queryKey: ["gadgets"],

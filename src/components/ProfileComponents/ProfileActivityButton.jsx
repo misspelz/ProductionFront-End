@@ -18,7 +18,11 @@ const ProfileActivityButton = ({ children, count, param }) => {
       onClick={handleClick}
     >
       <span>{children}</span>{" "}
-      <span className="py-[2px] px-[6px] rounded-[3px] bg-white text-[#4f0da3] my-0 mx-[4px]">
+      <span
+        className={`${
+          !count ? "hidden" : "block"
+        } py-[2px] px-[6px] rounded-[3px] bg-white text-[#4f0da3] my-0 mx-[4px]`}
+      >
         {count}
       </span>
     </button>
