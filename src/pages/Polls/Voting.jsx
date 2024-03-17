@@ -31,6 +31,7 @@ import AD1 from "assets/images/AD1.png";
 import AD2 from "assets/images/AD2.png";
 import AD3 from "assets/images/AD3.png";
 import AD4 from "assets/images/AD3.png";
+import InputField from "components/Commons/InputField";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
@@ -51,6 +52,7 @@ const Voting = () => {
   const [castVotes, setCastVotes] = useState(false);
 
   const [APoll, setAPoll] = useState({});
+  console.log("APoll", APoll);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [numberOfVotes, setNumberOfVotes] = useState("");
@@ -64,10 +66,10 @@ const Voting = () => {
     const input = e.target.value;
     if (!isNaN(input)) {
       const votes = parseFloat(input);
+      console.log("votes", votes);
+      console.log("amount", APoll.amount);
       setNumberOfVotes(votes);
-      setPayNowAmount(
-        votes * 2000 * (selectedCurrency === "USD" ? 1 / 1900 : 1)
-      );
+      setPayNowAmount(votes * APoll.amount);
     } else {
       setNumberOfVotes("");
     }
@@ -84,6 +86,12 @@ const Voting = () => {
   };
 
   const HandlePaySuccess = () => {
+    // try {
+
+    // } catch (error) {
+
+    // }
+
     setSuccess(true);
   };
 
@@ -239,6 +247,11 @@ const Voting = () => {
       option_id: selectedOptionId,
     };
 
+    if (APoll.is_paid) {
+      setPaidPoll(true);
+      return;
+    }
+
     try {
       setLoading(true);
       const resp = await VoteApi(dataOptionId, APoll.id);
@@ -325,7 +338,7 @@ const Voting = () => {
   return (
     <>
       {!selectedPoll && (
-        <div className=" bg-[#f5f5f5]  w-full  lg:px-10 gap-6 ">
+        <div className=" bg-[#f5f5f5] mt-20 lg:mt-0 h-full overflow-scroll  w-full  lg:px-10 gap-6 ">
           <div className="">
             {!Notify && !CastVote && (
               <div className=" overflow-x-hidden bg-[#fff] px-6 md:hidden">
@@ -341,17 +354,18 @@ const Voting = () => {
                   className="mt-6 lg:mt-10"
                 />
 
-                <CreateCastActions
-                  HandleNotification={HandleNotification}
-                  HandleCastVote={HandleCastVote}
-                  showCreateModal={() => setShowCreateModal((prev) => !prev)}
-                  // setNotify={setNotify}
-                  // handleShowCreateModal={handleShowCreateModal}
-                />
+                <div className="mt-10">
+                  <CreateCastActions
+                    HandleNotification={HandleNotification}
+                    HandleCastVote={HandleCastVote}
+                    showCreateModal={() => setShowCreateModal((prev) => !prev)}
+                  />
+                </div>
               </div>
             )}
           </div>
 
+          
           {Notify && <Notifications setNotify={setNotify} />}
 
           {/* Mobile */}
@@ -361,7 +375,7 @@ const Voting = () => {
                 <FaArrowLeftLong
                   size={20}
                   onClick={goBack}
-                  className="cursor-pointer text-lg mb-[0.5rem]"
+                  className="cursor-pointer text-lg mb-[0.5rem] mt-[50px]"
                 />
                 <h1>Cast Vote</h1>
               </div>
@@ -432,7 +446,7 @@ const Voting = () => {
           )}
 
           {/* Web */}
-          <div className="flex flex-row gap-4 ">
+          <div className="hidden lg:flex flex-row gap-4 ">
             <div className="md:w-[60%] px-4 pb-[40px] md:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <h1>Voting</h1>
 
@@ -503,7 +517,6 @@ const Voting = () => {
               <PollsNotification
                 setNotify={setNotify}
                 handleShowCreateModal={handleShowCreateModal}
-                // showCreateModal={handleShowCreateModal}
               />
             </div>
           </div>
@@ -625,7 +638,7 @@ const Voting = () => {
         </div>
       )}
 
-      {/* {PaidPoll && !PayNow && (
+      {PaidPoll && !PayNow && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <h3 className="font-bold text-center text-[18px]">Paid Poll</h3>
@@ -636,14 +649,14 @@ const Voting = () => {
             </h6>
 
             <div className="mt-8 ">
-              <div className="flex gap-4 mb-10">
+              <div className="mb-10">
                 <InputField
                   placeholder={"Number of votes"}
                   type={"number"}
                   value={numberOfVotes}
                   onChange={handleNumberOfVotesChange}
                 />
-                <select
+                {/* <select
                   name="currency"
                   value={selectedCurrency}
                   onChange={handleCurrencyChange}
@@ -651,7 +664,7 @@ const Voting = () => {
                 >
                   <option value="NGN">NGN</option>
                   <option value="USD">USD</option>
-                </select>
+                </select> */}
               </div>
               <ActionButton
                 label={"Proceed to Pay"}
@@ -667,15 +680,16 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
 
-      {/* {PayNow && !Success && (
+      {PayNow && !Success && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <h6 className="text-[16px] text-center">You are paying</h6>
 
             <h3 className="text-[30px] text-center text-purple-600 mt-4">
-              {selectedCurrency === "NGN" ? "NGN" : "$"}
+              {/* {selectedCurrency === "NGN" ? "NGN" : "$"} */}
+              NGN
               {payNowAmount.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -709,9 +723,9 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
 
-      {/* {Success && !castVotes && (
+      {Success && !castVotes && (
         <Modal>
           <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
             <div className="flex justify-center">
@@ -728,11 +742,11 @@ const Voting = () => {
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
 
-      {/* {castVotes && (
+      {castVotes && (
         <Modal>
-          <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
+          <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20 ">
             <div className="flex justify-end">
               <IoMdClose
                 size={25}
@@ -765,12 +779,12 @@ const Voting = () => {
               <ActionButton
                 label={"Vote"}
                 bg={"pruplr"}
-                onClick={HandleVoteSubmit}
+                onClick={handleSubmitVote}
               />
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
     </>
   );
 };

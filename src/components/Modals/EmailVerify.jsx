@@ -3,6 +3,8 @@ import ActionButton from "../Commons/Button";
 import toast from "react-hot-toast";
 import { ReSendOTP } from "api/services/auth&poll";
 import { useState } from "react";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 
 export const EmailVerify = ({ setIsEmailVerify }) => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,12 @@ export const EmailVerify = ({ setIsEmailVerify }) => {
 
   return (
     <div className="bg-white p-10 rounded-[10px] mx-10">
+      <div className="flex justify-end w-full cursor-pointer">
+        <FaTimes
+          className="text-black text-xl"
+          onClick={() => setIsEmailVerify(false)}
+        />
+      </div>
       <h1 className="text-center mb-4 text-red-500 font-bold">Ooopsss!!</h1>
       <h2 className="text-[14px] md:text-[16px] mb-14 text-center">
         You need to verify your Email Address

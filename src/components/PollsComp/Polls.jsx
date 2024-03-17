@@ -24,6 +24,7 @@ export const Polls = ({
   selectedOptionId,
   handleOptionChange,
   isClosed,
+  HandlePromote
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
 
@@ -142,18 +143,24 @@ export const Polls = ({
               </div>
               {/* Show actions based on the corresponding index */}
               {showAction && (
-                <div className="absolute flex flex-col gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[2rem]">
+                <div className="absolute flex flex-col items-start gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[1rem]">
                   <button
                     onClick={HandleEdit}
-                    className="text-[1rem] md:text-[1.4rem] text-[#4f0da3] text-start font-bold"
+                    className="text-[1rem] md:text-[1.4rem] text-black text-start font-bold"
                   >
                     Edit Poll
                   </button>
                   <button
                     onClick={HandleDelete}
-                    className="text-[1rem] md:text-[1.4rem] text-red-600 font-bold"
+                    className="text-[1rem] md:text-[1.4rem] text-red-500 font-bold"
                   >
                     Delete Poll
+                  </button>
+                  <button
+                    onClick={HandlePromote}
+                    className="text-[1rem] md:text-[1.4rem] text-black font-bold"
+                  >
+                    Promote Poll
                   </button>
                 </div>
               )}
