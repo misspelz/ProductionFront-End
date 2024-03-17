@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import person from "../Assets/artist.jpeg";
 import ModalWrapper2 from "../Components/Modals/ModalWrapper2";
 import Edit from "../Assets/ic_round-edit.svg";
@@ -18,12 +18,13 @@ export default function UploadMusicSider() {
   const [producer, setProducer] = useState()
   const [uploadRadio, setUploadRadio] = useState()
   const authToken = localStorage.getItem("authToken")
+  const fileInput = useRef(null)
 
   const UploadSong = () => {
     console.log(audio)
     const payload = {
       title:song,
-      // audio_file: audio,
+      audio_file: fileInput,
       artist: artist
     }
     axios.post(`https://development.2geda.net/api/stereo/songs/`, payload, {
@@ -163,7 +164,7 @@ export default function UploadMusicSider() {
         </div>
       </div>
      </label>
-    <input hidden="" type="file" name="button2" id="button2" onChange={(e)=>setAudio(e.target.files[0])}/>
+    <input hidden="" type="file" ref={fileInput} name="button2" id="button2" onChange={(e)=>setAudio(e.target.files[0])}/>
 </div>
         </div>
         <div className="flex justify-center items-center pb-4">

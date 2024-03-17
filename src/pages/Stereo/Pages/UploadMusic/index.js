@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UploadMusicLayout from "../../Layout/UploadMusicLayout";
 import Arrow from "../../Assets/arrowback.svg";
 import PromoCard from "../../Components/PromoCard";
@@ -7,10 +7,33 @@ import RightArrow from "../../Assets/icon-park_right.svg";
 import RecentUploadCard from "../../Components/recentUploadCard";
 import UploadSongHeader from "../../Components/UploadSongHeader";
 import Ad from "../../Assets/AD.jpeg";
+import LayoutMain from "pages/Stereo/Layout/LayoutMain";
+import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../../Assets/nothing_here.json"
 
 export default function UploadMusic() {
+  const [recentUpload, setRecentUpload] = useState([])
+  const GetRecentUploads = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/artists/songs/recent_upload/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setRecentUpload(res?.data?.data);
+        console.log(recentUpload + "trending state===");
+        console.log(JSON.stringify(res.data) + "trending====");
+      });
+  };
+
+  useEffect(() => {
+    GetRecentUploads();
+  }, []);
   return (
-    <UploadMusicLayout>
+    <LayoutMain>
       <UploadSongHeader />
       <div className="pt-20 md:pt-10 lg:pt-10 xl:pt-0">
         <div className="sm:hidden flex flex-col px-5">
@@ -130,10 +153,21 @@ export default function UploadMusic() {
               </button>
             </div>
             <div className="mx-5">
+              {/* <RecentUploadCard />
               <RecentUploadCard />
               <RecentUploadCard />
-              <RecentUploadCard />
-              <RecentUploadCard />
+              <RecentUploadCard /> */}
+             {recentUpload?.length>0?recentUpload?.map(res=>{
+                  return (
+                    <RecentUploadCard title={"prince"} />
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
             </div>
             {/* ad */}
             <div className="mx-5 mt-4">
@@ -152,6 +186,6 @@ export default function UploadMusic() {
 
         <div></div>
       </div>
-    </UploadMusicLayout>
+    </LayoutMain>
   );
 }

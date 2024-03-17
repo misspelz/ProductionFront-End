@@ -22,7 +22,7 @@ export default function Welcome() {
 
   const GetTrendingSongs = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/songs/trending/`, {
+      .get(`https://development.2geda.net/api/stereo/artists/songs/trending/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,

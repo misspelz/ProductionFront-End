@@ -45,7 +45,7 @@ export default function UploadSongHeader({title, link}) {
       />
       <div className="hidden lg:block xl:block">
         {/* <Navbar /> */}
-        <DesktopNavbar />
+        {/* <DesktopNavbar /> */}
       </div>
     </div>
   );

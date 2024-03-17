@@ -7,6 +7,8 @@ import Header1 from "../Components/Header1";
 import DesktopNavbar from "./DesktopNavbar";
 import RightSider from "./RightSider";
 import UploadMusicSider from "./UploadMusicSider";
+import { Asidebar } from "Layout/Asidebar";
+import { Header } from "Layout/Header";
 
 export default function UploadMusicLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -49,15 +51,17 @@ export default function UploadMusicLayout({ children }) {
         <div class="h-32 rounded-lg bg-gray-200"></div>
       </div> */}
 
-      {/* <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
         {isCollapsed ? (
-          <div className="col-span-2 top-0">
-            <Sider />
+          <div className="col-span-2 h-screen bg-[#4F0DA3] absolute w-[50%] z-40 sm:w-full top-0 left-0">
+            <Asidebar />
           </div>
         ) : null}
-        <div className="col-span-10">
-          <DesktopNavbar />
+        <div className="col-span-12">
+          {/* <DesktopNavbar /> */}
+          <Header/>
           <div className="grid grid-cols-12">
+          <div className="col-span-2"> </div>
             <div className="col-span-7">{children}</div>
             <div className="col-span-5">
               <UploadMusicSider />
@@ -78,13 +82,16 @@ export default function UploadMusicLayout({ children }) {
           </div>
         ) : null}
         {children}
-      </div> */}
-      <div className="grid grid-cols-12">
-            <div className="col-span-7">{children}</div>
-            <div className="col-span-5">
+      </div>
+      {/* <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      <div className="col-span-7">{children}</div>
+      <div className="col-span-5">
               <UploadMusicSider />
             </div>
-          </div>
+      </div>
+      <div className="sm:hidden block">
+        {children}
+      </div> */}
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default function Header1() {
       />
       <div className="hidden lg:block xl:block">
         {/* <Navbar /> */}
-        <DesktopNavbar />
+        {/* <DesktopNavbar /> */}
       </div>
     </div>
   );

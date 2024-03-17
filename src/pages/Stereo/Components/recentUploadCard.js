@@ -1,7 +1,7 @@
 import React from "react";
 import More from "../Assets/codicon_kebab-vertical.svg";
 
-export default function RecentUploadCard() {
+export default function RecentUploadCard({title, artist, img, plays, likes, entries, downloads}) {
   return (
     <div className="bg-[#F5F5F5] py-3 px-3 rounded-md w-full mb-4">
       <section className="flex items-center justify-between">
@@ -11,8 +11,8 @@ export default function RecentUploadCard() {
             className="w-[35px] h-[35px] rounded-lg"
           />
           <div className="flex flex-col">
-            <p className="font-normal text-sm">Dance with me</p>
-            <p className="text-sm font-light text-[#403F3F]">Faith increase</p>
+            <p className="font-normal text-sm">{title? title:"Dance with me"}</p>
+            <p className="text-sm font-light text-[#403F3F]">{artist?artist:"Faith increase"}</p>
           </div>
         </div>
         <buttom>
@@ -24,19 +24,19 @@ export default function RecentUploadCard() {
       </div>
       <main className="flex justify-between min-w-[100%]">
         <div className="flex flex-col items-center ">
-          <p className="font-normal text-lg">2.4K</p>
+          <p className="font-normal text-lg">{plays?plays:"2.4K"}</p>
           <p className="text-xs font-normal text-[#4F0DA3]">Plays</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="font-normal text-lg">1.9k</p>
+          <p className="font-normal text-lg">{likes?likes:"1.9k"}</p>
           <p className="text-xs font-normal text-[#4F0DA3]">Likes</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="font-normal text-lg">5</p>
+          <p className="font-normal text-lg">{entries?entries:"5"}</p>
           <p className="text-xs font-normal text-[#4F0DA3]">Playlist entries</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="font-normal text-lg text-center">100</p>
+          <p className="font-normal text-lg text-center">{downloads?downloads:"100"}</p>
           <p className="text-xs font-normal text-[#4F0DA3] text-center">
             Downloads
           </p>

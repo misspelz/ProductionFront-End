@@ -6,6 +6,8 @@ import RecentUploadCard from "../../Components/recentUploadCard";
 import Ad from "../../Assets/AD.jpeg";
 import UploadSongHeader from "../../Components/UploadSongHeader";
 import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../../Assets/nothing_here.json"
 
 export default function RecentUploads() {
   const [recentUpload, setRecentUpload] = useState([])
@@ -13,14 +15,14 @@ export default function RecentUploads() {
 
   const GetRecentUploads = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/songs/recent_upload`, {
+      .get(`https://development.2geda.net/api/stereo/artists/songs/recent_upload/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
         },
       })
       .then((res) => {
-        setRecentUpload(JSON.stringify(res?.data?.data));
+        setRecentUpload(res?.data?.data);
         console.log(recentUpload + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
       });
@@ -60,13 +62,25 @@ export default function RecentUploads() {
             </section>
 
             <section className="mx-5">
+              {/* <RecentUploadCard />
               <RecentUploadCard />
               <RecentUploadCard />
               <RecentUploadCard />
               <RecentUploadCard />
               <RecentUploadCard />
-              <RecentUploadCard />
-              <RecentUploadCard />
+              <RecentUploadCard /> */}
+              {recentUpload?.length>0?recentUpload?.map(res=>{
+                  return (
+                    <RecentUploadCard title={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+
             </section>
             {/* ad */}
             <div className="mt-4 mx-5">
