@@ -1,21 +1,23 @@
+import "./style.css";
 import { IoMdTrash } from "react-icons/io";
 import { IoMailOpenOutline } from "react-icons/io5";
-import "./style.css";
-import BusinessProfileHeader from "../../components/BusinessProfileComponents/BusinessProfileHeader";
 import BusinessProfileDetails from "../../components/BusinessProfileComponents/BusinessProfileDetails";
 import ads from "../../assets/profile_images/Jumia-Celebrate-the-Game.png";
 import ModalButton from "../../components/Modals/ModalButton";
 import ProfileAds from "../../components/ProfileComponents/ProfileAds";
 import BusinessPosts from "../../components/BusinessProfileComponents/BusinessPosts";
 import ProfileMessageLikeBox from "../../components/ProfileComponents/ProfileMessageLikeBox";
+import ProfileOverviewNav from "components/ProfileComponents/ProfileOverviewNav";
+import { ProfileHeader } from "Layout/FeaturesMobileHeaders/ProfileHeader";
 
 const BusinessProfile = () => {
   return (
-    <div className="profile_container">
-      <div className="profile_overview">
-        <div className="overview">
-          <div className="profile_top_content">
-            <BusinessProfileHeader />
+    <div className="lg:grid lg:grid-cols-12 gap-4 overflow-hidden">
+      <ProfileHeader type="Business Profile" navigate="/" />
+      <div className="px-1 overflow-auto h-[93vh] col-span-8">
+        <div className="lg:p-[5px]">
+          <div className="flex flex-col gap-[10px] py-[15px] px-[10px]">
+            <ProfileOverviewNav type="Business" />
 
             {/* DETAILS */}
             <BusinessProfileDetails />
@@ -37,11 +39,11 @@ const BusinessProfile = () => {
         </div>
       </div>
 
-      <div className="profile_ads">
+      <div className="cursor-pointer col-span-1 hidden lg:block ">
         <ProfileAds />
       </div>
 
-      <div className="profile_users">
+      <div className="col-span-3 hidden lg:block ">
         <ProfileMessageLikeBox header="Top Businesses" newMessage="8">
           {Array.from({ length: 10 }, (_, i) => i + 1).map((i) => (
             <li className="message" key={i + 1}>

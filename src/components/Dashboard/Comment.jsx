@@ -4,13 +4,11 @@ import { useCreateComment } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
 
 const Comment = ({
-	disnone,
 	postID,
 	commentList,
 	setCommentList,
 	likeList,
 	setLikeList,
-	index,
 }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId: postID,
@@ -30,14 +28,14 @@ const Comment = ({
 
 	function handleComment() {
 		// handleAddComment(index);
-		const commentData = new FormData();
+		let commentData = new FormData();
 		commentData.append("text_content", commentText);
 		// commentData.append("file", null);
 		comment(commentData);
 	}
 
 	return (
-		<div className={`comment-container ${disnone}`}>
+		<div className={`comment-container`}>
 			<div className="post-ead">Comment</div>
 			<div className="inp-coment">
 				<textarea

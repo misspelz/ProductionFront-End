@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import "./CreatePoll.css";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { CreatePollApi, UpdatePollApi } from "api/services/auth&poll";
+import { CreatePollApi } from "api/services/auth&poll";
 import toast from "react-hot-toast";
 import { ModalContext } from "Context/ModalContext";
 
@@ -67,12 +67,12 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         durationOptions.find((option) => option.label === value)?.value || 0;
       const now = new Date();
       const closeTime = new Date(now.getTime() + durationInMs);
-      
+
       const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
 
       setPollData((prevState) => ({
         ...prevState,
-        close_time: formattedCloseTime, 
+        close_time: formattedCloseTime,
       }));
     } else if (name === "options") {
       const updatedOptions = value.map((option) => {
@@ -91,7 +91,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     }
   };
 
-  const handleCreateandEditPoll = async (e) => {
+  const handleCreatePoll = async (e) => {
     e.preventDefault();
 
     const missingFields = [];
@@ -112,23 +112,13 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     try {
       setIsLoading(true);
 
-      let apiCall;
-      if (singlePoll) {
-        apiCall = UpdatePollApi;
-      } else {
-        apiCall = CreatePollApi;
-      }
-
-      const resp = await apiCall(pollData, singlePoll ? singlePoll.id : null);
+      const resp = await CreatePollApi(pollData);
 
       if (resp.data.status) {
-        toast.success(
-          singlePoll ? "Poll updated successfully" : "Poll created successfully"
-        );
-        // closeModal();
+        toast.success("Poll created successfully");
       }
     } catch (error) {
-      console.log("createandedit", error);
+      console.log("createt", error);
       toast.error(error.response.data.message || "Something went wrong!");
     } finally {
       fetchPolls();
@@ -146,22 +136,8 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
     }));
   };
 
-  useEffect(() => {
-    if (singlePoll) {
-      const { question, poll_type, poll_access } = singlePoll;
-      if (question) {
-        setPollData((prevState) => ({
-          ...prevState,
-          question,
-          poll_type,
-          // poll_access,
-        }));
-      }
-    }
-  }, [singlePoll]);
-
   return (
-    <form className="form-wrapper" onSubmit={handleCreateandEditPoll}>
+    <form className="form-wrapper" onSubmit={handleCreatePoll}>
       <div
         className="createTop"
         style={{
@@ -177,7 +153,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
           className="cursor-pointer"
         />
         <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-          {singlePoll ? "Edit Poll" : "Create Poll"}
+          Create Poll
         </span>
       </div>
       <div className="form-field">
@@ -310,13 +286,7 @@ const CreatePoll = ({ onClose, fetchPolls }) => {
         type="submit"
         disabled={isLoading}
       >
-        {singlePoll
-          ? isLoading
-            ? "Updating Poll..."
-            : "Update Poll"
-          : isLoading
-          ? "Creating Poll..."
-          : "Create Poll"}
+        {isLoading ? "Loading..." : "Create Poll"}
       </button>
     </form>
   );

@@ -1,9 +1,8 @@
 import { SuggestedPollsApi } from "api/services/auth&poll";
+import Spin from "components/Spin/Spin";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { formatDate } from "utils/helper";
 import { Polls } from "./Polls";
-import Spin from "components/Spin/Spin";
 
 export const SuggestedPolls = ({ HandlePoll }) => {
   const [loading, setLoading] = useState(true);
@@ -49,10 +48,10 @@ export const SuggestedPolls = ({ HandlePoll }) => {
           key={index}
           onClick={() => HandlePoll(poll)}
           authorName={poll.creator.username}
-          createdAt={formatDate(poll.created_at)}
+          createdAt={poll.created_at}
           question={poll.question}
           options={poll?.options?.length > 1 && poll?.options}
-          daysRemaining={formatDate(poll.close_time)}
+          daysRemaining={poll.close_time}
           isClosed={poll.is_closed}
           backgroundImageUrl={
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"

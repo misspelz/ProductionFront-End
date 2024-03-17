@@ -18,21 +18,23 @@ const Gadget = ({ onModalClose }) => {
         onModalClose={onModalClose}
       />
 
-      <div className="gadget_container">
-        <div className="imei_serial">
+      <div className="px-[15px] h-[90vh] overflow-y-auto mb-0 py-[10px] lg:px-[10px] lg:h-[60vh] overflow-auto lg:mb-[1.5rem]">
+        <div className="flex flex-col gap-[20px] py-[1.5rem] px-0">
           {/* PHONE IMEI */}
           <div
-            className="imei_serial_number clickModalOpen"
+            className="flex p-[10px] justify-between items-center rounded-[5px] border border-[#d0d5dd] cursor-pointer clickModalOpen"
             id="btn"
             onClick={handleClick}
             data-modal="phoneIMEI"
           >
-            <div className="imei_serial_number_text">
-              <h4>Phone IMEI</h4>
-              <span>3 entries</span>
+            <div>
+              <h4 className="text-[#000] text-[14px] font-light">Phone IMEI</h4>
+              <span className="text-[#ff8a15] text-[12px] font-light">
+                3 entries
+              </span>
             </div>
 
-            <div className="imei_serial_number_icon">
+            <div className="text-[20px]  text-gray-500">
               <IoIosArrowForward />
             </div>
           </div>
@@ -44,17 +46,21 @@ const Gadget = ({ onModalClose }) => {
 
           {/* SERIAL NUMBER */}
           <div
-            className="imei_serial_number clickModalOpen"
+            className="flex p-[10px] justify-between items-center rounded-[5px] border border-[#d0d5dd] cursor-pointer  clickModalOpen"
             id="btn"
             onClick={handleClick}
             data-modal="serialNO"
           >
-            <div className="imei_serial_number_text">
-              <h4>Serial number</h4>
-              <span>3 entries</span>
+            <div>
+              <h4 className="text-[#000] text-[14px] font-light">
+                Serial number
+              </h4>
+              <span className="text-[#ff8a15] text-[12px] font-light">
+                3 entries
+              </span>
             </div>
 
-            <div className="imei_serial_number_icon">
+            <div className="text-[20px] text-gray-500">
               <IoIosArrowForward />
             </div>
           </div>

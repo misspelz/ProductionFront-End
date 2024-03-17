@@ -194,7 +194,18 @@
     height: fit-content;
     width: fit-content;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 6px;
     margin: .8rem 34% 0 34% !important;
+}
+
+.share-lifestyle-btn:disabled {
+    background: var(--primary-color-light);
+    pointer-events: none;
+    cursor: default;
 }
 
 .delete-lifestyle-btn {

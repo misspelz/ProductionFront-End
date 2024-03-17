@@ -83,7 +83,8 @@ function ScrollToTop() {
 function App() {
   useEffect(() => {
     setupAxios();
-  });
+    console.log("setup axios called from Appjs");
+  }, []);
 
   const { isAuthenticated } = useContext(ModalContext);
 
@@ -120,8 +121,6 @@ function App() {
         />
 
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Home /> : <Landing />} />
-
           {/* AUTH */}
           <Route index path="/Signup" element={<Signup />} />
           <Route index path="/Signin" element={<Signin />} />
@@ -129,14 +128,21 @@ function App() {
           <Route index path="/verify" element={<Verify />} />
 
           {/* Below are the pages with aside containers */}
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate replace to="Home" /> : <Landing />
+            }
+          />
+
           <Route element={<AppLayout />}>
-            <Route element={<Navigate replace to="home" />} />
+            <Route element={<Navigate replace to="Home" />} />
             <Route
-              path="/home"
+              path="/Home"
               element={<ProtectedRoutes element={<Home />} />}
             />
 
-            <Route path="/home/:feedId" element={<FeedDetail />} />
+            <Route path="/Home/:feedId" element={<FeedDetail />} />
 
             {/* Below are poll routes */}
             <Route
@@ -276,7 +282,7 @@ function App() {
 
             <Route
               path="manage-business"
-              element={<ProtectedRoutes manageManageBusiness />}
+              element={<ProtectedRoutes element={<ManageBusiness />} />}
             />
 
             <Route element={<ProtectedRoutes element={<RewardLayout />} />}>

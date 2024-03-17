@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/profile_images/2geda.png";
 import EditProfile from "../Modals/EditProfile";
 import RequestVerification from "../Modals/RequestVerification";
@@ -17,6 +17,7 @@ const MobileProfileOptions = ({
 }) => {
   const { modal } = useModal();
   const { handleClick } = useOpenModal();
+  const { pathname } = useLocation();
 
   return (
     <div
@@ -58,7 +59,11 @@ const MobileProfileOptions = ({
           </li>
           {modal.setting && (
             <ModalContainer type="setting">
-              {type === "business" ? <EditBusinessProfile /> : <EditProfile />}
+              {pathname === "/business-profile" ? (
+                <EditBusinessProfile />
+              ) : (
+                <EditProfile />
+              )}
             </ModalContainer>
           )}
 

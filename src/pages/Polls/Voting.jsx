@@ -1,6 +1,8 @@
 import { Dialog } from "@mui/material";
 import MainLayout from "Layout/MainLayout";
 import {
+  ClosePollApi,
+  FindPollsApi,
   PollsApi,
   VoteApi,
   getLoginToken,
@@ -17,7 +19,7 @@ import { PromotedPolls } from "components/PollsComp/PromotedPolls";
 import { PollsNotification } from "components/PollsComp/RightComp";
 import { SuggestedPolls } from "components/PollsComp/SuggestedPolls";
 import Spin from "components/Spin/Spin";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import "./styles.css";
@@ -35,6 +37,7 @@ const Voting = () => {
   const userInfo = JSON.parse(userInfoString);
 
   const [polls, setPolls] = useState([]);
+  const [findPolls, setFindPolls] = useState([]);
   // console.log("allpolls", polls)
 
   const [selectedPoll, setSelectedPoll] = useState(false);
@@ -55,6 +58,7 @@ const Voting = () => {
   const [payNowAmount, setPayNowAmount] = useState(0);
   const [PayNow, setPayNow] = useState(false);
   const [Success, setSuccess] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const handleNumberOfVotesChange = (e) => {
     const input = e.target.value;
@@ -100,6 +104,11 @@ const Voting = () => {
     setAllVotesValue(numberOfVotes);
   };
 
+  const handleShowCreateModal = () => {
+    setSelectedPoll(null);
+    setShowCreateModal(true);
+  };
+
   const HandleNotification = () => {
     setNotify(true);
   };
@@ -129,84 +138,14 @@ const Voting = () => {
     }
   };
 
-  useEffect(() => {
-    handleAllPolls();
-  }, []);
+  const allPolls = polls.filter(
+    (poll) => poll?.options?.length > 1 && !poll.is_closed
+  );
 
   const renderPolls = () => {
     switch (viewType) {
-      // case "private":
-      //   const isPrivate = polls.filter(
-      //     (poll) =>
-      //       poll.poll_access.toLowerCase() === "private" &&
-      //       poll?.options?.length > 1
-      //   );
-      //   if (isLoading) {
-      //     return <Spin />;
-      //   } else if (isPrivate.length === 0) {
-      //     return <p className="mt-20">No polls to display</p>;
-      //   } else {
-      //     return isPrivate.length > 0 ? (
-      //       isPrivate
-      //         ?.reverse()
-      //         .map((poll, index) => (
-      //           <Polls
-      //             key={index}
-      //             onClick={() => HandlePoll(poll)}
-      //             authorName={poll.creator.username}
-      //             createdAt={formatDate(poll.created_at)}
-      //             question={poll.question}
-      //             options={poll?.options?.length > 1 && poll?.options}
-      //             daysRemaining={formatDate(poll.close_time)}
-      //             backgroundImageUrl={
-      //               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-      //             }
-      //             className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-      //           />
-      //         ))
-      //     ) : (
-      //       <p className="mt-20">No polls to display</p>
-      //     );
-      //   }
-      // case "public":
-      //   const isPublic = polls.filter(
-      //     (poll) =>
-      //       poll.poll_access.toLowerCase() === "public" &&
-      //       poll?.options?.length > 1
-      //   );
-      //   if (isLoading) {
-      //     return <Spin />;
-      //   } else if (isPublic.length === 0) {
-      //     return <p className="mt-20">No polls to display</p>;
-      //   } else {
-      //     return isPublic.length > 0 ? (
-      //       isPublic
-      //         ?.reverse()
-      //         .map((poll, index) => (
-      //           <Polls
-      //             key={index}
-      //             onClick={() => HandlePoll(poll)}
-      //             authorName={poll.creator.username}
-      //             createdAt={formatDate(poll.created_at)}
-      //             question={poll.question}
-      //             options={poll?.options?.length > 1 && poll?.options}
-      //             daysRemaining={formatDate(poll.close_time)}
-      //             backgroundImageUrl={
-      //               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-      //             }
-      //             className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
-      //           />
-      //         ))
-      //     ) : (
-      //       <p className="mt-20">No polls to display</p>
-      //     );
-      //   }
       case "all":
       default:
-        const allPolls = polls.filter(
-          (poll) => poll?.options?.length > 1 && !poll.is_closed
-        );
-
         if (isLoading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
@@ -220,10 +159,10 @@ const Voting = () => {
                   key={index}
                   onClick={() => HandlePoll(poll)}
                   authorName={poll.creator.username}
-                  createdAt={formatDate(poll.created_at)}
+                  createdAt={poll.created_at}
                   question={poll.question}
                   options={poll?.options?.length > 1 && poll?.options}
-                  daysRemaining={formatDate(poll.close_time)}
+                  daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -235,6 +174,57 @@ const Voting = () => {
             <p className="mt-20">No polls to display</p>
           );
         }
+    }
+  };
+
+  const allFindPolls = findPolls.filter(
+    (poll) => poll?.options?.length > 1 && !poll.is_closed
+  );
+
+  const renderFindPolls = () => {
+    switch (viewType) {
+      case "all":
+      default:
+        if (isLoading) {
+          return <Spin />;
+        } else if (allFindPolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return allFindPolls.length > 0 ? (
+            allFindPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          ) : (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        }
+    }
+  };
+
+  const isSearching = searchText.trim() !== "";
+
+  const renderPollsOrFindPolls = () => {
+    if (isSearching) {
+      return renderFindPolls();
+    } else {
+      return renderPolls();
     }
   };
 
@@ -279,31 +269,18 @@ const Voting = () => {
     );
   };
 
-  const [searchText, setSearchText] = useState("");
-
   const onSearch = (text) => {
     setSearchText(text);
-    onFetchPolls(text);
   };
 
   const onFetchPolls = async (text) => {
     try {
       setIsLoading(true);
-      let res;
 
-      if (text === "") {
-        res = await PollsApi();
-      } else {
-        res = await axios.get(`${url}/api/polls/find/`, {
-          params: { find: text },
-          headers: {
-            Authorization: `Token ${getLoginToken()}`,
-          },
-        });
-      }
+      const res = await FindPollsApi(text);
 
       if (res.data.status) {
-        setPolls(res?.data?.data);
+        setFindPolls(res?.data?.data);
       }
     } catch (error) {
       console.log("findpolls", error);
@@ -314,26 +291,44 @@ const Voting = () => {
   };
 
   useEffect(() => {
+    handleAllPolls();
+  }, []);
+
+  useEffect(() => {
     const intervalId = setInterval(goToNextImage, 3000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    if (searchText !== "") {
-      onFetchPolls(searchText);
-    } else {
-      onFetchPolls();
-    }
-  }, [searchText]);
+    const closeExpiredPolls = async () => {
+      try {
+        polls.forEach(async (poll) => {
+          const closeTime = new Date(poll.close_time);
+          const currentTime = new Date();
+
+          if (currentTime >= closeTime) {
+            await ClosePollApi(poll.id);
+          }
+        });
+      } catch (error) {
+        console.error("Error closing polls:", error);
+        toast.error(error.message || "Error closing polls!");
+      }
+    };
+    closeExpiredPolls();
+
+    const intervalId = setInterval(closeExpiredPolls, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
       {!selectedPoll && (
-        <div className=" bg-[#f5f5f5]  w-full pt-36 lg:px-10 gap-6 ">
+        <div className=" bg-[#f5f5f5]  w-full  lg:px-10 gap-6 ">
           <div className="">
             {!Notify && !CastVote && (
-              <div className=" overflow-x-hidden bg-[#fff] py-10 px-6 md:hidden">
+              <div className=" overflow-x-hidden bg-[#fff] px-6 md:hidden">
                 <h1>Voting</h1>
                 <h2 className="mt-6 ">Hello, {userInfo.username}</h2>
                 <span className="text-[14px] ">
@@ -350,6 +345,8 @@ const Voting = () => {
                   HandleNotification={HandleNotification}
                   HandleCastVote={HandleCastVote}
                   showCreateModal={() => setShowCreateModal((prev) => !prev)}
+                  // setNotify={setNotify}
+                  // handleShowCreateModal={handleShowCreateModal}
                 />
               </div>
             )}
@@ -420,7 +417,7 @@ const Voting = () => {
                   Private
                 </button> */}
               </div>
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
               <Dialog
                 open={showCreateModal}
                 onClose={() => setShowCreateModal((prev) => !prev)}
@@ -489,7 +486,7 @@ const Voting = () => {
                   Private
                 </button> */}
               </div>
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
               <Dialog
                 open={showCreateModal}
                 onClose={() => setShowCreateModal((prev) => !prev)}
@@ -505,7 +502,8 @@ const Voting = () => {
             <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
               <PollsNotification
                 setNotify={setNotify}
-                showCreateModal={() => setShowCreateModal((prev) => !prev)}
+                handleShowCreateModal={handleShowCreateModal}
+                // showCreateModal={handleShowCreateModal}
               />
             </div>
           </div>
@@ -526,9 +524,9 @@ const Voting = () => {
 
             <Polls
               authorName={APoll.creator.username}
-              createdAt={formatDate(APoll.created_at)}
+              createdAt={APoll.created_at}
               question={APoll.question}
-              daysRemaining={formatDate(APoll.close_time)}
+              daysRemaining={APoll.close_time}
               isClosed={APoll.is_closed}
               cast={APoll.id}
               selectedOptionId={selectedOptionId}
@@ -583,9 +581,9 @@ const Voting = () => {
                   <Polls
                     className="lg:max-w-full lg:p-6"
                     authorName={APoll.creator.username}
-                    createdAt={formatDate(APoll.created_at)}
+                    createdAt={APoll.created_at}
                     question={APoll.question}
-                    daysRemaining={formatDate(APoll.close_time)}
+                    daysRemaining={APoll.close_time}
                     isClosed={APoll.is_closed}
                     cast={APoll.id}
                     selectedOptionId={selectedOptionId}
@@ -610,7 +608,7 @@ const Voting = () => {
                     onClick={CastPaidVotes}
                     className="w-[100%] p-6 mt-4 cursor-pointer"
                      authorName={"authorName"}
-                    createdAt={formatDate(poll.created_at)}
+                    createdAt={poll.created_at}
                     question={APoll.question}
                     options={APoll?.options?.length > 1 && APoll?.options}
                     daysRemaining={APoll.close_time}

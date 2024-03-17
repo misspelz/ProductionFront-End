@@ -8,11 +8,13 @@ import RewardHeader from "components/Rewards/RewardHeader";
 import ModalButton from "components/Modals/ModalButton";
 import coin from "../../assets/profile_images/Ooni_coin.png";
 import { useOpenModal } from "Hooks/useOpenModal";
+import { useState } from "react";
 
 const Payment = () => {
   const navigate = useNavigate();
   const { modal } = useModal();
   const { handleClick } = useOpenModal();
+  const [data, setData] = useState({});
 
   return (
     <div className="rewards">
@@ -46,7 +48,11 @@ const Payment = () => {
           <div className="payment_container_bottom">
             <h2>Withdrawal information</h2>
 
-            <CustomDropdown stallValue="Select bank" menu={banks} />
+            <CustomDropdown
+              stallValue="Select bank"
+              menu={banks}
+              setData={setData}
+            />
 
             <div className="payment_input">
               <input type="text" placeholder="Accont name" />

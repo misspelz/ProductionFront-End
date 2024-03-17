@@ -12,26 +12,27 @@ import { useEditProfile } from "pages/Profile/useEditProfile";
 import ErrorMessage from "./ErrorMessage";
 import Spinner from "components/Spinner";
 import { useProfileDetails } from "pages/Profile/useProfileDetails";
+import { mainURL } from "services/profile_business_API";
 
 const EditProfile = ({ onModalClose }) => {
   const { profile: userInfo } = useProfileDetails();
   const { updateStatus, updating } = useEditProfile();
 
+  const [cover, setCover] = useState("");
+  const [profile, setProfile] = useState("");
   const [data, setData] = useState({
     first_name: userInfo?.data?.user?.first_name || "",
     last_name: userInfo?.data?.user?.last_name || "",
     occupation: userInfo?.data?.occupation || "",
-    address: {
-      city: userInfo?.data?.address?.city || "",
-    },
+    city: userInfo?.data?.address?.city || "",
     bio: userInfo?.data?.bio || "",
     day: new Date(userInfo?.data?.date_of_birth).getDate() || "",
-    month: new Date(userInfo?.data?.date_of_birth).getMonth() || "",
+    month: new Date(userInfo?.data?.date_of_birth).getMonth() + 1 || "",
     year: new Date(userInfo?.data?.date_of_birth).getFullYear() || "",
     gender: userInfo?.data?.gender || "",
+    cover_image: userInfo?.data?.cover_image || "",
+    profile_picture: userInfo?.data?.profile_picture || "",
   });
-  const [cover, setCover] = useState("");
-  const [profile, setProfile] = useState("");
   const [bioValidate, setBioValidate] = useState(false);
 
   const handleCover = (event) => {
@@ -50,7 +51,7 @@ const EditProfile = ({ onModalClose }) => {
 
     setData((prev) => ({
       ...prev,
-      media: file,
+      profile_picture: file,
     }));
 
     setProfile(URL.createObjectURL(file));
@@ -76,24 +77,24 @@ const EditProfile = ({ onModalClose }) => {
 
     const dateOfBirth = `${data.year}-${data.month}-${data.day}`;
 
-    const updatingData = {
-      user: {
-        first_name: data.first_name,
-        last_name: data.last_name,
-      },
-      address: {
-        city: data.city,
-      },
-      date_of_birth: dateOfBirth,
-      bio: data.bio,
-      occupation: data.occupation,
-      gender: data.gender,
-    };
+    /**
+     * Inserting data
+     */
 
-    updating(updatingData);
+    const formData = new FormData();
+
+    formData.append("first_name", data?.first_name);
+    formData.append("last_name", data?.last_name);
+    formData.append("city", data?.address?.city);
+    formData.append("date_of_birth", dateOfBirth);
+    formData.append("bio", data.bio);
+    formData.append("occupation", data.occupation);
+    formData.append("gender", "Male"); //data?.gender
+    formData.append("profile_picture", data.profile_picture);
+    formData.append("cover_image", data.cover_image);
+
+    updating(formData);
   };
-
-  console.log(userInfo);
 
   return (
     <ModalWrapper>
@@ -108,12 +109,21 @@ const EditProfile = ({ onModalClose }) => {
             <div className="w-full h-full">
               {cover ? (
                 <img
-                  src={cover ? cover : img}
+                  src={cover}
                   alt="User"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover "
                 />
               ) : (
-                <div className="w-full h-full bg-[#4f0da3] flex justify-center items-center flex-col text-white gap-[10px]">
+                <div
+                  className={`w-full h-full flex justify-center items-center flex-col text-white gap-[10px]`}
+                  style={{
+                    background: data?.cover_image
+                      ? `url('${mainURL}${data?.cover_image}')`
+                      : "#4f0da3",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
                   <MdOutlineAddPhotoAlternate className="text-[20px]" />
                   <h2 className="text-[14px]">Add cover photo</h2>
                 </div>
@@ -123,6 +133,7 @@ const EditProfile = ({ onModalClose }) => {
             <input
               type="file"
               id="cover"
+              accept="image/*"
               className="hidden"
               onChange={handleCover}
             />
@@ -143,12 +154,22 @@ const EditProfile = ({ onModalClose }) => {
                   className="absolute w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <div className="w-full h-full rounded-[80%] border-[#4f0da3] bg-[#f3f3f3]"></div>
+                <div
+                  className="w-full h-full rounded-[80%] border-[#4f0da3] bg-[#f3f3f3]"
+                  style={{
+                    background: data?.profile_picture
+                      ? `url('${mainURL}${data?.profile_picture}')`
+                      : "#4f0da3",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
               )}
 
               <input
                 type="file"
                 id="profile"
+                accept="image/*"
                 className="hidden"
                 onChange={handleProfile}
               />
@@ -193,7 +214,7 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Current city"
               name="city"
               onChange={handleChange}
-              value={data?.address?.city || ""}
+              value={data?.city || ""}
             />
           </div>
 
@@ -234,7 +255,7 @@ const EditProfile = ({ onModalClose }) => {
               placeholder="Bio"
               onChange={handleChange}
               name="bio"
-              className="!w-full h-[80px] resize-none lg:h-[100px] xl:h-[120px]"
+              className="!w-full h-[80px] resize-none lg:h-[70px] xl:h-[90px]"
               value={data?.bio}
             ></textarea>
 

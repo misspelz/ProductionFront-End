@@ -104,7 +104,7 @@ const VerifyForm = () => {
     <>
       <div className="verify-form-container">
         <div className="be-condo">Please verify your email</div>
-        <div className="ins-tst-dig">
+        <div className="ins-tst-dig text-center">
           We sent a 5 digits code to your email address
           <br />
           {registrationEmail}

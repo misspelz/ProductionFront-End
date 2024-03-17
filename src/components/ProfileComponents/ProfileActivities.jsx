@@ -9,48 +9,57 @@ import ContainerError from "components/ContainerError";
 const ProfileActivities = () => {
   const { userPostsStatus, userPosts, tab } = useAllUserPosts();
 
+  const updatingText =
+    tab === "all"
+      ? "Posts"
+      : tab === "voice_notes"
+      ? "Voice notes"
+      : tab === "locations"
+      ? "Locations"
+      : tab;
+
   return (
     <div className="profile_activities">
       <div className="cta-btns">
         <ProfileActivityButton
-          count={tab === "all" ? userPosts?.posts.length : ""}
+          count={tab === "all" ? userPosts?.data?.length : ""}
           param="all"
         >
           All Posts
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "images" ? userPosts?.posts.length : ""}
+          count={tab === "images" ? userPosts?.data?.length : ""}
           param="images"
         >
           Images
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "videos" ? userPosts?.posts.length : ""}
+          count={tab === "videos" ? userPosts?.data?.length : ""}
           param="videos"
         >
           Videos
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "voice_notes" ? userPosts?.posts.length : ""}
+          count={tab === "voice_notes" ? userPosts?.data?.length : ""}
           param="voice_notes"
         >
           Voice note
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "locations" ? userPosts?.posts.length : ""}
+          count={tab === "locations" ? userPosts?.data?.length : ""}
           param="locations"
         >
           Location
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "musics" ? userPosts?.posts.length : ""}
+          count={tab === "musics" ? userPosts?.data?.length : ""}
           param="musics"
         >
-          Music
+          Musics
         </ProfileActivityButton>
         <ProfileActivityButton
-          count={tab === "files" ? userPosts?.posts.length : ""}
-          param="files"
+          count={tab === "file" ? userPosts?.data.length : ""}
+          param="file"
         >
           Files
         </ProfileActivityButton>
@@ -60,10 +69,10 @@ const ProfileActivities = () => {
 
       {userPostsStatus === "pending" ? (
         <ContainerLoading height={80} unit="px" />
-      ) : userPostsStatus === "pending" ? (
+      ) : userPostsStatus === "error" ? (
         <ContainerError height={80} unit="px" />
-      ) : userPosts.posts.length === 0 ? (
-        <EmptyResults type="posts" />
+      ) : !userPosts?.data?.length ? (
+        <EmptyResults type={updatingText} />
       ) : (
         <div className="profile_posts">
           {Array.from({ length: 24 }, (_, i) => i + 1).map((i) => (
