@@ -15,14 +15,23 @@ export default function Welcome() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [show, setShow] = useState(false);
+  const [userName, setUserName] = useState()
+  const [about, setAbout] = useState()
+  const [image, setImage] = useState();
   const navigation = useNavigate()
 
   const [trendingSongs, setTrendingSongs] = useState([]);
   const authToken = localStorage.getItem("authToken")
 
+  const handleFileChange = (e)=>{
+    if (e.target.files){
+      setImage(e.target.files[0])
+    }
+  }
+
   const GetTrendingSongs = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/artists/songs/trending/`, {
+      .get(`https://development.2geda.net/api/stereo/songs/trending/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
@@ -34,6 +43,21 @@ export default function Welcome() {
         console.log(JSON.stringify(res.data) + "trending====");
       });
   };
+  const RegisterArtist = () => {
+    console.log(image)
+    const payload = {
+      artist_name: userName,
+      about: about,
+      brand_image: image
+    }
+    axios.post("https://development.2geda.net/api/stereo/artists/register/",payload, {headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": 'multipart/form-data',
+      "X-CSRFToken": process.env.REACT_TOKEN,
+    }}).then(res=>{
+      console.log(res)
+    })
+  }
 
   useEffect(() => {
     GetTrendingSongs();
@@ -44,7 +68,7 @@ export default function Welcome() {
   return (
     <LayoutMain>
       <Header1 />
-      <div className="bg-[#fff] mt-10 sm:mt-0 sm:mx-5 pt-10 pb-20">
+      <div className="bg-[#fff] mt-10 sm:mt-0 sm:mx-5 pt-10 pb-20 overflow-scroll">
         <div
           id="heading-desktop"
           className="hidden sm:flex sm:flex-col sm:px-4">
@@ -81,7 +105,7 @@ export default function Welcome() {
               style={{ scrollbarWidth: "none" }}>
                 {trendingSongs?.length>0?trendingSongs?.map(res=>{
                   return (
-                  <TrendingCard category={res.title}/>
+                  <TrendingCard category={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.cover_image}`:null}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -136,28 +160,24 @@ export default function Welcome() {
                 <input
                   type="text"
                   placeholder="Username"
-                  className="max-w-[351px] px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
+                  onChange={(e)=>setUserName(e.target.value)}
+                  className="max-w-[351px] text-black px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
                 />
-                <input
+                {/* <input
                   type="text"
-                  placeholder="Artist name"
+                  placeholder="About"
                   className="max-w-[351px] px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
-                />
+                /> */}
+                <textarea onChange={(e)=>setAbout(e.target.value)} placeholder="About"
+                  className="max-w-[351px] text-black px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]" cols={6}></textarea>
                 <div className="relative">
                   <input
-                    type={show ? "text" : "password"}
+                    type={"file"}
+                    onChange={handleFileChange}
                     placeholder="Create password"
-                    className="max-w-[351px] px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
+                    className="max-w-[351px] text-black px-3 mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
                   />
-                  <button
-                    onClick={() => setShow(!show)}
-                    className="absolute top-4 right-5 w-[18.34px] h-[9.64px]">
-                    {show ? (
-                      <BsEyeSlash width={18.34} height={9.64} />
-                    ) : (
-                      <BsEye width={18.34} height={9.64} />
-                    )}
-                  </button>
+                  
                 </div>
                 <div className="flex items-center mb-5 gap-1">
                   <span className="font-light text-xs">
@@ -174,7 +194,7 @@ export default function Welcome() {
                   </a>
                 </div>
                 <div className="flex justify-center mb-5">
-                  <button className="bg-[#4F0DA3] text-white py-2 px-20 rounded-md">
+                  <button onClick={()=>RegisterArtist()} className="bg-[#4F0DA3] text-white py-2 px-20 rounded-md">
                     Sign Up
                   </button>
                 </div>

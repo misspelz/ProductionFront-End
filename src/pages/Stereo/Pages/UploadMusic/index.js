@@ -14,9 +14,10 @@ import NothingHere from "../../Assets/nothing_here.json"
 
 export default function UploadMusic() {
   const [recentUpload, setRecentUpload] = useState([])
+  const [category, setCategory] = useState([])
   const GetRecentUploads = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/artists/songs/recent_upload/`, {
+      .get(`https://development.2geda.net/api/stereo/artist/songs/recent_upload/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
@@ -29,14 +30,30 @@ export default function UploadMusic() {
       });
   };
 
+  const GetCategories = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/categories/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setCategory(res?.data?.data);
+        console.log(category + "category state===");
+        console.log(JSON.stringify(res.data) + "category====");
+      });
+  };
+
   useEffect(() => {
     GetRecentUploads();
+    GetCategories()
   }, []);
   return (
-    <LayoutMain>
+    <UploadMusicLayout>
       <UploadSongHeader />
       <div className="pt-20 md:pt-10 lg:pt-10 xl:pt-0">
-        <div className="sm:hidden flex flex-col px-5">
+        <div className="lg:hidden xl:hidden flex flex-col px-5">
           <span className="font-medium text-base mt-4">Artist Overview</span>
           <section className="grid grid-cols-2 mt-4 gap-3">
             <main className="bg-[#F5F5F5] flex flex-col w-full h-full justify-center items-center py-8 rounded-md">
@@ -186,6 +203,6 @@ export default function UploadMusic() {
 
         <div></div>
       </div>
-    </LayoutMain>
+    </UploadMusicLayout>
   );
 }

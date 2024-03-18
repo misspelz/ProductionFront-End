@@ -26,7 +26,7 @@ export default function RightSider() {
 
   const GetAlbums = async() => {
     await axios
-      .get(`https://development.2geda.net/api/stereo/album/`, {
+      .get(`https://development.2geda.net/api/stereo/albums/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
@@ -48,9 +48,9 @@ export default function RightSider() {
         },
       })
       .then((res) => {
-        setArtists(res?.data?.data);
-        console.log(artists + "artist state===");
-        console.log(JSON.stringify(res.data) + "artists====");
+        setArtists(res.data.data);
+        console.log(JSON.stringify(artists) + "artist state===");
+        console.log(JSON.stringify(res.data.data) + "artists====");
       });
   };
 
@@ -250,8 +250,8 @@ export default function RightSider() {
           /> */}
           {albums.length>0?albums.map(album=>{
             return <AlbumCard
-            img={require("../Assets/Image2.jpeg")}
-            title={"Are we annoyed?"}
+            img={album.cover_image}
+            title={album.name}
             artist={"Billie Eilish"}
           />
           }):<div className="flex justify-center items-center">
@@ -279,9 +279,9 @@ export default function RightSider() {
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} /> */}
-          {artists>0?artists.map(artist=>{
-            return(<ArtistTabCard onClick={handleOpenModal} />)
-          }):<div className="flex justify-center items-center">
+          {artists.length>0?artists.map(artist =>{
+          return(<ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={handleOpenModal} />)
+        }):<div className="flex justify-center items-center">
           <Lottie
                 animationData={NothingHere}
                 style={{

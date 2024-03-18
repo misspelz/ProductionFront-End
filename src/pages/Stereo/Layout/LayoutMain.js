@@ -26,7 +26,7 @@ export default function LayoutMain({ children }) {
     }
   }, []);
   return (
-    <div className="w-auto">
+    <div className="w-auto overflow-scroll">
       {/* <div className="ml-90">
         <Header1 />
       </div>
@@ -79,7 +79,7 @@ export default function LayoutMain({ children }) {
         {children}
       </div> */}
 
-      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5] mt-10">
       <div className="col-span-7">{children}</div>
       <div className="col-span-5">
               <RightSider />

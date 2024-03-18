@@ -18,7 +18,7 @@ export default function UploadMusic() {
   const navigation = useNavigate()
   const GetRecentUploads = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/artists/songs/recent_upload/`, {
+      .get(`https://development.2geda.net/api/stereo/artist/songs/recent_upload/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,

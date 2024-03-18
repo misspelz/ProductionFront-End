@@ -51,25 +51,31 @@ export default function UploadMusicLayout({ children }) {
         <div class="h-32 rounded-lg bg-gray-200"></div>
       </div> */}
 
-      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5]">
+      <div className="lg:grid xl:grid lg:grid-cols-12 xl:grid-cols-12 hidden bg-[#F5F5F5]">
         {isCollapsed ? (
-          <div className="col-span-2 h-screen bg-[#4F0DA3] absolute w-[50%] z-40 sm:w-full top-0 left-0">
+          <div className="col-span-2">
             <Asidebar />
           </div>
         ) : null}
         <div className="col-span-12">
           {/* <DesktopNavbar /> */}
-          <Header/>
-          <div className="grid grid-cols-12">
+          
+          <div className="grid grid-cols-12 ml-20">
+            <div className="col-span-2"> </div>
+            <div className="col-span-10">
+          <Header />
+          </div>
+          </div>
+          <div className="grid grid-cols-12 ml-14">
           <div className="col-span-2"> </div>
-            <div className="col-span-7">{children}</div>
-            <div className="col-span-5">
+            <div className="col-span-6 ml-5">{children}</div>
+            <div className="col-span-4">
               <UploadMusicSider />
             </div>
           </div>
         </div>
       </div>
-      <div className="block sm:hidden">
+      <div className="block lg:hidden xl:hidden">
         <div
           className={isCollapsed ? "ctrl-btn" : "ctrl-btn lst"}
           // className={`sticky top-0 left-0`}

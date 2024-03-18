@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import person from "../Assets/artist.jpeg";
 import ModalWrapper2 from "../Components/Modals/ModalWrapper2";
 import Edit from "../Assets/ic_round-edit.svg";
@@ -19,23 +19,44 @@ export default function UploadMusicSider() {
   const [uploadRadio, setUploadRadio] = useState()
   const authToken = localStorage.getItem("authToken")
   const fileInput = useRef(null)
+  const [category, setCategory] = useState([])
+
+  const GetCategories = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/categories/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setCategory(res?.data?.data);
+        console.log(category + "category state===&&&");
+        console.log(JSON.stringify(res.data) + "category====");
+      });
+  };
+
 
   const UploadSong = () => {
     console.log(audio)
     const payload = {
       title:song,
-      audio_file: fileInput,
+      audio_file: audio,
       artist: artist
     }
     axios.post(`https://development.2geda.net/api/stereo/songs/`, payload, {
       headers: {
         Authorization: `Bearer ${authToken}`,
+        "Content-Type": 'multipart/form-data',
         "X-CSRFToken": process.env.REACT_TOKEN,
       },
     }).then(res=>{
       console.log(res)
     })
   }
+  useEffect(()=>{
+    GetCategories()
+  },[])
   return (
     <div className="bg-white lg:px-10 xl:px-10 md:px-5 pt-5 w-auto h-full mx-10">
       <div className="flex justify-between items-center lg:mt-5 xl:mt-5">
@@ -212,6 +233,11 @@ export default function UploadMusicSider() {
                   placeholder="Producer"
                   className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
                 />
+                <select placeholder={"Category"} className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]">
+                  {category.map(res=>{
+                    <option className="text-white" value={res.id}>{res.name}</option>
+                  })}
+                </select>
         </div>
         <div className="flex justify-center items-center pb-4 mt-5">
         <button onClick={()=>UploadSong()} className="bg-[#4F0DA3] rounded-md py-2 w-1/2 text-white">Upload</button>

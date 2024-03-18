@@ -18,31 +18,50 @@ import Charts from "./StereoHomeTabs/Charts";
 import Artists from "./StereoHomeTabs/Artists";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 export default function StereoHome() {
   const [activeTab, setActiveTab] = useState(0);
   const [topAlbums, setTopAlbums] = useState([])
+  const [quickpicks, setQuickPicks] = useState([])
   const authToken = localStorage.getItem("authToken")
   const navigation = useNavigate()
   
 
   const GetTopAlbums = () => {
     axios
-      .get(`https://development.2geda.net/api/stereo/album/top-album/`, {
+      .get(`https://development.2geda.net/api/stereo/albums/top-album/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "X-CSRFToken": process.env.REACT_TOKEN,
         },
       })
       .then((res) => {
-        setTopAlbums(JSON.stringify(res?.data?.data));
+        setTopAlbums(res?.data?.data);
         console.log(topAlbums + "topAlbums state===");
         console.log(JSON.stringify(res.data) + "topAlbums====");
       });
   };
 
+  const GetQuickPicks = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/trending/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setQuickPicks(res?.data?.data);
+        console.log(quickpicks + "quickpicks state===");
+        console.log(JSON.stringify(res.data) + "quickpicks====");
+      });
+  };
+
   useEffect(()=>{
     GetTopAlbums()
+    GetQuickPicks()
   },[])
 
   const handleTabClick = (index) => {
@@ -254,18 +273,32 @@ export default function StereoHome() {
               {/* cards1 */}
               <div style={{ overflowX: "hidden" }}>
                 <div
+                className={quickpicks?.length>0?"flex mx-3 gap-3 overflow-x-scroll justify-between h-full":null}
                   style={{
-                    display: "flex",
-                    marginLeft: 10,
-                    marginRight: 10,
-                    gap: 10,
-                    overflowX: "scroll",
+                  //   display: "flex",
+                  //   marginLeft: 10,
+                  //   marginRight: 10,
+                  //   gap: 10,
+                  //   overflowX: "scroll",
                     scrollbarWidth: "none",
-                    justifyContent: "space-between",
-                    height: "100%",
-                    // position: "unset"
-                  }}>
-                  <PicksCard />
+                  //   justifyContent: "space-between",
+                  //   height: "100%",
+                  //   // position: "unset"
+                  }}
+                  >
+                    {quickpicks?.length>0?quickpicks?.map(res=>{
+                  return (
+                  <PicksCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+
+                  {/* <PicksCard />
                   <PicksCard title={"Take me home ft Alan Walker"} />
                   <PicksCard />
                   <PicksCard />
@@ -274,7 +307,7 @@ export default function StereoHome() {
                   <PicksCard />
                   <PicksCard />
                   <PicksCard />
-                  <PicksCard />
+                  <PicksCard /> */}
                 </div>
               </div>
               {/* </div> */}
@@ -388,17 +421,29 @@ export default function StereoHome() {
                 </button>
               </div>
               <div
+              className={topAlbums?.length>0?"flex mx-3 gap-3 overflow-x-scroll justify-between h-full":null}
                 style={{
-                  display: "flex",
-                  marginLeft: 10,
-                  marginRight: 10,
-                  gap: 10,
-                  overflowX: "scroll",
+                  // display: "flex",
+                  // marginLeft: 10,
+                  // marginRight: 10,
+                  // gap: 10,
+                  // overflowX: "scroll",
                   scrollbarWidth: "none",
-                  justifyContent: "space-between",
-                  height: "100%",
+                  // justifyContent: "space-between",
+                  // height: "100%",
                 }}>
-                <HitsCard name={"When we fall asleep"} />
+                                      {topAlbums?.length>0?topAlbums?.map(res=>{
+                  return (
+                  <HitsCard name={res.name} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist.artist_name} />
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+                {/* <HitsCard name={"When we fall asleep"} />
                 <HitsCard
                   img={require("../Assets/Image3.jpeg")}
                   name={"I told them"}
@@ -409,7 +454,7 @@ export default function StereoHome() {
                 <HitsCard img={require("../Assets/Image4.jpeg")} />
                 <HitsCard />
                 <HitsCard img={require("../Assets/Image4.jpeg")} />
-                <HitsCard />
+                <HitsCard /> */}
               </div>
 
               {/* special picks */}
