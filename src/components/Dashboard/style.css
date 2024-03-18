@@ -427,12 +427,7 @@
   color: #000;
   background: #fff;
 }
-.inpu-com-box {
-  position: fixed;
-  top: 82vh;
-  width: 38%;
-  margin-left: 40px;
-}
+
 .lig {
   background: #f5f5f5 !important;
 }
@@ -457,24 +452,11 @@
   border: 1px solid #d0d5dd;
   margin: 5px 0;
 }
-.inp-sen-send {
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  color: #4f0da3;
-  gap: 10px;
-  padding: 0 10px;
-}
+
 .cur {
   cursor: pointer;
 }
-.pic-inpt {
-  width: 90%;
-  height: 25px;
-  outline: none;
-  border: none;
-  caret-color: #4f0da3;
-}
+
 
 /* chat short */
 .das-mess-container {
@@ -628,20 +610,8 @@
   color: #403f3f;
   text-align: center;
 }
-.pic-inptn {
-  cursor: pointer;
-}
-@media only screen and (max-width: 1200px) {
-  .inpu-com-box {
-    top: 98vh;
-    width: 38%;
-    margin-left: 60px;
-  }
-  .pic-bx-cont {
-    top: 80vh;
-    margin-left: 40px;
-  }
-}
+
+
 @media only screen and (max-width: 1150px) {
   .select-cat-container {
     width: 260px;
@@ -661,15 +631,6 @@
   .feed-box {
     min-width: 68% !important;
   }
-  .inpu-com-box {
-    top: 95vh;
-    width: 42%;
-    margin-left: 150px;
-  }
-  .pic-bx-cont {
-    top: 80vh;
-    left: 0;
-  }
 }
 @media only screen and (max-width: 1000px) {
   .ads-img {
@@ -681,14 +642,7 @@
   .right-side-container {
     display: none;
   }
-  .inpu-com-box {
-    right: 8%;
-  }
-  .pic-bx-cont {
-    top: 80vh;
-    left: 5%;
-    width: 70%;
-  }
+
 }
 @media only screen and (max-width: 940px) {
   .first-side-container {
@@ -696,27 +650,12 @@
     margin-bottom: 30px;
   }
 }
-@media only screen and (max-width: 830px) {
-  .inpu-com-box {
-    right: 0%;
-    width: 80%;
-  }
-  .pic-bx-cont {
-    top: 80vh;
-    left: 5%;
-    width: 70%;
-  }
-}
+
 @media only screen and (max-width: 700px) {
   .post-body-box {
     font-size: 14px;
   }
-  .pic-bx-cont {
-    top: 80vh;
-    right: 0%;
-    width: 80%;
-    margin-left: 40px;
-  }
+
 }
 @media only screen and (max-width: 600px) {
   .post-body-box {
@@ -761,21 +700,10 @@
   .post-likes-co {
     gap: 5px;
   }
-  .inpu-com-box {
-    top: 85vh;
-    width: 90%;
-  }
-  .pic-bx-cont {
-    top: 68vh;
-    left: 4%;
-    width: 80%;
-  }
+
 }
 @media only screen and (max-width: 380px) {
-  .inpu-com-box {
-    right: 5%;
-    width: 85%;
-  }
+
   .feed-hr {
     width: 80%;
   }
@@ -811,11 +739,6 @@
   }
   .liker-name-and-total {
     font-size: 12px;
-  }
-  .pic-bx-cont {
-    top: 68vh;
-    margin-left: 5px;
-    width: 80%;
   }
 }
 @media only screen and (max-width: 290px) {

@@ -10,6 +10,7 @@ export const Poll = ({
   cast,
   selectedOptionId,
   handleOptionChange,
+  
 }) => {
   const percent =
     totalVotes !== 0 ? Math.round((allVotes / totalVotes) * 100) : 0;

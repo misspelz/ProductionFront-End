@@ -30,7 +30,12 @@ import AD1 from "assets/images/AD1.png";
 import AD2 from "assets/images/AD2.png";
 import AD3 from "assets/images/AD3.png";
 import AD4 from "assets/images/AD3.png";
+import promote from "assets/promote.png";
 import EditPoll from "components/Modals/Vote/EditPoll/EditPoll";
+import Modal from "components/Modals/Modal";
+import { FaTimes } from "react-icons/fa";
+import PricingComponent from "components/PollPomotion";
+import ActionButton from "components/Commons/Button";
 
 const MyPolls = () => {
   const {
@@ -62,6 +67,7 @@ const MyPolls = () => {
   const [singlePollResult, setSinglePollResult] = useState(false);
   const [viewResults, setViewResults] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [findPolls, setFindPolls] = useState([]);
 
   const nav = useNavigate();
 
@@ -71,6 +77,8 @@ const MyPolls = () => {
   const [selectedPoll, setSelectedPoll] = useState(null);
   const [showPaidVotes, setShowPaidVotes] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
+  const [PromoteSuccess, setPromoteSuccess] = useState(false);
 
   const HandlePoll = (pollData) => {
     setSelectedPoll(pollData);
@@ -98,10 +106,6 @@ const MyPolls = () => {
     setViewResults((prev) => !prev);
   };
 
-  // const handleShowCreateModal = () => {
-  //   setShowCreateModal(true);
-  // };
-
   const HandleEdit = (poll) => {
     setSinglePoll(poll);
     setShowEditModal(true);
@@ -122,6 +126,16 @@ const MyPolls = () => {
     setShowEditModal(false);
   };
 
+  const HandlePromote = (poll) => {
+    setSinglePoll(poll);
+    setShowPromoteModal(true);
+  };
+
+  const HandlePromoteModal = () => {
+    setShowPromoteModal(false);
+    setShowAction(false);
+  };
+
   const renderPolls = () => {
     switch (viewType) {
       case "active":
@@ -131,7 +145,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (filteredActivePolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             filteredActivePolls &&
@@ -154,6 +168,7 @@ const MyPolls = () => {
                   onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
@@ -165,7 +180,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (filteredEndedPolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             filteredEndedPolls &&
@@ -188,6 +203,7 @@ const MyPolls = () => {
                   onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
@@ -200,7 +216,7 @@ const MyPolls = () => {
         if (loading) {
           return <Spin />;
         } else if (allPolls.length === 0) {
-          return <p className="mt-20">No polls to display</p>;
+          return <p className="mt-20 text-center">No polls to display</p>;
         } else {
           return (
             allPolls.length > 0 &&
@@ -224,11 +240,140 @@ const MyPolls = () => {
                   onView={() => handleViewResults(poll)}
                   HandleDelete={() => HandleDelete(poll)}
                   HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
           );
         }
+    }
+  };
+
+  const renderFindPolls = () => {
+    switch (viewType) {
+      case "active":
+        const filteredActivePolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredActivePolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            filteredActivePolls &&
+            filteredActivePolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+      case "ended":
+        const filteredEndedPolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (filteredEndedPolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            filteredEndedPolls &&
+            filteredEndedPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+      case "all":
+      default:
+        const allFindPolls =
+          findPolls && findPolls.filter((poll) => poll?.options?.length > 1);
+        if (loading) {
+          return <Spin />;
+        } else if (allFindPolls.length === 0) {
+          return (
+            <p className="mt-20 text-center">No matching polls to display</p>
+          );
+        } else {
+          return (
+            allFindPolls.length > 0 &&
+            allFindPolls
+              ?.reverse()
+              .map((poll, index) => (
+                <Polls
+                  key={index}
+                  onClick={() => HandlePoll(poll)}
+                  authorName={poll.creator.username}
+                  createdAt={poll.created_at}
+                  question={poll.question}
+                  options={poll?.options?.length > 1 && poll?.options}
+                  daysRemaining={poll.close_time}
+                  isClosed={poll.is_closed}
+                  backgroundImageUrl={
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  myPolls={true}
+                  onClose={() => handleShowcloseModal(poll)}
+                  onView={() => handleViewResults(poll)}
+                  HandleDelete={() => HandleDelete(poll)}
+                  HandleEdit={() => HandleEdit(poll)}
+                  HandlePromote={() => HandlePromote(poll)}
+                  className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                />
+              ))
+          );
+        }
+    }
+  };
+
+  const isSearching = searchText.trim() !== "";
+
+  const renderPollsOrFindPolls = () => {
+    if (isSearching) {
+      return renderFindPolls();
+    } else {
+      return renderPolls();
     }
   };
 
@@ -248,9 +393,7 @@ const MyPolls = () => {
       console.log("finduserpollsres", res);
 
       if (res?.data?.status) {
-        setPolls(res?.data?.data);
-        setActivePolls(res?.data?.data);
-        setEndedPolls(res?.data?.data);
+        setFindPolls(res?.data?.data);
       }
     } catch (error) {
       console.log("finduserpollserror", error);
@@ -260,6 +403,16 @@ const MyPolls = () => {
 
   const onSearch = (text) => {
     setSearchText(text);
+  };
+
+  const CheckOut = () => {
+    setPromoteSuccess(true);
+  };
+
+  const HandlePromotedPoll = () => {
+    setPromoteSuccess(false);
+    setShowPromoteModal(false);
+    setShowAction(false);
   };
 
   useEffect(() => {
@@ -297,25 +450,34 @@ const MyPolls = () => {
   }, []);
 
   return (
-    <div className="lg:bg-[#f5f5f5] lg:flex w-full pt-36  lg:px-10 lg:gap-6 ">
+    <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative">
       {!Notify && !CastVote && !showMyPolls && (
         <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
-          <div className="flex gap-3 items-center">
-            <FaArrowLeftLong
-              size={20}
-              onClick={goBack}
-              className="cursor-pointer text-lg mb-[0.5rem]"
-            />
+          <div className="flex flex-col gap-3 ">
+            <div className="flex gap-6 items-center">
+              <FaArrowLeftLong
+                size={20}
+                onClick={goBack}
+                className="cursor-pointer text-lg mb-[0.5rem]"
+              />
 
-            <FindPolls onFetchPolls={onFetchPolls} />
+              <h1>My Polls</h1>
+            </div>
+
+            <FindPolls
+              onSearch={onSearch}
+              onFetchPolls={onFetchPolls}
+              searchText={searchText}
+            />
 
             <div className="pb-[40px] ">
               <MyPollsCategories
                 viewType={viewType}
                 setViewType={setViewType}
               />
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
             </div>
+
             <Dialog open={showCreateModal} onClose={HandleClose} fullWidth>
               <CreatePoll onClose={HandleClose} fetchPolls={handleMyPolls} />
             </Dialog>
@@ -364,7 +526,7 @@ const MyPolls = () => {
                 viewType={viewType}
                 setViewType={setViewType}
               />
-              {renderPolls()}
+              {renderPollsOrFindPolls()}
             </div>
           )}
 
@@ -388,17 +550,16 @@ const MyPolls = () => {
         )} */}
 
           {/* WEB */}
-          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
+          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
             <PollsNotification
               setNotify={setNotify}
               handleShowCreateModal={handleShowCreateModal}
-              // showCreateModal={handleShowCreateModal}
             />
           </div>
         </div>
       )}
 
-      {showMyPolls && (
+      {showMyPolls && !showPromoteModal && (
         <div className="px-4 lg:hidden pb-[40px]">
           <FindPolls
             onSearch={onSearch}
@@ -417,17 +578,168 @@ const MyPolls = () => {
             searchText={searchText}
           />
           <MyPollsCategories viewType={viewType} setViewType={setViewType} />
-          {renderPolls()}
+          {renderPollsOrFindPolls()}
         </div>
       )}
 
-      {/* WEB */}
-      <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[90px] right-10 ">
-        <PollsNotification
-          setNotify={setNotify}
-          showCreateModal={() => setShowCreateModal((prev) => !prev)}
-        />
+      <div className="flex lg:hidden">
+        {showPromoteModal &&
+          !Notify &&
+          !CastVote &&
+          !showMyPolls &&
+          !showMyPolls &&
+          !PromoteSuccess && (
+            <Modal>
+              <div className="h-[90vh]  bg-white rounded-t-[30px] w-full absolute bottom-0 z-[999] p-8 ">
+                <div
+                  onClick={HandlePromoteModal}
+                  className="cursor-pointer flex justify-end"
+                >
+                  <FaTimes className="text-black text-xl" />
+                </div>
+
+                <img
+                  src={promote}
+                  alt="promote-poll-pics"
+                  className="h-[150px] w-full object-contain"
+                />
+
+                <h2 className="font-bold text-center text-[18px]">
+                  Promote your polls
+                </h2>
+                <p className="text-center">
+                  Promote your poll, attract a wider audience, and boost poll
+                  interaction effortlessly
+                </p>
+
+                <h3 className="font-bold text-[14px] mt-10">Select a plan</h3>
+
+                <div className="flex gap-2 w-full mt-4">
+                  <PricingComponent
+                    title="Basic"
+                    price="N1,000"
+                    duration="1 day"
+                  />
+                  <PricingComponent
+                    title="Standard"
+                    price="N5,000"
+                    duration="7 days"
+                  />
+                </div>
+                <div className="flex gap-2 w-full mt-4">
+                  <PricingComponent
+                    title="Premium"
+                    price="N9,000"
+                    duration="14 days"
+                  />
+                  <PricingComponent
+                    title="Pro"
+                    price="N14,000"
+                    duration="30 days"
+                  />
+                </div>
+
+                <div className="absolute bottom-10 w-[90%]">
+                  <ActionButton
+                    label={"Proceed to Checkout"}
+                    bg={"pruplr"}
+                    onClick={CheckOut}
+                  />
+                </div>
+              </div>
+            </Modal>
+          )}
       </div>
+
+      <div className="hidden lg:flex">
+        {showPromoteModal &&
+          !Notify &&
+          !CastVote &&
+          !showMyPolls &&
+          !showMyPolls &&
+          !PromoteSuccess && (
+            <div>
+              <Modal>
+                <div className="bg-white w-[50%] p-14">
+                  <div
+                    onClick={HandlePromoteModal}
+                    className="cursor-pointer flex justify-end"
+                  >
+                    <FaTimes className="text-black text-xl" />
+                  </div>
+
+                  <img
+                    src={promote}
+                    alt="promote-poll-pics"
+                    className="h-[150px] w-full object-contain"
+                  />
+
+                  <h2 className="font-bold text-center text-[18px]">
+                    Promote your polls
+                  </h2>
+                  <p className="text-center">
+                    Promote your poll, attract a wider audience, and boost poll
+                    interaction effortlessly
+                  </p>
+
+                  <h3 className="font-bold text-[14px] mt-10">Select a plan</h3>
+
+                  <div className="flex gap-2 w-full mt-4">
+                    <PricingComponent
+                      title="Basic"
+                      price="N1,000"
+                      duration="1 day"
+                    />
+                    <PricingComponent
+                      title="Standard"
+                      price="N5,000"
+                      duration="7 days"
+                    />
+                  </div>
+                  <div className="flex gap-2 w-full mt-4">
+                    <PricingComponent
+                      title="Premium"
+                      price="N9,000"
+                      duration="14 days"
+                    />
+                    <PricingComponent
+                      title="Pro"
+                      price="N14,000"
+                      duration="30 days"
+                    />
+                  </div>
+
+                  <div className="mt-10 w-full">
+                    <ActionButton
+                      label={"Proceed to Checkout"}
+                      bg={"pruplr"}
+                      onClick={CheckOut}
+                    />
+                  </div>
+                </div>
+              </Modal>
+            </div>
+          )}
+      </div>
+
+      {PromoteSuccess && (
+        <Modal>
+          <div className="w-[90%] lg:w-[30%] mx-auto bg-white px-16 py-20">
+            <div className="flex justify-center">
+              <img src="images/success.png" alt="payment-success-pics" />
+            </div>
+            <h6 className="mt-8 text-[16px] text-center">Payment Successful</h6>
+
+            <div className="mt-8 ">
+              <ActionButton
+                label={"Continue to Events"}
+                bg={"pruplr"}
+                onClick={HandlePromotedPoll}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

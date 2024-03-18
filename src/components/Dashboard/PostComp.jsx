@@ -112,7 +112,7 @@ const PostComp = ({
 							<Sharepost postId={postData?.id} postData={postData} />
 						</div>
 					</div>
-					<PostMenu postId={postData?.id} />
+					<PostMenu postId={postData?.id} userId={postData?.user.id} />
 				</div>
 			</div>
 			<Comment

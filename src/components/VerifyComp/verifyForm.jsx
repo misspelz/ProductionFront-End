@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ActionButton from "../Commons/Button";
 import toast from "react-hot-toast";
 import { ReSendOTP, VerifyOTP } from "api/services/auth&poll";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Spin from "components/Spin/Spin";
 
 const VerifyForm = () => {
@@ -92,7 +92,7 @@ const VerifyForm = () => {
     if (allInputsComplete) {
       HandleVerify();
     }
-  }, [inputValues]);
+  }, [allInputsComplete]);
 
   useEffect(() => {
     if (inputRefs[0]) {
@@ -103,7 +103,9 @@ const VerifyForm = () => {
   return (
     <>
       <div className="verify-form-container">
+        <Link to="/" className="text-[16px] lg:text-[18px] mb-5 lg:mb-10 text-primaryColor">Back to Home</Link>
         <div className="be-condo">Please verify your email</div>
+
         <div className="ins-tst-dig text-center">
           We sent a 5 digits code to your email address
           <br />

@@ -4,19 +4,19 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import "./post-menu.css";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { usePromotePost, useReportPost, useSavePost } from "api/hooks/feeds";
+import { useBlockUser, usePromotePost, useReportPost, useSavePost } from "api/hooks/feeds";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import PromoteIllustration from "assets/images/promote-post-illustration.png";
 import { RxCross2 } from "react-icons/rx";
 import Custombutton from "components/Custom-button/Custombutton";
 
-const PostMenu = ({ postId }) => {
+const PostMenu = ({ postId, userId }) => {
 	const promotePost = usePromotePost({
 		onSuccess: (response) => {
 			console.log({ response });
 			handleClose();
-            handleClosePromoteModal()
+			handleClosePromoteModal();
 		},
 		onError: (errorResponse) => {
 			console.log({ errorResponse });
@@ -27,7 +27,18 @@ const PostMenu = ({ postId }) => {
 		onSuccess: (response) => {
 			console.log({ response });
 			handleClose();
-            handleCloseReportModal()
+			handleCloseReportModal();
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+
+	const blockUser = useBlockUser({
+		onSuccess: (response) => {
+			console.log({ response });
+			handleClose();
+			handleCloseReportModal();
 		},
 		onError: (errorResponse) => {
 			console.log({ errorResponse });
@@ -92,9 +103,15 @@ const PostMenu = ({ postId }) => {
 		}
 	};
 
-	const handleBlockUser = () => {
+	const handleBlockModal = () => {
 		setIsOpen(true);
 		handleClose();
+	};
+	const handleBlockUser = () => {
+		blockUser.block({
+			blocked_user: userId,
+			reason: "block this user",
+		});
 	};
 
 	const handlePromoteModal = () => {
@@ -153,7 +170,7 @@ const PostMenu = ({ postId }) => {
 				<MenuItem onClick={handleSavePost}>
 					{savePost.isLoading ? "Saving" : "Save Post"}
 				</MenuItem>
-				<MenuItem onClick={handleBlockUser}>Block User</MenuItem>
+				<MenuItem onClick={handleBlockModal}>Block User</MenuItem>
 			</Menu>
 
 			<div>
@@ -163,7 +180,7 @@ const PostMenu = ({ postId }) => {
 						<p>Are you sure you want to block this user ?</p>
 						<Box className="block-user-modal-btns">
 							<button onClick={handleCloseModal}>Cancel</button>
-							<button onClick={handleCloseModal}>Block user</button>
+							<button onClick={handleBlockUser}>Block user</button>
 						</Box>
 					</Box>
 				</Modal>

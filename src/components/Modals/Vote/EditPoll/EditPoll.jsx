@@ -36,57 +36,59 @@ const EditPoll = ({ onClose, fetchPolls }) => {
     options: [{ option_id: null, content: "" }],
   });
 
-  // console.log("editpoll", pollData);
-
   const handleInputChange = (name, value) => {
-    if (singlePoll) {
-      switch (name) {
-        case "is_paid":
-          setPollData((prevState) => ({
-            ...prevState,
-            is_paid: value,
-            amount: value ? prevState.amount : "0",
-          }));
-          break;
-        case "poll_type":
-          setPollData((prevState) => ({
-            ...prevState,
-            poll_type: value,
-            amount: value === "Free" ? "0" : prevState.amount,
-            is_paid: value === "Free" ? false : prevState.is_paid,
-          }));
-          break;
-        case "close_time":
-          const durationInMs =
-            durationOptions.find((option) => option.label === value)?.value ||
-            0;
-          const now = new Date();
-          const closeTime = new Date(now.getTime() + durationInMs);
-          const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
-          setPollData((prevState) => ({
-            ...prevState,
-            close_time: formattedCloseTime,
-          }));
-          break;
-        case "options":
-          const updatedOptions = value.map((option) => {
-            if (typeof option === "string") {
-              return {
-                ...pollData.options.find((opt) => opt.content === option),
-              }; // Preserve option_id if exists
-            } else {
-              return option;
-            }
-          });
-          setPollData((prevState) => ({
-            ...prevState,
-            options: updatedOptions,
-          }));
-          break;
-        default:
-          setPollData((prevState) => ({ ...prevState, [name]: value }));
-          break;
-      }
+    if (name === "is_paid" && !value) {
+      // Handling is_paid field
+      setPollData((prevState) => ({
+        ...prevState,
+        is_paid: false,
+        amount: "0",
+      }));
+    } else if (name === "poll_type" && value === "Free") {
+      // Handling poll_type field for Free poll
+      setPollData((prevState) => ({
+        ...prevState,
+        poll_type: "Free",
+        amount: "0",
+        is_paid: false,
+      }));
+    } else if (name === "poll_type" && value === "Paid") {
+      // Handling poll_type field for Paid poll
+      setPollData((prevState) => ({
+        ...prevState,
+        poll_type: "Paid",
+        is_paid: true,
+      }));
+    } else if (name === "poll_duration") {
+      // Handling poll_duration field
+      const durationInMs =
+        durationOptions.find((option) => option.label === value)?.value || 0;
+      const now = new Date();
+      const closeTime = new Date(now.getTime() + durationInMs);
+
+      const formattedCloseTime = `${closeTime.toISOString().slice(0, 19)}Z`;
+
+      setPollData((prevState) => ({
+        ...prevState,
+        close_time: formattedCloseTime,
+      }));
+    } else if (name === "options") {
+      // Handling options field
+      const updatedOptions = pollData.options.map((option, index) => {
+        if (index === value.index) {
+          // If index matches, update the content
+          return { ...option, content: value.content };
+        } else {
+          return option;
+        }
+      });
+      setPollData((prevState) => ({
+        ...prevState,
+        options: updatedOptions,
+      }));
+    } else {
+      // Handling other fields
+      setPollData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -109,6 +111,7 @@ const EditPoll = ({ onClose, fetchPolls }) => {
       setIsLoading(true);
 
       const resp = await UpdatePollApi(pollData, singlePoll.id);
+      console.log("edit", pollData);
 
       if (resp.data.status) {
         toast.success("Poll updated successfully");
@@ -143,7 +146,11 @@ const EditPoll = ({ onClose, fetchPolls }) => {
           question,
           poll_type,
           close_time,
-          options: options.map((opt) => ({ ...opt, option_id: opt.id })),
+          options: options.map((opt) => ({
+            ...opt,
+            option_id: opt.id,
+            content: opt.content,
+          })),
         }));
       }
     }
@@ -201,7 +208,7 @@ const EditPoll = ({ onClose, fetchPolls }) => {
             className="outline-none p-[9px]"
             onChange={(e) => {
               const updatedOptions = [...pollData.options];
-              updatedOptions[index] = e.target.value;
+              updatedOptions[index].content = e.target.value;
               handleInputChange("options", updatedOptions);
             }}
           />

@@ -24,25 +24,119 @@
 }
 
 .post-display-images img,
-.post-display-images video{
+.post-display-images video,
+.post-display-images audio {
     width: 100%;
     margin-bottom: .8rem;
     height: auto;
     object-fit: cover;
 }
 
+.post-display-images audio::-webkit-media-controls-enclosure {
+    border-radius: 0;
+}
+
 .post-display-content p {
     text-align: left !important;
+}
+
+.inpu-com-box {
+    position: fixed;
+    bottom: 18vh;
+    width: 42%;
+    margin-left: 40px;
+}
+
+.pic-bx-cont {
+    bottom: 12vh;
+    margin-left: 32px;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .inpu-com-box {
+        /* bottom: 12vh; */
+        width: 38%;
+        margin-left: 60px;
+    }
+    .pic-bx-cont {
+        bottom: 12vh;
+        margin-left: 40px;
+    }
 }
 
 @media screen and (max-width: 1150px){
     .quick-dial-container{
         right: 40%;
     }
+
+    .inpu-com-box {
+        bottom: 15vh;
+        width: 42%;
+        margin-left: 150px;
+    }
+
+          .pic-bx-cont {
+              /* bottom: 20vh; */
+              left: 0;
+          }
 }
 
 @media screen and (max-width: 1000px) {
     .quick-dial-container{
         right: 6%;
+    }
+
+          .inpu-com-box {
+              right: 8%;
+          }
+
+                        .pic-bx-cont {
+                            /* bottom: 20vh; */
+                            left: 5%;
+                            width: 70%;
+                        }
+}
+
+@media only screen and (max-width: 830px) {
+    .inpu-com-box {
+        right: 0%;
+        width: 80%;
+    }
+    .pic-bx-cont {
+        /* bottom: 20vh; */
+        left: 5%;
+        width: 70%;
+    }
+}
+@media only screen and (max-width: 700px) {
+         .pic-bx-cont {
+             /* bottom: 40vh; */
+             right: 0%;
+             width: 80%;
+             margin-left: 40px;
+         }
+}
+
+@media only screen and (max-width: 500px) {
+    .inpu-com-box {
+            /* bottom: 26vh; */
+            width: 90%;
+        }
+    .pic-bx-cont {
+        /* bottom: 12vh; */
+        left: 5%;
+        width: 70%;
+    }
+}
+@media only screen and (max-width: 380px) {
+    .inpu-com-box {
+            right: 5%;
+            width: 95%;
+        }
+    .pic-bx-cont {
+        /* bottom: 20vh; */
+        left: 5%;
+        width: 80%;
     }
 }

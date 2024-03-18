@@ -3,18 +3,21 @@
  *************************************************************************/
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+    blockUser,
 	createComment,
 	createCommentReaction,
 	createFeedsPost,
 	createPostFile,
 	createReaction,
 	createReply,
+	createReplyReaction,
 	createStatus,
 	feedsRepost,
 	getAllFeedsPost,
 	getCommentReplies,
 	getComments,
 	getPostById,
+	getReplyReactions,
 	getTotalCommentReactions,
 	getTotalReactions,
 	promotePost,
@@ -181,6 +184,25 @@ export const useReportPost = (options) => {
 	};
 };
 
+export const useBlockUser = (options) => {
+	const mutation = useMutation({
+		mutationFn: (data) => blockUser(data),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		block: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
 /**CREATE FEEDS REACTION HOOKS */
 
 export const useCreateReaction = (options) => {
@@ -206,6 +228,26 @@ export const useCreateCommentReaction = (options) => {
 	const mutation = useMutation({
 		mutationFn: (reactionData) =>
 			createCommentReaction(options.postId, options.commentId, reactionData),
+		onSuccess: (data) => {
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		reaction: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
+export const useCreateReplyReaction = (options) => {
+	const mutation = useMutation({
+		mutationFn: (reactionData) =>
+			createReplyReaction(options.postId, options.commentId, options.replyId, reactionData),
 		onSuccess: (data) => {
 			options.onSuccess && options.onSuccess(data);
 		},
@@ -248,10 +290,11 @@ export const useCreateStatus = (options) => {
 
 /**FETCH FEEDS DATA HOOKS */
 
-export const useGetAllFeeds = () => {
+export const useGetAllFeeds = (isAuth) => {
 	const response = useQuery({
 		queryKey: [feedsKey],
 		queryFn: () => getAllFeedsPost(),
+		enabled: isAuth
 	});
 
 	return {
@@ -325,6 +368,22 @@ export const useGetTotalCommentReactions = (params) => {
 	const response = useQuery({
 		queryKey: [reactionKey, params?.postId, params?.commentId],
 		queryFn: () => getTotalCommentReactions(params?.postId, params?.commentId),
+		enabled: params?.commentId !== undefined,
+	});
+
+	return {
+		isError: response.isError,
+		isLoading: response.isLoading,
+		isSuccess: response.isSuccess,
+		data: response.data ? response.data?.data : undefined,
+	};
+};
+
+export const useGetReplyReactions = (params) => {
+	const response = useQuery({
+		queryKey: [reactionKey, params?.postId, params?.commentId, params?.replyId],
+		queryFn: () =>
+			getReplyReactions(params?.postId, params?.commentId, params?.replyId),
 		enabled: params?.commentId !== undefined,
 	});
 
