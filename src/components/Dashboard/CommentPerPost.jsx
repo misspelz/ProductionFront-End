@@ -25,7 +25,6 @@ const CommentPerPost = ({ postId, comment }) => {
 	};
 	const { data } = useGetTotalCommentReactions(params);
 	const getReplies = useGetCommentReplies(params);
-	console.log("replies", getReplies?.data);
 	const totalReactions = data
 		? Object.values(data?.reactions)?.reduce((acc, cur) => acc + cur)
 		: 0;

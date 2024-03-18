@@ -34,7 +34,9 @@ const Sharepost = ({ postId, postData }) => {
 	};
 
 	const handleCopyUrl = async () => {
-		const urlText = `${window.location.href}Home/${postId}`;
+		const urlText = window.location.href.includes("Home")
+			? `${window.location.href}/${postId}`
+			: `${window.location.href}Home/${postId}`;
 		try {
 			await navigator.clipboard.writeText(urlText);
 			console.log("copied", urlText);

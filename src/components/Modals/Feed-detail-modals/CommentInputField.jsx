@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { url } from "../../utils";
+import { MdSend } from "react-icons/md";
 import { useCreateComment } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
+import "./feed-detail-modal.css";
 
-const Comment = ({
-	postID
-}) => {
+const CommentInputField = ({ postId }) => {
 	const { comment, isLoading } = useCreateComment({
-		postId: postID,
+		postId,
 		onSuccess: (response) => {
 			console.log({ response });
 			setCommentText("");
@@ -16,40 +15,45 @@ const Comment = ({
 			console.log({ errorResponse });
 		},
 	});
+
 	const [commentText, setCommentText] = useState("");
 
 	function handleComment() {
+		// handleAddComment(index);
 		let commentData = new FormData();
 		commentData.append("text_content", commentText);
+		// commentData.append("file", null);
 		comment(commentData);
 	}
-
 	return (
-		<div className={`comment-container`}>
-			<div className="post-ead">Comment</div>
-			<div className="inp-coment">
-				<textarea
-					name=""
-					className="comment-inp"
-					id=""
-					value={commentText}
-					placeholder="Your comment goes here"
-					onChange={(e) => {
-						setCommentText(e.target.value);
-					}}
-				></textarea>
-				<div className="com-btn-box">
+		<>
+			<div className="pic-cont-box">
+				<div className="inp-sen-send">
+					<input
+						type="text"
+						className="pic-inpt"
+						placeholder="Start typing"
+						onChange={(e) => {
+							setCommentText(e.target.value);
+						}}
+					/>
 					<Custombutton
-						className="com-btn"
+						className="com-icon-btn"
 						type="submit"
 						onClick={handleComment}
-						name={isLoading ? "Posting" : "Post"}
+						name={
+							isLoading ? (
+								""
+							) : (
+								<MdSend className="cur" size={22} color="#4f0da3" />
+							)
+						}
 						disabled={isLoading}
 					/>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
-export default Comment;
+export default CommentInputField;

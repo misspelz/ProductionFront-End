@@ -65,10 +65,22 @@ export const createCommentReaction = async (postId, commentId, reactionData) => 
 	return (await response).data;
 };
 
+export const createReplyReaction = async (postId, commentId, replyId, reactionData) => {
+	const response = post(`/feeds/post/${postId}/comments/${commentId}/replies/${replyId}/reactions/`, reactionData);
+	return (await response).data;
+};
+
 export const createStatus = async (statusData) => {
 	const response = post(`/feeds/status/`, statusData);
 	return (await response).data;
 };
+
+export const blockUser = async (data) => {
+	const response = post(`/user/account/block_user/`, data);
+	return (await response).data;
+};
+
+// /user/account/block_user/
 
 /**PUT/PATCH HTTP REQUESTS*/
 //none here at the moment
@@ -92,6 +104,11 @@ export const getTotalReactions = async (postId) => {
 
 export const getTotalCommentReactions = async (postId, commentId) => {
 	const response = get(`/feeds/post/${postId}/comments/${commentId}/reactions/`);
+	return (await response).data;
+};
+
+export const getReplyReactions = async (postId, commentId, replyId) => {
+	const response = get(`/feeds/post/${postId}/comments/${commentId}/replies/${replyId}/reactions/`);
 	return (await response).data;
 };
 

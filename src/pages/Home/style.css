@@ -1,3 +1,8 @@
+.app_main {
+    padding: 1rem 1.5rem;
+    overflow: auto;
+}
+
 .home-container {
   position: relative;
 }
@@ -189,7 +194,7 @@
   .left-side-container {
     width: 100%;
     padding: 20px;
-    margin: 0 100px;
+    /* margin: 0 100px; */
   }
   .select-what-display {
     padding: 10px;
@@ -198,14 +203,15 @@
 @media only screen and (max-width: 830px) {
   .left-side-container {
     margin: 0 0 0 15px;
-    width: 120%;
+    /* width: 120%; */
   }
 }
 @media only screen and (max-width: 700px) {
   .left-side-container {
-    margin: 0 20px;
+    /* margin: 0 10px; */
     padding: 0;
-    width: 115%;
+    /* width: 115%; */
+    width: 94%;
   }
   .em-im {
     width: 55px;

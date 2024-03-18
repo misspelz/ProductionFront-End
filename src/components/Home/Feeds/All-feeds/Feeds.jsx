@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import MusicDash from "components/Dashboard/MusicDas";
 import PostComp from "components/Dashboard/PostComp";
 import ProductDash from "components/Dashboard/product-card/ProductDAs";
@@ -8,17 +8,14 @@ import Stick from "components/Dashboard/Stick";
 import PostImage from "assets/images/sample-post-image.png";
 import MovieDashCard from "components/Home/Movieslider/MovieCards";
 import { useGetAllFeeds } from "api/hooks/feeds";
+import { ModalContext } from "Context/ModalContext";
+import FeedsSkeleton from "components/Home/Skeleton/FeedsSkeleton";
 
 const Feeds = () => {
-	const { data, isLoading, isError } = useGetAllFeeds();
-	console.log("feeds data", data);
-	// useEffect(() => {
-    //     if (isError) {
-    //         window.location.href = "/Signin";
-    //     } 
-	// }, [isError]);
+    const { isAuthenticated } = useContext(ModalContext);
+	const { data, isLoading, isError } = useGetAllFeeds(isAuthenticated);
 
-	if (!isLoading && !isError && !data) {
+	if (!isLoading && !isError && !data && isAuthenticated) {
 		return <h3>No feeds available</h3>;
 	}
 	// if(!data || data?.length === 0) {
@@ -26,6 +23,16 @@ const Feeds = () => {
 	//         <h3>No feeds available</h3>
 	//     )
 	// }
+
+    if (isLoading) {
+        return (
+            <FeedsSkeleton />
+        )
+    }
+    if (isAuthenticated && isError) {
+			return <h3>unable to get feeds at this time, 
+                please check your network and try again in some minutes</h3>;
+		}
 
 	return (
 		<div style={{ maxWidth: "560px" }}>
