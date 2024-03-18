@@ -20,6 +20,8 @@ export default function UploadMusicSider() {
   const authToken = localStorage.getItem("authToken")
   const fileInput = useRef(null)
   const [category, setCategory] = useState([])
+  const [categoryId, setCategoryId] = useState()
+  const [photo, setPhoto] = useState()
 
   const GetCategories = () => {
     axios
@@ -38,13 +40,15 @@ export default function UploadMusicSider() {
 
 
   const UploadSong = () => {
-    console.log(audio)
+    console.log(audio + categoryId +photo)
     const payload = {
-      title:song,
+      category_id: categoryId,
+      cover_image: photo,
       audio_file: audio,
-      artist: artist
+      title:song,
+      // artist: artist
     }
-    axios.post(`https://development.2geda.net/api/stereo/songs/`, payload, {
+    axios.post(`https://development.2geda.net/api/stereo/artist/songs/`, payload, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": 'multipart/form-data',
@@ -209,6 +213,19 @@ export default function UploadMusicSider() {
         </div>
 
         <div className="flex flex-col items-center justify-center px-10 mt-5">
+          <div class="file-upload-content">
+    <label>Profile Picture</label>
+    <div class="form-group custom-drop-file text-center mb-3">
+      <input type="file" class="form-control" id="img-upload" placeholder="Upload a picture" onChange={(e)=>setPhoto(e.target.files[0])}/>
+      <main className="flex flex-col justify-center items-center">
+        <div className="rounded-full mb-4 bg-[#FF8A15] flex justify-center items-center w-[62px] h-[62px]">
+          <span className="text-4xl font-light text-white">+</span>
+        </div>
+        <span className="font-medium text-sm">Tap here to select a file</span>
+        </main>
+      {/* <p>Upload Picture</p> */}
+    </div>
+  </div>
         <input
         onChange={(e)=>setArtist(e.target.value)}
                   type="text"
@@ -221,21 +238,12 @@ export default function UploadMusicSider() {
                   placeholder="Song Title"
                   className="max-w-[351px] px-3 mb-2 text-black rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
                 />
-                <input
-                onChange={(e)=>setFeaturing(e.target.value)}
-                  type="text"
-                  placeholder="Featuring"
-                  className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
-                />
-                <input
-                onChange={(e)=>setProducer(e.target.value)}
-                  type="text"
-                  placeholder="Producer"
-                  className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
-                />
-                <select placeholder={"Category"} className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]">
+                
+                <select value={categoryId} onChange={(e)=>setCategoryId(e.target.value)} placeholder={"Category"} className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]">
                   {category.map(res=>{
-                    <option className="text-white" value={res.id}>{res.name}</option>
+                    return(
+                    <option className="text-black" value={res.id}>{res.name}</option>
+                    )
                   })}
                 </select>
         </div>
