@@ -69,6 +69,8 @@ import StereoSearchResult from "pages/Stereo/StereoSearchResult";
 import UploadMusic from "pages/Stereo/Pages/UploadMusic/UploadMusic";
 import RecentUploads from "pages/Stereo/Pages/UploadMusic/recentUploads";
 import { AppLayout } from "Layout/AppLayout";
+import PollPayment from "components/PollsComp/PollPayment";
+import PromotionPayment from "components/PollsComp/PromotionPayment";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -132,6 +134,15 @@ function App() {
             element={
               isAuthenticated ? <Navigate replace to="Home" /> : <Landing />
             }
+          />
+
+          <Route
+            path="/poll-payment-confimed"
+            element={<ProtectedRoutes element={<PollPayment />} />}
+          />
+          <Route
+            path="/promotion-payment-confimed"
+            element={<ProtectedRoutes element={<PromotionPayment />} />}
           />
 
           <Route element={<AppLayout />}>

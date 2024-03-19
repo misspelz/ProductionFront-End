@@ -230,3 +230,16 @@ export const NotificationsApi = async () => {
   });
   return res;
 };
+
+export const PromotePollApi = async (amount, poll_id) => {
+  const res = await axios.post(
+    `${url}/api/polls/user/${poll_id}/promote-poll/`,
+    { ...amount },
+    {
+      headers: {
+        Authorization: `Bearer ${getLoginToken()}`,
+      },
+    }
+  );
+  return res;
+};

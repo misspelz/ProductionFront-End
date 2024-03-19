@@ -21,8 +21,6 @@ export const ModalContextProvider = ({ children }) => {
   const [endedPolls, setEndedPolls] = useState([]);
   const [showAction, setShowAction] = useState(false);
 
-  
-
   const handleMyPolls = async (e) => {
     try {
       setLoading(true);
@@ -92,7 +90,6 @@ export const ModalContextProvider = ({ children }) => {
         loading,
         isAuthenticated,
         setIsAuthenticated,
-      
       }}
     >
       {children}
