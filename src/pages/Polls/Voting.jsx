@@ -1,37 +1,30 @@
 import { Dialog } from "@mui/material";
-import MainLayout from "Layout/MainLayout";
 import {
   ClosePollApi,
   FindPollsApi,
   PollsApi,
   VoteApi,
-  getLoginToken,
-  getToken,
 } from "api/services/auth&poll";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import { default as AD3, default as AD4 } from "assets/images/AD3.png";
 import ActionButton from "components/Commons/Button";
+import InputField from "components/Commons/InputField";
 import Modal from "components/Modals/Modal";
 import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
 import { CreateCastActions } from "components/PollsComp/CreateCastActions";
 import { FindPolls } from "components/PollsComp/FindPolls";
 import { Notifications } from "components/PollsComp/Notification";
 import { Polls } from "components/PollsComp/Polls";
-import { PromotedPolls } from "components/PollsComp/PromotedPolls";
 import { PollsNotification } from "components/PollsComp/RightComp";
 import { SuggestedPolls } from "components/PollsComp/SuggestedPolls";
 import Spin from "components/Spin/Spin";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import "./styles.css";
-import { formatDate } from "utils/helper";
-import { url } from "utils/index";
-import axios from "axios";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import AD1 from "assets/images/AD1.png";
-import AD2 from "assets/images/AD2.png";
-import AD3 from "assets/images/AD3.png";
-import AD4 from "assets/images/AD3.png";
-import InputField from "components/Commons/InputField";
+import { PromotedPolls } from "components/PollsComp/PromotedPolls";
 
 const Voting = () => {
   const userInfoString = localStorage.getItem("2gedaUserInfo");
@@ -52,7 +45,7 @@ const Voting = () => {
   const [castVotes, setCastVotes] = useState(false);
 
   const [APoll, setAPoll] = useState({});
-  console.log("APoll", APoll);
+  // console.log("APoll", APoll);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [numberOfVotes, setNumberOfVotes] = useState("");
@@ -62,37 +55,8 @@ const Voting = () => {
   const [Success, setSuccess] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const handleNumberOfVotesChange = (e) => {
-    const input = e.target.value;
-    if (!isNaN(input)) {
-      const votes = parseFloat(input);
-      console.log("votes", votes);
-      console.log("amount", APoll.amount);
-      setNumberOfVotes(votes);
-      setPayNowAmount(votes * APoll.amount);
-    } else {
-      setNumberOfVotes("");
-    }
-  };
-
-  const handleCurrencyChange = (e) => {
-    const currency = e.target.value;
-    setSelectedCurrency(currency);
-    setPayNowAmount(numberOfVotes * 2000 * (currency === "USD" ? 1 / 1900 : 1));
-  };
-
   const HandlePayNow = () => {
     setPayNow(true);
-  };
-
-  const HandlePaySuccess = () => {
-    // try {
-
-    // } catch (error) {
-
-    // }
-
-    setSuccess(true);
   };
 
   const HandleContinue = () => {
@@ -100,10 +64,6 @@ const Voting = () => {
     setPayNow(false);
     setPaidPoll(false);
     setShowPaidVotes(true);
-  };
-
-  const CastPaidVotes = () => {
-    setCastVotes(true);
   };
 
   const [allVotesValue, setAllVotesValue] = useState(0);
@@ -237,6 +197,7 @@ const Voting = () => {
   };
 
   const [selectedOptionId, setSelectedOptionId] = useState(null);
+  const [isPayLoading, setIsPayLoading] = useState(false);
 
   const handleOptionChange = (id) => {
     setSelectedOptionId(id);
@@ -255,6 +216,7 @@ const Voting = () => {
     try {
       setLoading(true);
       const resp = await VoteApi(dataOptionId, APoll.id);
+      console.log("voteresp", resp);
 
       if (resp.data.status) {
         toast.success("Vote casted successfully");
@@ -265,6 +227,34 @@ const Voting = () => {
     } finally {
       handleAllPolls();
       setLoading(false);
+      setAllVotesValue(null);
+      setCastVotes(false);
+      setNumberOfVotes("");
+      setSelectedPoll(null);
+    }
+  };
+
+  const HandlePaySuccess = async () => {
+    const dataOptionId = {
+      option_id: selectedOptionId,
+    };
+
+    try {
+      setIsPayLoading(true);
+      const resp = await VoteApi(dataOptionId, APoll.id);
+      console.log("voteresp", resp);
+
+      if (resp.data.data.paystack[1].status) {
+        const res = resp.data.data.paystack[1].data.authorization_url;
+        console.log("url", res);
+        window.location.href = res;
+      }
+    } catch (error) {
+      console.log("vote", error);
+      toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setIsPayLoading(false);
+      handleAllPolls();
       setAllVotesValue(null);
       setCastVotes(false);
       setNumberOfVotes("");
@@ -365,7 +355,6 @@ const Voting = () => {
             )}
           </div>
 
-          
           {Notify && <Notifications setNotify={setNotify} />}
 
           {/* Mobile */}
@@ -388,8 +377,8 @@ const Voting = () => {
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
 
-              {/* <h2>Promoted Polls</h2>
-              <PromotedPolls HandlePoll={HandlePoll} /> */}
+              <h2>Promoted Polls</h2>
+              <PromotedPolls HandlePoll={HandlePoll} />
 
               {/* tabs */}
               <div className=" mt-16 lg:mt-20">
@@ -457,8 +446,8 @@ const Voting = () => {
               />
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
-              {/* <h2>Promoted Polls</h2>
-              <PromotedPolls HandlePoll={HandlePoll} /> */}
+              <h2>Promoted Polls</h2>
+              <PromotedPolls HandlePoll={HandlePoll} />
 
               {/* tabs */}
               <div className=" mt-16 md:mt-20">
@@ -524,7 +513,7 @@ const Voting = () => {
       )}
 
       {/* MOBILE */}
-      {selectedPoll && (
+      {selectedPoll && !PaidPoll && (
         <div className="pt-36 lg:pt-48 px-4 flex lg:hidden flex-col justify-between w-full h-screen">
           <div className="lg:hidden w-full">
             <div
@@ -650,12 +639,12 @@ const Voting = () => {
 
             <div className="mt-8 ">
               <div className="mb-10">
-                <InputField
+                {/* <InputField
                   placeholder={"Number of votes"}
                   type={"number"}
                   value={numberOfVotes}
                   onChange={handleNumberOfVotesChange}
-                />
+                /> */}
                 {/* <select
                   name="currency"
                   value={selectedCurrency}
@@ -688,25 +677,29 @@ const Voting = () => {
             <h6 className="text-[16px] text-center">You are paying</h6>
 
             <h3 className="text-[30px] text-center text-purple-600 mt-4">
-              {/* {selectedCurrency === "NGN" ? "NGN" : "$"} */}
               NGN
-              {payNowAmount.toLocaleString(undefined, {
+              {/* {payNowAmount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} */}
+              {APoll.amount.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </h3>
 
-            <h6 className="mt-4 text-[16px] text-center">Being payment for</h6>
+            {/* <h6 className="mt-4 text-[16px] text-center">Being payment for</h6>
 
             <div className="flex justify-center">
               <h3 className="mt-4 text-center p-2 w-[100px] rounded-[10px] bg-purple-300">
                 {numberOfVotes} votes
               </h3>
-            </div>
+            </div> */}
 
             <div className="mt-8 ">
               <ActionButton
                 label={"Pay Now"}
+                loading={isPayLoading}
                 bg={"pruplr"}
                 onClick={HandlePaySuccess}
               />

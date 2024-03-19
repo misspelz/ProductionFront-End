@@ -1,41 +1,33 @@
 import { Dialog } from "@mui/material";
 import { ModalContext } from "Context/ModalContext";
-import MainLayout from "Layout/MainLayout";
 import {
-  ActivePollsApi,
   ClosePollApi,
-  EndedPollsApi,
   FindUserPollsApi,
-  MyPollsApi,
-  getLoginToken,
+  PromotePollApi
 } from "api/services/auth&poll";
-import axios from "axios";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import { default as AD3, default as AD4 } from "assets/images/AD3.png";
+import promote from "assets/promote.png";
+import ActionButton from "components/Commons/Button";
+import Modal from "components/Modals/Modal";
 import ClosePoll from "components/Modals/Vote/ClosePoll";
 import CreatePoll from "components/Modals/Vote/CreatePoll/CreatePoll";
+import DeletePoll from "components/Modals/Vote/DeletePoll";
+import EditPoll from "components/Modals/Vote/EditPoll/EditPoll";
 import PollResult from "components/Modals/Vote/PollResult";
+import PricingComponent from "components/PollPomotion";
 import { FindPolls } from "components/PollsComp/FindPolls";
 import { MyPollsCategories } from "components/PollsComp/MyPollsCategories";
 import { Polls } from "components/PollsComp/Polls";
 import { PollsNotification } from "components/PollsComp/RightComp";
 import Spin from "components/Spin/Spin";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { resolvePath, useNavigate } from "react-router-dom";
-import { formatDate } from "utils/helper";
-import { url } from "utils/index";
-import "./styles.css";
-import DeletePoll from "components/Modals/Vote/DeletePoll";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import AD1 from "assets/images/AD1.png";
-import AD2 from "assets/images/AD2.png";
-import AD3 from "assets/images/AD3.png";
-import AD4 from "assets/images/AD3.png";
-import promote from "assets/promote.png";
-import EditPoll from "components/Modals/Vote/EditPoll/EditPoll";
-import Modal from "components/Modals/Modal";
 import { FaTimes } from "react-icons/fa";
-import PricingComponent from "components/PollPomotion";
-import ActionButton from "components/Commons/Button";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import "./styles.css";
 
 const MyPolls = () => {
   const {
@@ -53,7 +45,6 @@ const MyPolls = () => {
     setShowAction,
     loading,
   } = useContext(ModalContext);
-  // console.log("mypolls", polls);
 
   const goBack = () => nav("/Voting");
 
@@ -127,6 +118,7 @@ const MyPolls = () => {
   };
 
   const HandlePromote = (poll) => {
+    console.log("singlePoll", poll);
     setSinglePoll(poll);
     setShowPromoteModal(true);
   };
@@ -170,6 +162,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -205,6 +198,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -242,6 +236,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -284,6 +279,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -321,6 +317,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -360,6 +357,7 @@ const MyPolls = () => {
                   HandleEdit={() => HandleEdit(poll)}
                   HandlePromote={() => HandlePromote(poll)}
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
+                  id={poll.id}
                 />
               ))
           );
@@ -378,6 +376,7 @@ const MyPolls = () => {
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPromoteLoading, setIsPromoteLoading] = useState(false);
 
   const images = ["images/fifa.png", AD1, AD2, AD3, AD4];
 
@@ -405,14 +404,35 @@ const MyPolls = () => {
     setSearchText(text);
   };
 
-  const CheckOut = () => {
-    setPromoteSuccess(true);
+  const [selectedPrice, setSelectedPrice] = useState(null);
+
+  const CheckOut = async () => {
+    try {
+      setIsPromoteLoading(true);
+      const res = await PromotePollApi(selectedPrice, singlePoll.id);
+      console.log("promote", res);
+
+      if (res.data.data.paystack[1].status) {
+        const resp = res.data.data.paystack[1].data.authorization_url;
+        console.log("url", res);
+        window.location.href = resp;
+      }
+    } catch (error) {
+      console.log("finduserpollserror", error);
+      toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setIsPromoteLoading(false);
+    }
   };
 
   const HandlePromotedPoll = () => {
     setPromoteSuccess(false);
     setShowPromoteModal(false);
     setShowAction(false);
+  };
+
+  const handleSelect = (priceInfo) => {
+    setSelectedPrice(priceInfo);
   };
 
   useEffect(() => {
@@ -617,25 +637,29 @@ const MyPolls = () => {
                 <div className="flex gap-2 w-full mt-4">
                   <PricingComponent
                     title="Basic"
-                    price="N1,000"
+                    price={1000}
                     duration="1 day"
+                    onSelect={handleSelect}
                   />
                   <PricingComponent
                     title="Standard"
-                    price="N5,000"
+                    price={5000}
                     duration="7 days"
+                    onSelect={handleSelect}
                   />
                 </div>
                 <div className="flex gap-2 w-full mt-4">
                   <PricingComponent
                     title="Premium"
-                    price="N9,000"
+                    price={9000}
                     duration="14 days"
+                    onSelect={handleSelect}
                   />
                   <PricingComponent
                     title="Pro"
-                    price="N14,000"
+                    price={14000}
                     duration="30 days"
+                    onSelect={handleSelect}
                   />
                 </div>
 
@@ -643,6 +667,7 @@ const MyPolls = () => {
                   <ActionButton
                     label={"Proceed to Checkout"}
                     bg={"pruplr"}
+                    loading={isPromoteLoading}
                     onClick={CheckOut}
                   />
                 </div>
@@ -713,6 +738,7 @@ const MyPolls = () => {
                     <ActionButton
                       label={"Proceed to Checkout"}
                       bg={"pruplr"}
+                      loading={isPromoteLoading}
                       onClick={CheckOut}
                     />
                   </div>

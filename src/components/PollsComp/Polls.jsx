@@ -24,12 +24,17 @@ export const Polls = ({
   selectedOptionId,
   handleOptionChange,
   isClosed,
-  HandlePromote
+  HandlePromote,
+  id,
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
 
-  const toggleShowAction = () => {
-    setShowAction(!showAction);
+  const toggleShowAction = (id) => {
+    if (showAction === id) {
+      setShowAction(false);
+    } else {
+      setShowAction(id);
+    }
   };
 
   const totalNumVotes =
@@ -83,7 +88,6 @@ export const Polls = ({
             cast={cast}
             handleOptionChange={handleOptionChange}
             selectedOptionId={selectedOptionId}
-            onClick={() => toggleShowAction(index)}
           />
         ))}
 
@@ -137,12 +141,12 @@ export const Polls = ({
                   </span>
                 </div>
               </div>
-              {/* Pass the index to toggleShowAction */}
-              <div onClick={() => toggleShowAction()}>
+              
+              <div onClick={() => toggleShowAction(id)}>
                 <CiMenuKebab className="text-black text-xl" />
               </div>
-              {/* Show actions based on the corresponding index */}
-              {showAction && (
+            
+              {showAction === id && (
                 <div className="absolute flex flex-col items-start gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[1rem]">
                   <button
                     onClick={HandleEdit}
