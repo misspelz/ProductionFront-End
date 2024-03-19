@@ -24,8 +24,8 @@ export default function New() {
       })
       .then((res) => {
         setRecentAlbums(res?.data?.data);
-        console.log(recentAlbums + "recentAlbums state===");
-        console.log(JSON.stringify(res.data) + "recentAlbums====");
+        console.log(recentAlbums + "newAlbums state===");
+        console.log(JSON.stringify(res.data) + "newAlbums====");
       });
   };
 
@@ -82,7 +82,7 @@ export default function New() {
         <span className="text-xl font-medium">New Albums</span>
       </div>
       <div
-        className={recentAlbums>0?"flex overflow-x-scroll gap-2 mx-3 mt-3":"mx-3 mt-3"}
+        className={recentAlbums?.length>0?"flex mx-3 gap-3 overflow-x-scroll justify-between h-full":null}
         style={{ scrollbarWidth: "none" }}>
           {recentAlbums?.length>0?recentAlbums?.map(res=>{
                   return (

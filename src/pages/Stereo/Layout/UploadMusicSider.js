@@ -5,12 +5,18 @@ import Edit from "../Assets/ic_round-edit.svg";
 import { HiXMark } from "react-icons/hi2";
 import { BiArrowBack, BiPlus } from "react-icons/bi";
 import axios from "axios";
+import toast from "react-hot-toast";
+import "react-toastify/dist/ReactToastify.css";
+import Lottie from "lottie-react";
+import preloader from "../../../pages/Home/Animation - 1703321875032 (1).json"
+
 
 export default function UploadMusicSider() {
   const [isOpen1, setIsOpen1] = useState(false);
   const [upload1, setUpload1] = useState(false)
   const [upload2, setUpload2] = useState(false)
   const [upload4, setUpload4] = useState(false)
+  const [upload5, setUpload5] = useState(false)
   const [audio, setAudio] = useState()
   const [artist, setArtist] = useState()
   const [song, setSong] = useState()
@@ -22,6 +28,10 @@ export default function UploadMusicSider() {
   const [category, setCategory] = useState([])
   const [categoryId, setCategoryId] = useState()
   const [photo, setPhoto] = useState()
+  const [albumName, setAlbumName] = useState()
+  const [aboutAlbum, setAboutAlbum] = useState()
+  const [albumImg, setAlbumImg] = useState()
+  const [loading, setLoading] = useState(false)
 
   const GetCategories = () => {
     axios
@@ -40,6 +50,7 @@ export default function UploadMusicSider() {
 
 
   const UploadSong = () => {
+    setLoading(true)
     console.log(audio + categoryId +photo)
     const payload = {
       category_id: categoryId,
@@ -55,13 +66,58 @@ export default function UploadMusicSider() {
         "X-CSRFToken": process.env.REACT_TOKEN,
       },
     }).then(res=>{
+      setLoading(true)
+      if (res.status === 201) {
+        toast.success(res.data.message)
+        setUpload1(false)
+        setUpload2(false)
+        // setUpload3(false)
+        setUpload4(false)
+        setUpload5(false)
+      } else {
+        toast.error("Something went wrong")
+      }
       console.log(res)
     })
   }
+
+  const UploadAlbum = () => {
+    setLoading(true)
+    console.log(albumName + aboutAlbum + albumImg)
+    const payload = {
+      name: albumName,
+      about: aboutAlbum,
+      cover_image: albumImg,
+      
+    }
+    axios.post(`https://development.2geda.net/api/stereo/artist/albums/`, payload, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": 'multipart/form-data',
+        "X-CSRFToken": process.env.REACT_TOKEN,
+      },
+    }).then(res=>{
+      setLoading(false)
+      console.log(res)
+      if (res.status === 201) {
+        toast.success(res.data.message)
+        setUpload1(false)
+        setUpload2(false)
+        // setUpload3(false)
+        setUpload4(false)
+        setUpload5(false)
+      } else {
+        toast.error("Something went wrong")
+      }
+    })
+  }
+
+  
   useEffect(()=>{
     GetCategories()
   },[])
   return (
+
     <div className="bg-white lg:px-10 xl:px-10 md:px-5 pt-5 w-auto h-full mx-10">
       <div className="flex justify-between items-center lg:mt-5 xl:mt-5">
         <span className="font-medium text-2xl">About artist</span>
@@ -156,7 +212,7 @@ export default function UploadMusicSider() {
           </main>
           <main className="flex flex-col gap-2">
             <input type="radio" name="upload" value={"Single"} className="flex items-end justify-end" onChange={()=>{setUpload2(true); setUpload1(false); setUploadRadio("Single")}}/>
-            <input type="radio" name="upload" value={"Album"} className="flex items-end justify-end" onChange={()=>{setUpload2(true); setUpload1(false); setUploadRadio("Album")}}/>
+            <input type="radio" name="upload" value={"Album"} className="flex items-end justify-end" onChange={()=>{setUpload5(true); setUpload1(false); setUploadRadio("Album")}}/>
           </main>
         </div>
         </div>
@@ -248,7 +304,76 @@ export default function UploadMusicSider() {
                 </select>
         </div>
         <div className="flex justify-center items-center pb-4 mt-5">
-        <button onClick={()=>UploadSong()} className="bg-[#4F0DA3] rounded-md py-2 w-1/2 text-white">Upload</button>
+        {loading ?<Lottie
+              animationData={preloader}
+              style={{
+                width: "300px",
+                height: "100px",
+              }}
+            />:<button onClick={()=>UploadSong()} className="bg-[#4F0DA3] rounded-md py-2 w-1/2 text-white">Upload</button>}
+        </div>
+      </ModalWrapper2>
+
+      {/* upload album */}
+
+      <ModalWrapper2 header={false} isOpen={upload5} closeModal={() => setUpload5(!upload5)}>
+      <div className="flex items-center justify-between px-2 py-4">
+        <div className="flex gap-2 items-center">
+          <button className="h-[24] w-[24]" onClick={()=>{setUpload5(!upload5); setUpload1(!upload1)}}>
+            <BiArrowBack size={24}/>
+          </button>
+          <span className="font-bold text-xl text-black">Upload</span>
+          </div>
+          <button onClick={()=>setUpload4(!upload4)} className="w-[16] h-[16]"><HiXMark size={16}/></button>
+        </div>
+        <div className="flex flex-col items-center justify-center mt-8 gap-3">
+          <span className="font-medium text-base">Your song has been uploaded!</span>
+          <span className="font-medium text-sm text-gray-400">Follow these steps to complete your upload</span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center px-10 mt-5">
+          <div class="file-upload-content">
+    <label>Profile Picture</label>
+    <div class="form-group custom-drop-file text-center mb-3">
+      <input type="file" class="form-control" id="img-upload" placeholder="Upload a picture" onChange={(e)=>setAlbumImg(e.target.files[0])}/>
+      <main className="flex flex-col justify-center items-center">
+        <div className="rounded-full mb-4 bg-[#FF8A15] flex justify-center items-center w-[62px] h-[62px]">
+          <span className="text-4xl font-light text-white">+</span>
+        </div>
+        <span className="font-medium text-sm">Tap here to select a file</span>
+        </main>
+      {/* <p>Upload Picture</p> */}
+    </div>
+  </div>
+        <input
+        onChange={(e)=>setAlbumName(e.target.value)}
+                  type="text"
+                  placeholder="Album Name"
+                  className="max-w-[351px] px-3 mb-2 text-black rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
+                />
+                <input
+                onChange={(e)=>setAboutAlbum(e.target.value)}
+                  type="text"
+                  placeholder="About Album"
+                  className="max-w-[351px] px-3 mb-2 text-black rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]"
+                />
+                
+                {/* <select value={categoryId} onChange={(e)=>setCategoryId(e.target.value)} placeholder={"Category"} className="max-w-[351px] px-3 text-black mb-2 rounded-lg py-3 w-full border border-[rgba(40, 40, 40, 0.15)]">
+                  {category.map(res=>{
+                    return(
+                    <option className="text-black" value={res.id}>{res.name}</option>
+                    )
+                  })}
+                </select> */}
+        </div>
+        <div className="flex justify-center items-center pb-4 mt-5">
+        {loading ? <Lottie
+              animationData={preloader}
+              style={{
+                width: "300px",
+                height: "100px",
+              }}
+            />:<button onClick={()=>UploadAlbum()} className="bg-[#4F0DA3] rounded-md py-2 w-1/2 text-white">Upload</button>}
         </div>
       </ModalWrapper2>
     </div>
