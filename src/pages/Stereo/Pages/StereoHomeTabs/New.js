@@ -10,6 +10,7 @@ import axios from "axios";
 export default function New() {
   const [recentAlbums, setRecentAlbums] = useState([])
   const [quickpicks, setQuickPicks] = useState([])
+  const [songs, setSongs] = useState([])
   const authToken = localStorage.getItem("authToken")
   const navigation = useNavigate()
   
@@ -29,8 +30,29 @@ export default function New() {
       });
   };
 
+  const GetSongs = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setSongs(res?.data?.data);
+        console.log(songs + "songs state===");
+        console.log(JSON.stringify(res.data) + "songs====");
+
+        
+      });
+  };
+
+  
+  
+
   useEffect(()=>{
     GetRecentAlbums()
+    GetSongs()
   },[])
   return (
     <div>
@@ -38,9 +60,20 @@ export default function New() {
         <span className="text-xl font-medium">New Release</span>
       </div>
       <div
-        className="flex overflow-x-scroll gap-2 mx-3 mt-3"
+        className={songs.length>0?"flex overflow-x-scroll gap-2 mx-3 mt-3":null}
         style={{ scrollbarWidth: "none" }}>
-        <NewCard />
+          {songs?.length>0?songs?.map(res=>{
+                  return (
+                    <NewCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                  )
+                }).reverse():<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+        {/* <NewCard />
         <NewCard
           img={require("../../Assets/Image6.jpeg")}
           category={"Life of the party"}
@@ -75,7 +108,7 @@ export default function New() {
         <NewCard
           img={require("../../Assets/Image3.jpeg")}
           category={"Afrojams"}
-        />
+        /> */}
       </div>
 
       <div className="mx-3 mt-5">
