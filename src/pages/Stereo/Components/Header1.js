@@ -8,7 +8,7 @@ import DesktopNavbar from "../Layout/DesktopNavbar";
 export default function Header1() {
   return (
     <div
-      className="fixed w-full bg-white top-0"
+      className="fixed w-full z-20 bg-white top-0"
       style={{ fontFamily: "Ubuntu" }}>
       <div
         className="flex lg:hidden xl:hidden"

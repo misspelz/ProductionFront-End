@@ -12,6 +12,7 @@ import Lottie from "lottie-react";
 import NothingHere from "../../Assets/nothing_here.json"
 import { useNavigate } from "react-router-dom";
 import UploadLayout2 from "pages/Stereo/Layout/UploadLayout2";
+import Header1 from "pages/Stereo/Components/Header1";
 
 export default function UploadMusic() {
   const [recentUpload, setRecentUpload] = useState([])
@@ -37,6 +38,7 @@ export default function UploadMusic() {
   }, []);
   return (
     <UploadLayout2>
+      <Header1/>
       <div className="pt-20 md:pt-10 lg:pt-10 xl:pt-0">
         <div className="sm:hidden flex flex-col px-5">
           <span className="font-medium text-base mt-4">Artist Overview</span>

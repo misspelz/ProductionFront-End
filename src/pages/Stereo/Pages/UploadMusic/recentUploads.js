@@ -8,6 +8,7 @@ import UploadSongHeader from "../../Components/UploadSongHeader";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../../Assets/nothing_here.json"
+import UploadLayout2 from "pages/Stereo/Layout/UploadLayout2";
 
 export default function RecentUploads() {
   const [recentUpload, setRecentUpload] = useState([])
@@ -33,7 +34,7 @@ export default function RecentUploads() {
   },[])
   return (
     <>
-      <UploadMusicLayout>
+      <UploadLayout2>
         <UploadSongHeader title={"Recent uploads"} />
         <div className="mt-20 sm:mt-0">
           <div className="bg-white w-full pb-10 sm:mx-5">
@@ -96,7 +97,7 @@ export default function RecentUploads() {
             </div>
           </div>
         </div>
-      </UploadMusicLayout>
+      </UploadLayout2>
     </>
   );
 }
