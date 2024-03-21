@@ -3,13 +3,32 @@ import Img from "../Assets/Image1.jpeg";
 import MoreIcon from "../Assets/MoreIcon.svg";
 import Play from "../Assets/ph_play-fill.svg";
 import { BiPause } from "react-icons/bi";
+import axios from "axios";
 
-export default function PicksCard({ title, artist, img, audio }) {
+export default function PicksCard({ title, artist, img, audio, id }) {
   const [formatedTitle, setFormatedTitle] = useState();
   const [isPlaying, setIsPlaying] = useState(false)
+  const [plays, setPlays] = useState()
   const [song] = useState(new Audio(audio))
+  const authToken = localStorage.getItem("authToken")
+
+  const GetPlays = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/${id}/play/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setPlays(res?.data?.data);
+        console.log(plays + "plays state===");
+        console.log(JSON.stringify(res.data) + "plays====");
+      });
+  };
 
   const handlePlaySong = () => {
+    GetPlays()
     setIsPlaying(true)
     song.play()
   }
@@ -45,7 +64,7 @@ export default function PicksCard({ title, artist, img, audio }) {
             {title ? formatedTitle : "Dead"}
           </label>
           <label style={{fontSize:"12px", fontWeight:"400", color:"#403F3F"}}>
-            {artist ? artist : "Billie Eilish"}
+            {artist ? artist : "2GEDA Artist"}
           </label>
         </div>
         {!isPlaying?<button onClick={()=>{handlePlaySong()}} className="flex justify-center items-center" style={{width:"30px",

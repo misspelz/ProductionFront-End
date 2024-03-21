@@ -15,7 +15,7 @@ export default function MoreCard({ title, img, artist }) {
       <div className="flex items-center justify-between">
         <div className="flex gap-4" space={2}>
           <img
-            src={Image}
+            src={img?img:Image}
             style={{ minHeight: 75 }}
             width={75}
             className="rounded-md"
@@ -30,7 +30,7 @@ export default function MoreCard({ title, img, artist }) {
               {title ? formatedTitle : "Take me home ft Bella Keys..."}
             </label>
             <label style={{fontSize:"12px", fontWeight:"400", color:"black"}}>
-              {artist ? artist : "TPrince"}
+              {artist ? artist : "2GEDA Artist"}
             </label>
           </div>
         </div>

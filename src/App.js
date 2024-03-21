@@ -272,7 +272,15 @@ function App() {
               element={<ProtectedRoutes element={<StereoSearchResult />} />}
             />
 
-            
+<Route
+              path="/stereo/artistIndex"
+              element={<ProtectedRoutes element={<UploadMusic />} />}
+            />
+
+            <Route
+              path="/stereo/artist/recentUploads"
+              element={<ProtectedRoutes element={<RecentUploads />} />}
+            />
 
             <Route
               path="/stereo/nonauth"
@@ -304,15 +312,7 @@ function App() {
               <Route path="rewards/payment" element={<Payment />} />
             </Route>
           </Route>
-          <Route
-              path="/stereo/artistIndex"
-              element={<ProtectedRoutes element={<UploadMusic />} />}
-            />
-
-            <Route
-              path="/stereo/artist/recentUploads"
-              element={<ProtectedRoutes element={<RecentUploads />} />}
-            />
+         
         </Routes>
       </div>
 

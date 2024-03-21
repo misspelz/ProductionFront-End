@@ -18,7 +18,7 @@ export default function HitsCard({ img, name, artist }) {
           {name ? name : "Are we annoyed?"}
         </label>
         <label style={{fontSize:"12px", fontWeight:"400", color:"#403F3F"}}>
-          {artist ? artist : "Billie Eilish"}
+          {artist ? artist : "2GEDA Artist"}
         </label>
       </main>
     </div>

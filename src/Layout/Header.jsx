@@ -4,7 +4,7 @@ import logo_2geda from "./../assets/profile_images/2geda_logo.png";
 
 export const Header = () => {
   return (
-    <header className="app_header shadow-lg hidden lg:block">
+    <header className="app_header shadow-lg hidden flex-wrap w-full bg-white  top-0 lg:block">
       <div>
         <img src={logo_2geda} alt="2geda Logo" />
       </div>

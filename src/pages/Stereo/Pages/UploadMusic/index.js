@@ -11,6 +11,7 @@ import LayoutMain from "pages/Stereo/Layout/LayoutMain";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../../Assets/nothing_here.json"
+import { AppLayout } from "Layout/AppLayout";
 
 export default function UploadMusic() {
   const [recentUpload, setRecentUpload] = useState([])
@@ -50,7 +51,7 @@ export default function UploadMusic() {
     GetCategories()
   }, []);
   return (
-    <UploadMusicLayout>
+    <AppLayout>
       <UploadSongHeader />
       <div className="pt-20 md:pt-10 lg:pt-10 xl:pt-0">
         <div className="lg:hidden xl:hidden flex flex-col px-5">
@@ -203,6 +204,6 @@ export default function UploadMusic() {
 
         <div></div>
       </div>
-    </UploadMusicLayout>
+    </AppLayout>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MoreBg from "../Assets/moreBg.jpeg";
 import Arrow from "../Assets/whiteback.svg";
 import Logo from "../Assets/2gedaLogo.svg";
@@ -7,8 +7,32 @@ import MoreCard from "../Components/MoreCard";
 import Ad from "../Assets/AD.jpeg";
 import LayoutMain from "../Layout/LayoutMain";
 import Arrow2 from "../Assets/arrowback.svg";
+import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 export default function More() {
+  const [quickpicks, setQuickPicks] = useState([])
+  const authToken = localStorage.getItem("authToken")
+  const GetQuickPicks = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/trending/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setQuickPicks(res?.data?.data);
+        console.log(quickpicks + "quickpicks state===");
+        console.log(JSON.stringify(res.data) + "quickpicks====");
+      });
+  };
+
+  useEffect(()=>{
+    GetQuickPicks()
+  },[])
+
   return (
     <LayoutMain>
       <div className="bg-white pb-10 sm:mx-5 sm:pt-8">
@@ -80,7 +104,7 @@ export default function More() {
                   </span>
                   <span
                     style={{ fontSize: 14, fontWeight: "400", color: "white" }}>
-                    230 songs
+                    {quickpicks.length} songs
                   </span>
                 </div>
               </div>
@@ -96,7 +120,20 @@ export default function More() {
               marginLeft: 10,
               gap: 20,
             }}>
-            <MoreCard />
+
+{quickpicks?.length>0?quickpicks?.map(res=>{
+                  return (
+                  <MoreCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+
+            {/* <MoreCard />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
@@ -105,7 +142,7 @@ export default function More() {
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
-            <MoreCard title={"Take me home"} />
+            <MoreCard title={"Take me home"} /> */}
           </div>
           {/* ad */}
           <div style={{ margin: "10px 10px" }}>

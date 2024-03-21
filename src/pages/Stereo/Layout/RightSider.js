@@ -252,7 +252,7 @@ export default function RightSider() {
             return <AlbumCard
             img={album.cover_image}
             title={album.name}
-            artist={"Billie Eilish"}
+            artist={album.artist.artist_name?album.artist.artist_name:"2GEDA Artist"}
           />
           }):<div className="flex justify-center items-center">
           <Lottie

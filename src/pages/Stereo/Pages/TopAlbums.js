@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Arrow from "../Assets/whiteback.svg";
 import Logo from "../Assets/2gedaLogo.svg";
 import Music from "../Assets/MusicImg.svg";
@@ -7,17 +7,41 @@ import Ad from "../Assets/AD.jpeg";
 import LayoutMain from "../Layout/LayoutMain";
 import Arrow2 from "../Assets/arrowback.svg";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 
 export default function TopAlbums() {
     const [activeTab, setActiveTab] = useState(0);
+    const [topAlbums, setTopAlbums] = useState([])
   const navigation = useNavigate()
+  const authToken = localStorage.getItem("authToken")
+
+
+  const GetTopAlbums = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/albums/top-album/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setTopAlbums(res?.data?.data);
+        console.log(topAlbums + "topAlbums state===");
+        console.log(JSON.stringify(res.data) + "topAlbums====");
+      });
+  };
   
   
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+  useEffect(()=>{
+    GetTopAlbums()
+  },[])
   return (
     <div>
       <LayoutMain>
@@ -197,7 +221,18 @@ export default function TopAlbums() {
               marginLeft: 10,
               gap: 20,
             }}>
-            <MoreCard />
+              {topAlbums?.length>0?topAlbums?.map(res=>{
+                  return (
+                  <MoreCard title={res.name} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist.artist_name} />
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+            {/* <MoreCard />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
@@ -206,7 +241,7 @@ export default function TopAlbums() {
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
-            <MoreCard title={"Take me home"} />
+            <MoreCard title={"Take me home"} /> */}
           </div>
           {/* ad */}
           <div style={{ margin: "10px 10px" }}>

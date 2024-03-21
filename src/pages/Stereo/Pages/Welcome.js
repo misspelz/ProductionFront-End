@@ -105,7 +105,7 @@ export default function Welcome() {
               style={{ scrollbarWidth: "none" }}>
                 {trendingSongs?.length>0?trendingSongs?.map(res=>{
                   return (
-                  <TrendingCard category={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.cover_image}`:null}/>
+                  <TrendingCard category={res.title} img={res.cover_image?res.cover_image:null} artist={res?.artist} audio={res.audio_file?`https://development.2geda.net${res.cover_image}`:null}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

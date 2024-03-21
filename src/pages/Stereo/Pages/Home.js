@@ -25,6 +25,7 @@ export default function StereoHome() {
   const [activeTab, setActiveTab] = useState(0);
   const [topAlbums, setTopAlbums] = useState([])
   const [quickpicks, setQuickPicks] = useState([])
+  const [bighit, setBigHit] = useState([])
   const authToken = localStorage.getItem("authToken")
   const navigation = useNavigate()
   
@@ -41,6 +42,25 @@ export default function StereoHome() {
         setTopAlbums(res?.data?.data);
         console.log(topAlbums + "topAlbums state===");
         console.log(JSON.stringify(res.data) + "topAlbums====");
+      });
+  };
+  const GetBigHits = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        // Filter the items where plays < 3
+        const filteredHits = res?.data?.data.filter((item) => item.plays > 0);
+        // Assuming setBigHit is a function to update state
+        setBigHit(filteredHits);
+        console.log(filteredHits,"bighits"); // This will log the filtered items
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
       });
   };
 
@@ -62,6 +82,7 @@ export default function StereoHome() {
   useEffect(()=>{
     GetTopAlbums()
     GetQuickPicks()
+    GetBigHits()
   },[])
 
   const handleTabClick = (index) => {
@@ -288,7 +309,7 @@ export default function StereoHome() {
                   >
                     {quickpicks?.length>0?quickpicks?.map(res=>{
                   return (
-                  <PicksCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null}/>
+                  <PicksCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -363,17 +384,29 @@ export default function StereoHome() {
               {/* second card */}
 
               <div
+              className={bighit?.length>0?"flex mx-3 gap-3 overflow-x-scroll justify-between h-full":null}
                 style={{
-                  marginLeft: 10,
-                  marginRight: 10,
-                  display: "flex",
-                  gap: 10,
-                  overflowX: "scroll",
+                  // marginLeft: 10,
+                  // marginRight: 10,
+                  // display: "flex",
+                  // gap: 10,
+                  // overflowX: "scroll",
                   scrollbarWidth: "none",
-                  justifyContent: "space-between",
+                  // justifyContent: "space-between",
                   height: "100%",
                 }}>
-                <HitsCard />
+                  {bighit?.length>0?bighit?.map(res=>{
+                  return (
+                  <HitsCard name={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist} audio={res.audio_file?res.audio_file:null} id={res.id}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+                {/* <HitsCard />
                 <HitsCard
                   img={require("../Assets/Image3.jpeg")}
                   name={"Life"}
@@ -387,7 +420,7 @@ export default function StereoHome() {
                   artist={"Burna Boy"}
                 />
                 <HitsCard img={require("../Assets/Image4.jpeg")} />
-                <HitsCard />
+                <HitsCard /> */}
               </div>
 
               {/* 3rd Card */}

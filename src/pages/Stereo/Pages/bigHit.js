@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MoreBg from "../Assets/moreBg.jpeg";
 import Arrow from "../Assets/whiteback.svg";
 import Logo from "../Assets/2gedaLogo.svg";
@@ -8,8 +8,38 @@ import Ad from "../Assets/AD.jpeg";
 import LayoutMain from "../Layout/LayoutMain";
 import Arrow2 from "../Assets/arrowback.svg";
 import downloadIcon from "../Assets/tabler_download.svg";
+import axios from "axios";
+import Lottie from "lottie-react";
+import NothingHere from "../Assets/nothing_here.json"
 
 export default function BigHit() {
+  const [bighit, setBigHit] = useState([])
+  const authToken = localStorage.getItem("authToken")
+
+  const GetBigHits = () => {
+    axios
+      .get(`https://development.2geda.net/api/stereo/songs/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        // Filter the items where plays < 3
+        const filteredHits = res?.data?.data.filter((item) => item.plays > 0);
+        // Assuming setBigHit is a function to update state
+        setBigHit(filteredHits);
+        console.log(filteredHits,"bighits"); // This will log the filtered items
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  useEffect(()=>{
+    GetBigHits()
+  },[])
+
   return (
     <LayoutMain>
       <div className="bg-white pb-10 sm:mx-5 sm:pt-8">
@@ -81,7 +111,7 @@ export default function BigHit() {
                   </span>
                   <span
                     style={{ fontSize: 14, fontWeight: "400", color: "white" }}>
-                    230 songs
+                    {bighit.length} songs
                   </span>
                 </div>
 
@@ -113,7 +143,18 @@ export default function BigHit() {
               marginLeft: 10,
               gap: 20,
             }}>
-            <MoreCard />
+              {bighit?.length>0?bighit?.map(res=>{
+                  return (
+                  <MoreCard title={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist} audio={res.audio_file?res.audio_file:null} id={res.id}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+            {/* <MoreCard />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
@@ -122,7 +163,7 @@ export default function BigHit() {
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
             <MoreCard title={"Take me home"} />
-            <MoreCard title={"Take me home"} />
+            <MoreCard title={"Take me home"} /> */}
           </div>
           {/* ad */}
           <div style={{ margin: "10px 10px" }}>
