@@ -217,7 +217,9 @@ const Connect = () => {
 
               {activeTab === "People nearby" ? (
                 <div className="bg-[#00000099]">
-                  <div className="flex relative w-full">
+
+                  <div className="flex relative w-full justify-center">
+
                     {currentUserIndex !== connectUsersImages.length - 1 && (
                       <div className="text-[40px] absolute top-[45%] right-0 lg:right-40 z-[999]">
                         <IoIosArrowDroprightCircle
