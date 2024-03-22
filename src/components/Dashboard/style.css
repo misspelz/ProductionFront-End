@@ -275,11 +275,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 16%;
+  /* width: 16%; */
 }
 /* last side */
 .right-side-container {
-  width: 23%;
+  /* width: 23%; */
 }
 .al-see {
   color: #4f0da3;

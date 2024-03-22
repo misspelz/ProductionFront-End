@@ -11,6 +11,18 @@ import ProfileStick from "../../components/Commons/ProfileStick";
 import SearchBusinessCard from "../../components/SearchComp/SearchBusinessCard";
 import BusinessStick from "../../components/Commons/BusinessStick";
 import ClamBuss from "../BussinessDirectory/ClamBuss";
+import logo from "../../assets/2gedalogo.svg";
+import filter from "../../assets/filter.svg";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import user1 from "assets/userconnect.svg";
+import user2 from "assets/connectuser2.svg";
+import user3 from "assets/connectuser3.svg";
+import { default as AD3, default as AD4 } from "assets/images/AD3.png";
+import {
+  IoIosArrowDropleftCircle,
+  IoIosArrowDroprightCircle,
+} from "react-icons/io";
 
 const Data = [
   {
@@ -94,6 +106,42 @@ const Connect = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentUserIndex, setCurrentUserIndex] = useState(0);
+
+  // const connectUsersImages = [user1, user2, user3];
+  const connectUsersImages = [
+    { src: user1, text: "Mike Ade" },
+    { src: user2, text: "Mercy John" },
+    { src: user3, text: "Ade Pelz" },
+  ];
+
+  const NextImage = () => {
+    setCurrentUserIndex((prevIndex) =>
+      prevIndex === connectUsersImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const PrevImage = () => {
+    setCurrentUserIndex((prevIndex) =>
+      prevIndex === 0 ? connectUsersImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  const images = [AD1, AD2, AD3, AD4];
+
+  const goToNextImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(goToNextImage, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
       <ClamBuss
@@ -124,9 +172,32 @@ const Connect = () => {
           {!isProfileOpen && !isBussinessOpen && (
             <>
               <div>
-                <div className="head-line bus-dir">Connect</div>
-                <ConnectSearch />
-                {/* <img src="images/jumia.png" alt="" className="ads-img" /> */}
+                <div className="head-line bus-dir flex justify-between w-full items-center mb-[16px] lg:hidden">
+                  <div className="flex items-center gap-2">
+                    <img src={logo} alt="logo" />
+                    <div>Connect with other users</div>
+                  </div>
+                  {/* <img src={filter} alt="filter-icon" /> */}
+                </div>
+
+                <div className="flex lg:hidden">
+                  <ConnectSearch />
+                </div>
+
+                <div className="hidden lg:flex ">
+                  <ConnectSearch />
+                  {/* <div className="p-3 bg-white rounded-[10px]">
+                    <img src={filter} alt="filter-icon" />
+                  </div> */}
+                </div>
+
+                <div className="mt-[16px]">
+                  <img
+                    src={images[currentIndex]}
+                    alt="banner"
+                    className="w-full"
+                  />
+                </div>
               </div>
               <div className="select-what-display w-dis">
                 {Data.map((item, index) => (
@@ -143,48 +214,38 @@ const Connect = () => {
                   </div>
                 ))}
               </div>
+
               {activeTab === "People nearby" ? (
-                <div className="connect-profile-view-box">
-                  <div className="cont-view-connect">
-                    <div className="arrr-ctrl disable flex">
-                      <AiOutlineLeft />
-                    </div>
-                    <div className="image-bx-cont">
-                      <div className="share-bx flex">
-                        <GiShare />
-                      </div>
-                      <div className="indicator-bx">
-                        <div className="ind-con actvv"></div>
-                        <div className="ind-con"></div>
-                        <div className="ind-con"></div>
-                      </div>
-                      <div className="flex all-ma-box">
-                        <img src="images/pic3.png" alt="" />
-                        <img src="images/pic2.png" alt="" />
-                      </div>
-                      <div className="prof-bx-connect">
-                        <img
-                          src="images/pic1.png"
-                          alt=""
-                          onClick={handleProfileClick}
+                <div className="bg-[#00000099]">
+                  <div className="flex relative w-full">
+                    {currentUserIndex !== connectUsersImages.length - 1 && (
+                      <div className="text-[40px] absolute top-[45%] right-0 lg:right-40 z-[999]">
+                        <IoIosArrowDroprightCircle
+                          size={40}
+                          color="#fff"
+                          onClick={NextImage}
                         />
-                        <div className="user-nmm">Mercy Alake</div>
-                        <div className="username-txtt">@mercyalkkk</div>
-                        <div className="username-txtt">
-                          Abeokuta, 56km From you
-                        </div>
-                        <div className="username-txtt biiio">
-                          Adewalw wed addyjum Adewalw wed addyjum Adewal...
-                        </div>
                       </div>
-                      <div className="chat-stick-btn-bx flex">
-                        <button className="ch-st-btn ora-btn">Chat</button>
-                        <button className="ch-st-btn">Stick</button>
+                    )}
+                    <div className="relative">
+                      <img
+                        src={connectUsersImages[currentUserIndex].src}
+                        alt="connect-user-images"
+                        className="w-full"
+                      />
+                      <div className="absolute bottom-20 left-0 right-0   text-white text-[20px] font-bold text-left">
+                        {connectUsersImages[currentUserIndex].text}
                       </div>
                     </div>
-                    <div className="arrr-ctrl flex">
-                      <AiOutlineRight />
-                    </div>
+                    {currentUserIndex !== 0 && (
+                      <div className="text-[40px] absolute top-[45%] left-0 lg:left-40 z-[999]">
+                        <IoIosArrowDropleftCircle
+                          size={40}
+                          color="#fff"
+                          onClick={PrevImage}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
@@ -217,15 +278,13 @@ const Connect = () => {
           )}
         </div>
 
-        <div className="middle-side-container mvmm">
-          <img src="images/ads1.png" alt="" />
-        </div>
-        <div className="right-side-container">
-          <SelectCategory />
-          {/* <Follower />
-              <div className="mess-bxx-conn">
-                <DashMessage />
-              </div> */}
+        <div className="flex gap-[20px] w-[50%]">
+          <div className="middle-side-container mvmm w-full">
+            <img src="images/ads1.png" alt="" className="w-full" />
+          </div>
+          <div className="right-side-container e-full">
+            <SelectCategory />
+          </div>
         </div>
       </div>
     </>

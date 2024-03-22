@@ -24,12 +24,12 @@ const ConnectSearch = ({ handleSearchResultContainerClick }) => {
 
   return (
     <div className="business-search-container">
-      <div className="search-container-busi">
-        <BiSearch />
+      <div className="search-container-busi rounded-[30px]">
+        <BiSearch size={20} />
         <input
           type="text"
-          className="search-inp-bus"
-          placeholder="Find event"
+          className="search-inp-bus "
+          placeholder="Search users, businesses"
           value={inputValue}
           onChange={handleInputChange}
           // onKeyDown={handleKeyDown}
@@ -40,9 +40,9 @@ const ConnectSearch = ({ handleSearchResultContainerClick }) => {
           <SortByModal handleFilterClose={handleFilterClose} />
         </div>
       )}
-      <div className="filter-search-bus" onClick={handleFilterClick}>
+      {/* <div className="filter-search-bus" onClick={handleFilterClick}>
         <GoFilter />
-      </div>
+      </div> */}
     </div>
   );
 };

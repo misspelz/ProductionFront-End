@@ -328,14 +328,14 @@ const Voting = () => {
   return (
     <>
       {!selectedPoll && (
-        <div className=" bg-[#f5f5f5] mt-20 lg:mt-0 h-full overflow-scroll  w-full  lg:px-10 gap-6 ">
+        <div className=" bg-[#f5f5f5] mt-20 lg:mt-[60px] lg:h-full lg:overflow-scroll  w-full  lg:px-10 gap-6">
           <div className="">
             {!Notify && !CastVote && (
               <div className=" overflow-x-hidden bg-[#fff] px-6 md:hidden">
                 <h1>Voting</h1>
                 <h2 className="mt-6 ">Hello, {userInfo.username}</h2>
                 <span className="text-[14px] ">
-                  What do you want to do today ?
+                  What do you want to do today?
                 </span>
 
                 <img
@@ -368,7 +368,6 @@ const Voting = () => {
                 />
                 <h1>Cast Vote</h1>
               </div>
-
               <img
                 src={images[currentIndex]}
                 alt="slider-pics"
@@ -377,7 +376,7 @@ const Voting = () => {
               <h2 className="mt-4">Suggested Polls</h2>
               <SuggestedPolls HandlePoll={HandlePoll} />
 
-              <h2>Promoted Polls</h2>
+              <h2 className="mt-5">Promoted Polls</h2>
               <PromotedPolls HandlePoll={HandlePoll} />
 
               {/* tabs */}

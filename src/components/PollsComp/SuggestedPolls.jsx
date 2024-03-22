@@ -38,7 +38,7 @@ export const SuggestedPolls = ({ HandlePoll }) => {
     );
 
   if (!filteredSuggestedPolls || filteredSuggestedPolls.length === 0) {
-    return <p className="mt-5">No polls to display</p>;
+    return <p className="mt-5 text-center">No polls to display</p>;
   }
 
   return (

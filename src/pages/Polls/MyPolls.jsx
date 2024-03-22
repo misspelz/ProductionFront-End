@@ -3,7 +3,7 @@ import { ModalContext } from "Context/ModalContext";
 import {
   ClosePollApi,
   FindUserPollsApi,
-  PromotePollApi
+  PromotePollApi,
 } from "api/services/auth&poll";
 import AD1 from "assets/images/AD1.png";
 import AD2 from "assets/images/AD2.png";
@@ -470,7 +470,7 @@ const MyPolls = () => {
   }, []);
 
   return (
-    <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative">
+    <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative lg:mt-[60px]">
       {!Notify && !CastVote && !showMyPolls && (
         <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
           <div className="flex flex-col gap-3 ">
@@ -712,25 +712,29 @@ const MyPolls = () => {
                   <div className="flex gap-2 w-full mt-4">
                     <PricingComponent
                       title="Basic"
-                      price="N1,000"
+                      price={1000}
                       duration="1 day"
+                      onSelect={handleSelect}
                     />
                     <PricingComponent
                       title="Standard"
-                      price="N5,000"
+                      price={5000}
                       duration="7 days"
+                      onSelect={handleSelect}
                     />
                   </div>
                   <div className="flex gap-2 w-full mt-4">
                     <PricingComponent
                       title="Premium"
-                      price="N9,000"
+                      price={9000}
                       duration="14 days"
+                      onSelect={handleSelect}
                     />
                     <PricingComponent
                       title="Pro"
-                      price="N14,000"
+                      price={14000}
                       duration="30 days"
+                      onSelect={handleSelect}
                     />
                   </div>
 
