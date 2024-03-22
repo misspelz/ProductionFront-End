@@ -10,6 +10,13 @@ import { useNavigate, useNavigation } from "react-router-dom";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../Assets/nothing_here.json"
+import toast from "react-hot-toast";
+import "react-toastify/dist/ReactToastify.css";
+// import Lottie from "lottie-react";
+import preloader from "../../../pages/Home/Animation - 1703321875032 (1).json"
+
+
+
 
 export default function Welcome() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +25,7 @@ export default function Welcome() {
   const [userName, setUserName] = useState()
   const [about, setAbout] = useState()
   const [image, setImage] = useState();
+  const [loading, setLoading] = useState(false)
   const navigation = useNavigate()
 
   const [trendingSongs, setTrendingSongs] = useState([]);
@@ -41,9 +49,20 @@ export default function Welcome() {
         setTrendingSongs(res?.data?.data);
         console.log(trendingSongs + "trending state===");
         console.log(JSON.stringify(res.data) + "trending====");
-      });
+        if (res.status === 200 || res.status===201){
+          setLoading(false)
+          toast.success(res.data.message)
+        } else if (res.status == null){
+          toast.error(res.data.message)
+        } else {
+          toast.error("Something went wrong")
+        }
+      }).catch(err=>{
+        toast.error("Something went wrong")
+      })
   };
   const RegisterArtist = () => {
+    setLoading(true)
     console.log(image)
     const payload = {
       artist_name: userName,
@@ -56,7 +75,7 @@ export default function Welcome() {
       "X-CSRFToken": process.env.REACT_TOKEN,
     }}).then(res=>{
       console.log(res)
-    })
+    }).catch(err=>{console.log(err)})
   }
 
   useEffect(() => {
@@ -179,7 +198,7 @@ export default function Welcome() {
                   />
                   
                 </div>
-                <div className="flex items-center mb-5 gap-1">
+                {/* <div className="flex items-center mb-5 gap-1">
                   <span className="font-light text-xs">
                     Already have an account?{" "}
                   </span>
@@ -192,11 +211,17 @@ export default function Welcome() {
                     className="font-light text-xs text-[#4F0DA3]">
                     Sign in
                   </a>
-                </div>
+                </div> */}
                 <div className="flex justify-center mb-5">
-                  <button onClick={()=>RegisterArtist()} className="bg-[#4F0DA3] text-white py-2 px-20 rounded-md">
+                  {loading?<Lottie
+              animationData={preloader}
+              style={{
+                width: "300px",
+                height: "100px",
+              }}
+            />:<button onClick={()=>RegisterArtist()} className="bg-[#4F0DA3] text-white py-2 px-20 rounded-md">
                     Sign Up
-                  </button>
+                  </button>}
                 </div>
               </main>
             </div>

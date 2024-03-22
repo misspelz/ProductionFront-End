@@ -36,7 +36,12 @@ export default function Artists() {
     <div className="mx-4">
       <div className={artists.length>0?`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6`:null}>
         {artists.length>0?artists.map(artist =>{
-          return(<ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={handleOpenModal} />)
+          return(<div><ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={handleOpenModal} />
+          {isOpen && (
+        <Modal isOpen={isOpen} onClose={handleCloseModal}>
+          <ArtistProfile onClick={handleCloseModal} />
+        </Modal>
+      )}</div>)
         }):<div className="flex justify-center items-center">
           <Lottie
                 animationData={NothingHere}
@@ -82,11 +87,7 @@ export default function Artists() {
           }}
         />
       </div>
-      {isOpen && (
-        <Modal isOpen={isOpen} onClose={handleCloseModal}>
-          <ArtistProfile onClick={handleCloseModal} />
-        </Modal>
-      )}
+      
     </div>
   );
 }
