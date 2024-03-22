@@ -328,7 +328,7 @@ const Voting = () => {
   return (
     <>
       {!selectedPoll && (
-        <div className=" bg-[#f5f5f5] mt-20 lg:mt-[60px] lg:h-full lg:overflow-scroll  w-full  lg:px-10 gap-6">
+        <div className=" bg-[#f5f5f5] lg:h-full lg:overflow-scroll  w-full  lg:px-10 gap-6">
           <div className="">
             {!Notify && !CastVote && (
               <div className=" overflow-x-hidden bg-[#fff] px-6 md:hidden">

@@ -4,6 +4,7 @@ module.exports = {
     extend: {
       colors: {
         primaryColor: "#4f0da3",
+        secondaryColor: "#FF8A15",
       },
 
       keyframes: {

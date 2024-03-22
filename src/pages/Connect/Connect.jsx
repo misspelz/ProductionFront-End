@@ -23,6 +23,8 @@ import {
   IoIosArrowDropleftCircle,
   IoIosArrowDroprightCircle,
 } from "react-icons/io";
+import Message from "components/ConnectComp/message";
+import RightBar from "components/RightBar";
 
 const Data = [
   {
@@ -109,11 +111,52 @@ const Connect = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
 
-  // const connectUsersImages = [user1, user2, user3];
   const connectUsersImages = [
-    { src: user1, text: "Mike Ade" },
-    { src: user2, text: "Mercy John" },
-    { src: user3, text: "Ade Pelz" },
+    {
+      src: user1,
+      text: "Mike Ade",
+      div: (
+        <div>
+          <div className="lg:text-[20px]">Mike Ade</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">@mike</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">
+            Abeokuta, 56km from you
+          </div>
+          <div className="font-thin text-[14px] lg:text-[16px]">No Bio yet</div>
+        </div>
+      ),
+    },
+    {
+      src: user2,
+      text: "Mercy John",
+      div: (
+        <div>
+          <div className="lg:text-[20px]">Mercy John</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">@mercyjohn</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">
+            Ibadan, 56km from you
+          </div>
+          <div className="font-thin text-[14px] lg:text-[16px]">
+            My name is Mercy, I’m a lady and I love to connect with people
+          </div>
+        </div>
+      ),
+    },
+    {
+      src: user3,
+      div: (
+        <div>
+          <div className="lg:text-[20px]">Ade Pelz</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">@pelz</div>
+          <div className="font-thin text-[14px] lg:text-[16px]">
+            Lagos, 56km from you
+          </div>
+          <div className="font-thin text-[14px] lg:text-[16px]">
+            No one knows tomorrow
+          </div>
+        </div>
+      ),
+    },
   ];
 
   const NextImage = () => {
@@ -177,7 +220,6 @@ const Connect = () => {
                     <img src={logo} alt="logo" />
                     <div>Connect with other users</div>
                   </div>
-                  {/* <img src={filter} alt="filter-icon" /> */}
                 </div>
 
                 <div className="flex lg:hidden">
@@ -186,9 +228,6 @@ const Connect = () => {
 
                 <div className="hidden lg:flex ">
                   <ConnectSearch />
-                  {/* <div className="p-3 bg-white rounded-[10px]">
-                    <img src={filter} alt="filter-icon" />
-                  </div> */}
                 </div>
 
                 <div className="mt-[16px]">
@@ -199,6 +238,7 @@ const Connect = () => {
                   />
                 </div>
               </div>
+              
               <div className="select-what-display w-dis">
                 {Data.map((item, index) => (
                   <div
@@ -217,15 +257,14 @@ const Connect = () => {
 
               {activeTab === "People nearby" ? (
                 <div className="bg-[#00000099]">
-
                   <div className="flex relative w-full justify-center">
-
                     {currentUserIndex !== connectUsersImages.length - 1 && (
                       <div className="text-[40px] absolute top-[45%] right-0 lg:right-40 z-[999]">
                         <IoIosArrowDroprightCircle
                           size={40}
                           color="#fff"
                           onClick={NextImage}
+                          className="cursor-pointer"
                         />
                       </div>
                     )}
@@ -233,18 +272,27 @@ const Connect = () => {
                       <img
                         src={connectUsersImages[currentUserIndex].src}
                         alt="connect-user-images"
-                        className="w-full"
+                        className="w-full lg:my-20 rounded-[10px]"
                       />
-                      <div className="absolute bottom-20 left-0 right-0   text-white text-[20px] font-bold text-left">
-                        {connectUsersImages[currentUserIndex].text}
+                      <div className="absolute bottom-40 left-4 right-0   text-white text-[20px] font-bold text-left">
+                        {connectUsersImages[currentUserIndex].div}
+                      </div>
+                      <div className="flex absolute bottom-10 transform translate-x-[5%]  lg:translate-x-[28%] gap-3 lg:gap-6">
+                        <div className="bg-primaryColor text-white w-[140px] h-[50px] rounded-[30px] flex items-center justify-center text-[16px] cursor-pointer">
+                          Chat
+                        </div>
+                        <div className="bg-secondaryColor text-white w-[140px] h-[50px] rounded-[30px] flex items-center justify-center text-[16px] cursor-pointer">
+                          Stick
+                        </div>
                       </div>
                     </div>
                     {currentUserIndex !== 0 && (
-                      <div className="text-[40px] absolute top-[45%] left-0 lg:left-40 z-[999]">
+                      <div className="text-[40px] absolute top-[45%] left-0 lg:left-40 z-[999] ">
                         <IoIosArrowDropleftCircle
                           size={40}
                           color="#fff"
                           onClick={PrevImage}
+                          className="cursor-pointer"
                         />
                       </div>
                     )}
@@ -280,13 +328,8 @@ const Connect = () => {
           )}
         </div>
 
-        <div className="flex gap-[20px] w-[50%]">
-          <div className="middle-side-container mvmm w-full">
-            <img src="images/ads1.png" alt="" className="w-full" />
-          </div>
-          <div className="right-side-container e-full">
-            <SelectCategory />
-          </div>
+        <div className="w-[70%]">
+          <RightBar />
         </div>
       </div>
     </>

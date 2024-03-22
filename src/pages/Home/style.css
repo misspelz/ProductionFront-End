@@ -1,5 +1,5 @@
 .app_main {
-  padding: 1rem 1.5rem;
+  /* padding: 1rem 1.5rem; */
   overflow: auto;
   background-color: #f5f5f5;
 }
@@ -24,7 +24,7 @@
 
 .main-containe {
   display: flex;
-  padding-bottom: 90px;
+  /* padding-bottom: 90px; */
   gap: 20px;
   position: relative;
   justify-content: space-between;
