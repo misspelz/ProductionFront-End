@@ -53,7 +53,6 @@ import ComingSoonPage from "./pages/ComingSoon";
 import { ModalContext } from "Context/ModalContext";
 import ManageBusiness from "pages/ManageBusiness/ManageBusiness";
 import RewardLayout from "./Layout/RewardLayout";
-import { setupAxios } from "./api";
 import BusinessProfile from "./pages/BusinessProfile/BusinessProfile";
 import Profile from "./pages/Profile/Profile";
 import Histories from "./pages/Rewards/Histories";
@@ -83,9 +82,6 @@ function ScrollToTop() {
 }
 
 function App() {
-  useEffect(() => {
-    setupAxios();
-  }, []);
 
   const { isAuthenticated } = useContext(ModalContext);
 

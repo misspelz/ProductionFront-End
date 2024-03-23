@@ -7,83 +7,26 @@ import "./feed-detail.css";
 import Follower from "components/Dashboard/Follower";
 import DashMessage from "components/Dashboard/DasMess";
 import SelectCategory from "components/Dashboard/SelectCategory";
-import { useGetComments, useGetPostById } from "api/hooks/feeds";
-import { PiMicrosoftPowerpointLogo } from "react-icons/pi";
-import { SiMicrosoftword, SiMicrosoftexcel } from "react-icons/si";
 import {
-	BsAndroid2,
-	// BsFiletypeExe,
-	BsFillFileEarmarkPdfFill,
-	// BsFiletypeExe,
-} from "react-icons/bs";
-
-
-const domainUrl = "https://development.2geda.net";
-
-const DisplayMedia = ({ mediaFile }) => {
-	const renderFileIcon = (fileType) => {
-		if (fileType?.endsWith("pdf")) {
-			return <BsFillFileEarmarkPdfFill className="icon-dw pdf" size={24} />;
-		}
-		if (fileType?.endsWith("doc") || fileType?.endsWith("docx")) {
-			return <SiMicrosoftword className="icon-dw word" size={24} />;
-		}
-		if (fileType?.endsWith("xls") || fileType?.endsWith("xlsx")) {
-			return <SiMicrosoftexcel className="icon-dw excel" size={24} />;
-		}
-		if (fileType?.endsWith("ppt")) {
-			return <PiMicrosoftPowerpointLogo className="icon-dw prese" size={24} />;
-		}
-		if (fileType?.endsWith("exe")) {
-			return <PiMicrosoftPowerpointLogo className="icon-dw prese" size={24} />;
-		}
-		if (fileType?.endsWith("apk")) {
-			return <BsAndroid2 className="icon-dw apk" size={24} />;
-		}
-	};
-	if (mediaFile?.file_type?.includes("audio")) {
-		const fileName = mediaFile.file.split("/")[3];
-		return (
-			<div>
-				<p>{fileName}</p>
-				<audio controls>
-					<source src={domainUrl + mediaFile.file} type={mediaFile.file_type} />
-				</audio>
-			</div>
-		);
-	}
-	if (mediaFile?.file_type?.includes("image")) {
-		return <img src={domainUrl + mediaFile.file} alt="" />;
-	}
-	if (mediaFile?.file_type?.includes("video")) {
-		return (
-			<video width="100%" height="180" controls>
-				<source src={domainUrl + mediaFile.file} type={mediaFile.file_type} />
-				Your browser does not support the video tag.
-			</video>
-		);
-	}
-	if (mediaFile?.file_type?.includes("application")) {
-		const fileName = mediaFile.file.split("/")[3];
-		return (
-			<a
-				href={domainUrl + mediaFile.file}
-				rel="noopener noreferrer"
-				download
-				className="document-media"
-			>
-				<div>{renderFileIcon(mediaFile?.file)}</div>
-				<span>{fileName}</span>
-			</a>
-		);
-	}
-};
+	useGetComments,
+	useGetGoogleLocation,
+	useGetPostById,
+} from "api/hooks/feeds";
+import DisplayMedia from "components/Home/Displaymedia/Displaymedia";
+import LocationMap from "components/Modals/Post-form-modals/LocationMap";
+import { MdLocationOn } from "react-icons/md";
 
 const FeedDetail = () => {
 	const { feedId } = useParams();
-	const { data, isLoading, isError, isSuccess } = useGetPostById(feedId);
+	const { data } = useGetPostById(feedId);
 	const getComments = useGetComments(feedId);
 	const navigate = useNavigate();
+
+	const coordinates = data?.location?.split(",");
+	const getLocation = useGetGoogleLocation({
+		latitude: coordinates?.[0],
+		longitude: coordinates?.[1],
+	});
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -111,8 +54,23 @@ const FeedDetail = () => {
 								<DisplayMedia mediaFile={file} key={file?.file_id} />
 							))}
 						</div>
+						{data?.location != null && (
+							<div className="location-container">
+								<div className="location-address">
+									<MdLocationOn /> {getLocation?.data?.[0]?.formatted_address}
+								</div>
+								<div className="location-wrapper">
+									{coordinates?.[0] && coordinates?.[1] && (
+										<LocationMap
+											lat={Number(coordinates?.[0])}
+											lng={Number(coordinates?.[1])}
+										/>
+									)}
+								</div>
+							</div>
+						)}
 						<div className="post-display-content">
-							<p>{data?.text_content}</p>
+							<p>{data?.text_content == "null" ? "" : data?.text_content}</p>
 						</div>
 					</div>
 					<div className="comm-bx-pos">

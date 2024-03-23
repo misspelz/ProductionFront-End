@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import MainLayout from "../../Layout/MainLayout";
+import React, { useState } from "react";
 import DashMessage from "../../components/Dashboard/DasMess";
 import FirstSide from "../../components/Dashboard/FirstSide";
 import Follower from "../../components/Dashboard/Follower";
@@ -17,7 +16,6 @@ import Feeds from "components/Home/Feeds/All-feeds/Feeds";
 import FeedsMusic from "components/Home/Feeds/Music/FeedsMusic";
 import Feedfiles from "components/Home/Feeds/Files/Feedfiles";
 import FeedsVoice from "components/Home/Feeds/voice-notes/FeedsVoice";
-import { setupAxios } from "api/index";
 
 const CustomTabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -41,11 +39,6 @@ const Home = () => {
 	const handleChange = (event, newValue) => {
 		setActiveTab(newValue);
 	};
-
-	useEffect(() => {
-		setupAxios();
-		console.log("setup from the home page");
-	}, []);
 
 	return (
 		<div className="main-containe">

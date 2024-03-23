@@ -102,13 +102,19 @@ export const convertPostTime = (timeStamp) => {
 	// Convert milliseconds to seconds
 	const secondsPassed = Math.floor(timeDifference / 1000);
 	if (secondsPassed < 60) {
-		renderedTime = `${secondsPassed} secs ago`;
+		renderedTime = secondsPassed < 2 ? "now" : `${secondsPassed} secs ago`;
 	} else if (secondsPassed < 3600) {
-		renderedTime = `${Math.floor(secondsPassed / 60)} mins ago`;
+		renderedTime = `${Math.floor(secondsPassed / 60)} min${Math.floor(
+			secondsPassed / 60
+		) < 2 ? "" : "s"} ago`;
 	} else if (secondsPassed < 86400) {
-		renderedTime = `${Math.floor(secondsPassed / 3600)} hrs ago`;
+		renderedTime = `${Math.floor(secondsPassed / 3600)} hr${Math.floor(
+			secondsPassed / 3600
+		) < 2 ? "" : "s" } ago`;
 	} else {
-		renderedTime = `${Math.floor(secondsPassed / 86400)} days ago`;
+		renderedTime = `${Math.floor(secondsPassed / 86400)} day${Math.floor(
+			secondsPassed / 86400
+		) < 2 ? "" : "s"} ago`;
 	}
 
 	return renderedTime;

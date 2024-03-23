@@ -5,13 +5,13 @@ import "./feed-detail-modal.css";
 import Custombutton from "components/Custom-button/Custombutton";
 import { AiFillDelete } from "react-icons/ai";
 
-const PhotoInputField = ({ postId }) => {
+const PhotoInputField = ({ postId, onClose }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
+			onClose()
 			setCommentText("");
-            setSelectedImage(null)
+			setSelectedImage(null);
 		},
 		onError: (errorResponse) => {
 			console.log({ errorResponse });
@@ -23,11 +23,10 @@ const PhotoInputField = ({ postId }) => {
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
 		if (file) {
-            setSelectedImage(file);
+			setSelectedImage(file);
 		}
 	};
 
-    
 	const handleDeleteItem = () => {
 		setSelectedImage(null);
 	};
