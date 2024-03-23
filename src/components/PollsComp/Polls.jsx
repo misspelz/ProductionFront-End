@@ -26,6 +26,7 @@ export const Polls = ({
   isClosed,
   HandlePromote,
   id,
+  tag,
 }) => {
   const { showAction, setShowAction } = useContext(ModalContext);
 
@@ -52,6 +53,10 @@ export const Polls = ({
       style={{ boxShadow: "0px 4px 4px 0px #00000040" }}
       onClick={onClick}
     >
+      <div className="text-white text-[12px] lg:text-[14px] uppercase bg-primaryColor mb-4 text-center">
+        {" "}
+        {tag ? "This is a Paid poll" : ""}
+      </div>
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div
@@ -141,11 +146,11 @@ export const Polls = ({
                   </span>
                 </div>
               </div>
-              
+
               <div onClick={() => toggleShowAction(id)}>
                 <CiMenuKebab className="text-black text-xl" />
               </div>
-            
+
               {showAction === id && (
                 <div className="absolute flex flex-col items-start gap-4 right-8 bottom-2 bg-white rounded-lg shadow-md shadow-gray-300 py-[1.5rem] px-[1rem]">
                   <button

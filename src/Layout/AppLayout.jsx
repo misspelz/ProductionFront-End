@@ -14,7 +14,7 @@ export const AppLayout = () => {
   };
 
   return (
-    <div className="app_layout">
+    <div className="app_layout max-w-[1440px] mx-auto">
       <Header />
       <Asidebar />
       <main className="app_main mt-40">

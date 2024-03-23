@@ -48,6 +48,7 @@ const Voting = () => {
   // console.log("APoll", APoll);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [numberOfVotes, setNumberOfVotes] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("NGN");
   const [payNowAmount, setPayNowAmount] = useState(0);
@@ -103,6 +104,8 @@ const Voting = () => {
     } catch (error) {
       console.log("allpolls", error);
       toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setIsPageLoading(false);
     }
   };
 
@@ -116,10 +119,11 @@ const Voting = () => {
       default:
         if (isLoading) {
           return <Spin />;
-        } else if (allPolls.length === 0) {
+        } else if (!allPolls || allPolls.length === 0) {
           return <p className="mt-20 text-center">No polls to display</p>;
         } else {
-          return allPolls.length > 0 ? (
+          return (
+            allPolls.length > 0 &&
             allPolls
               ?.reverse()
               .map((poll, index) => (
@@ -132,14 +136,13 @@ const Voting = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
-          ) : (
-            <p className="mt-20 text-center">No polls to display</p>
           );
         }
     }
@@ -155,12 +158,13 @@ const Voting = () => {
       default:
         if (isLoading) {
           return <Spin />;
-        } else if (allFindPolls.length === 0) {
+        } else if (!allFindPolls || allFindPolls.length === 0) {
           return (
             <p className="mt-20 text-center">No matching polls to display</p>
           );
         } else {
-          return allFindPolls.length > 0 ? (
+          return (
+            allFindPolls.length > 0 &&
             allFindPolls
               ?.reverse()
               .map((poll, index) => (
@@ -173,14 +177,13 @@ const Voting = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   className="border p-6 mt-4 rounded-[25px] cursor-pointer flex-shrink-0"
                 />
               ))
-          ) : (
-            <p className="mt-20 text-center">No matching polls to display</p>
           );
         }
     }
@@ -248,6 +251,7 @@ const Voting = () => {
         const res = resp.data.data.paystack[1].data.authorization_url;
         console.log("url", res);
         window.location.href = res;
+        setIsPayLoading(false);
       }
     } catch (error) {
       console.log("vote", error);
@@ -325,6 +329,10 @@ const Voting = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  if (isPageLoading) {
+    return <Spin />;
+  }
+
   return (
     <>
       {!selectedPoll && (
@@ -332,17 +340,19 @@ const Voting = () => {
           <div className="">
             {!Notify && !CastVote && (
               <div className=" overflow-x-hidden bg-[#fff] px-6 md:hidden">
-                <h1>Voting</h1>
-                <h2 className="mt-6 ">Hello, {userInfo.username}</h2>
-                <span className="text-[14px] ">
-                  What do you want to do today?
-                </span>
+                <div className="w-full">
+                  <h1>Voting</h1>
+                  <h2 className="mt-6 ">Hello, {userInfo.username}</h2>
+                  <span className="text-[14px] ">
+                    What do you want to do today?
+                  </span>
 
-                <img
-                  src={images[currentIndex]}
-                  alt="slider-pics"
-                  className="mt-6 lg:mt-10"
-                />
+                  <img
+                    src={images[currentIndex]}
+                    alt="slider-pics"
+                    className="mt-6 lg:mt-10 w-full"
+                  />
+                </div>
 
                 <div className="mt-10">
                   <CreateCastActions
@@ -434,7 +444,7 @@ const Voting = () => {
           )}
 
           {/* Web */}
-          <div className="hidden lg:flex flex-row gap-4 ">
+          <div className="hidden md:flex flex-row gap-4 ">
             <div className="md:w-[60%] px-4 pb-[40px] md:pt-5 hidden md:flex md:flex-col bg-[#fff]">
               <h1>Voting</h1>
 
@@ -501,7 +511,7 @@ const Voting = () => {
               </Dialog>
             </div>
 
-            <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
+            <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[101px] right-10 ">
               <PollsNotification
                 setNotify={setNotify}
                 handleShowCreateModal={handleShowCreateModal}

@@ -44,6 +44,7 @@ const MyPolls = () => {
     handleEndedPolls,
     setShowAction,
     loading,
+    isPageLoading,
   } = useContext(ModalContext);
 
   const goBack = () => nav("/Voting");
@@ -118,7 +119,6 @@ const MyPolls = () => {
   };
 
   const HandlePromote = (poll) => {
-    console.log("singlePoll", poll);
     setSinglePoll(poll);
     setShowPromoteModal(true);
   };
@@ -152,6 +152,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -188,6 +189,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -226,6 +228,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -269,6 +272,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -307,6 +311,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -347,6 +352,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -416,6 +422,7 @@ const MyPolls = () => {
         const resp = res.data.data.paystack[1].data.authorization_url;
         console.log("url", res);
         window.location.href = resp;
+        setIsPromoteLoading(false);
       }
     } catch (error) {
       console.log("finduserpollserror", error);
@@ -469,8 +476,12 @@ const MyPolls = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  if (isPageLoading) {
+    return <Spin />;
+  }
+
   return (
-    <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative lg:mt-[60px]">
+    <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative">
       {!Notify && !CastVote && !showMyPolls && (
         <div className=" lg:w-[60%] overflow-x-hidden bg-[#fff] py-10 px-6 pb-[40px] lg:pt-5 flex flex-col">
           <div className="flex flex-col gap-3 ">
@@ -570,7 +581,7 @@ const MyPolls = () => {
         )} */}
 
           {/* WEB */}
-          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
+          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[101px] right-10 ">
             <PollsNotification
               setNotify={setNotify}
               handleShowCreateModal={handleShowCreateModal}
