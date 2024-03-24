@@ -64,7 +64,7 @@ export default function New() {
         style={{ scrollbarWidth: "none" }}>
           {songs?.length>0?songs?.map(res=>{
                   return (
-                    <NewCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <NewCard img={res.cover_image} category={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }).reverse():<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

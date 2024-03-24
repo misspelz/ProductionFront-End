@@ -69,6 +69,7 @@ export default function UploadMusicSider() {
       setLoading(true)
       if (res.status === 201) {
         toast.success(res.data.message)
+        setLoading(false)
         setUpload1(false)
         setUpload2(false)
         // setUpload3(false)
@@ -76,6 +77,7 @@ export default function UploadMusicSider() {
         setUpload5(false)
       } else {
         toast.error("Something went wrong")
+        setLoading(false)
       }
       console.log(res)
     })
@@ -100,6 +102,7 @@ export default function UploadMusicSider() {
       setLoading(false)
       console.log(res)
       if (res.status === 201) {
+        setLoading(false)
         toast.success(res.data.message)
         setUpload1(false)
         setUpload2(false)
@@ -108,7 +111,11 @@ export default function UploadMusicSider() {
         setUpload5(false)
       } else {
         toast.error("Something went wrong")
+        setLoading(false)
       }
+    }).catch(err=>{
+      console.log(err)
+      setLoading(false)
     })
   }
 

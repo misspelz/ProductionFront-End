@@ -145,7 +145,7 @@ export default function BigHit() {
             }}>
               {bighit?.length>0?bighit?.map(res=>{
                   return (
-                  <MoreCard title={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist} audio={res.audio_file?res.audio_file:null} id={res.id}/>
+                  <MoreCard title={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist.artist_name} audio={res.audio_file?res.audio_file:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

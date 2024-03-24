@@ -50,15 +50,15 @@ export default function Welcome() {
         console.log(trendingSongs + "trending state===");
         console.log(JSON.stringify(res.data) + "trending====");
         if (res.status === 200 || res.status===201){
-          setLoading(false)
-          toast.success(res.data.message)
+          // setLoading(false)
+          console.log(res.data.message)
         } else if (res.status == null){
-          toast.error(res.data.message)
+        console.log(res.data.message)
         } else {
-          toast.error("Something went wrong")
+          console.log("Something went wrong")
         }
       }).catch(err=>{
-        toast.error("Something went wrong")
+        console.log("Something went wrong")
       })
   };
   const RegisterArtist = () => {
@@ -75,7 +75,17 @@ export default function Welcome() {
       "X-CSRFToken": process.env.REACT_TOKEN,
     }}).then(res=>{
       console.log(res)
-    }).catch(err=>{console.log(err)})
+      if (res.status === 200 || res.status===201){
+        // setLoading(false)
+        toast.success(res.data.message)
+      } else if (res.status == null){
+        toast.error(res.data.message)
+      } else {
+        toast.error("Something went wrong")
+      }
+    }).catch(err=>{
+      toast.error("Something went wrong")
+    })
   }
 
   useEffect(() => {
@@ -124,7 +134,7 @@ export default function Welcome() {
               style={{ scrollbarWidth: "none" }}>
                 {trendingSongs?.length>0?trendingSongs?.map(res=>{
                   return (
-                  <TrendingCard category={res.title} img={res.cover_image?res.cover_image:null} artist={res?.artist} audio={res.audio_file?`https://development.2geda.net${res.cover_image}`:null}/>
+                  <TrendingCard category={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res?.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.cover_image}`:null}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

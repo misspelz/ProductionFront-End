@@ -123,7 +123,7 @@ export default function More() {
 
 {quickpicks?.length>0?quickpicks?.map(res=>{
                   return (
-                  <MoreCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
+                  <MoreCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

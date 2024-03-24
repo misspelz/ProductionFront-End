@@ -57,7 +57,7 @@ export default function StereoHome() {
         const filteredHits = res?.data?.data.filter((item) => item.plays > 0);
         // Assuming setBigHit is a function to update state
         setBigHit(filteredHits);
-        console.log(filteredHits,"bighits"); // This will log the filtered items
+        console.log(filteredHits,"bighits==="); // This will log the filtered items
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -309,7 +309,7 @@ export default function StereoHome() {
                   >
                     {quickpicks?.length>0?quickpicks?.map(res=>{
                   return (
-                  <PicksCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
+                  <PicksCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -397,7 +397,7 @@ export default function StereoHome() {
                 }}>
                   {bighit?.length>0?bighit?.map(res=>{
                   return (
-                  <HitsCard name={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist} audio={res.audio_file?res.audio_file:null} id={res.id}/>
+                  <HitsCard name={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist.artist_name} audio={res.audio_file?res.audio_file:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

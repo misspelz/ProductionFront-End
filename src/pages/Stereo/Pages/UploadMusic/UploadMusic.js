@@ -176,7 +176,7 @@ export default function UploadMusic() {
               <RecentUploadCard /> */}
               {recentUpload?.length>0?recentUpload?.map(res=>{
                   return (
-                    <RecentUploadCard title={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <RecentUploadCard title={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }).slice(0,4):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}

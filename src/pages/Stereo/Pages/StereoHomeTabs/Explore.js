@@ -47,7 +47,7 @@ export default function Explore() {
 
 {songs?.length>0?songs?.map(res=>{
                   return (
-                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -103,7 +103,7 @@ export default function Explore() {
         style={{ scrollbarWidth: "none" }}>
           {Afrobeats?.length>0?Afrobeats?.map(res=>{
                   return (
-                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -170,7 +170,7 @@ export default function Explore() {
         style={{ scrollbarWidth: "none" }}>
           {songs?.length>0?songs?.map(res=>{
                   return (
-                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }).reverse():<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
@@ -224,7 +224,7 @@ export default function Explore() {
         style={{ scrollbarWidth: "none" }}>
           {songs?.length>0?songs?.map(res=>{
                   return (
-                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
+                    <SpecialPicksCard img={res.cover_image} category={res.title} artist={res?.artist.artist_name} plays={res?.plays.toString()} likes={res?.likes.toString()} downloads={res?.downloads.toString()} entries={res?.entries} />
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
