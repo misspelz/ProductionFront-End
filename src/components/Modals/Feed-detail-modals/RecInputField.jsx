@@ -6,11 +6,11 @@ import { AiFillDelete } from "react-icons/ai";
 import "./feed-detail-modal.css";
 import Custombutton from "components/Custom-button/Custombutton";
 
-const RecInputField = ({ postId, onStop }) => {
+const RecInputField = ({ postId, onStop, onClose }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
+			onClose()
 			setAudioFile(null);
 		},
 		onError: (errorResponse) => {

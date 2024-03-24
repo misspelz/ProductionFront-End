@@ -20,10 +20,11 @@ export const ModalContextProvider = ({ children }) => {
   const [activePolls, setActivePolls] = useState([]);
   const [endedPolls, setEndedPolls] = useState([]);
   const [showAction, setShowAction] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
   const handleMyPolls = async (e) => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const resp = await MyPollsApi();
 
       if (resp.data.status) {
@@ -33,13 +34,13 @@ export const ModalContextProvider = ({ children }) => {
       console.log("mypolls", error);
       toast.error(error.response.data.message || "Something went wrong!");
     } finally {
-      setLoading(false);
+      setIsPageLoading(false);
     }
   };
 
   const handleActivePolls = async (e) => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const resp = await ActivePollsApi();
 
       if (resp.data.status) {
@@ -48,7 +49,7 @@ export const ModalContextProvider = ({ children }) => {
     } catch (error) {
       console.log("activepolls", error);
       toast.error(error.response.data.message || "Something went wrong!");
-    } finally {
+    }  finally {
       setLoading(false);
     }
   };
@@ -65,7 +66,7 @@ export const ModalContextProvider = ({ children }) => {
       console.log("endedpolls", error);
       toast.error(error.response.data.message || "Something went wrong!");
     } finally {
-      setLoading(false);
+      setIsPageLoading(false);
     }
   };
 
@@ -90,6 +91,7 @@ export const ModalContextProvider = ({ children }) => {
         loading,
         isAuthenticated,
         setIsAuthenticated,
+        isPageLoading
       }}
     >
       {children}

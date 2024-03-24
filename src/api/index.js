@@ -8,7 +8,6 @@ const _2gedaservice = axios.create({
 export const setupAxios = () => {
 	const token = localStorage.getItem("authToken");
     _2gedaservice.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    console.log("setup axios called with token", token)
 };
 
 export default _2gedaservice;

@@ -1,4 +1,4 @@
-import { BiLike, BiMessageAlt } from "react-icons/bi";
+import { BiMessageAlt } from "react-icons/bi";
 import ReplyComp from "./ReplyComp";
 import { useState } from "react";
 import { useRef } from "react";
@@ -9,6 +9,8 @@ import {
 	useGetTotalCommentReactions,
 } from "api/hooks/feeds";
 import ReplyInput from "./ReplyInput";
+import DisplayMedia from "components/Home/Displaymedia/Displaymedia";
+
 const CommentPerPost = ({ postId, comment }) => {
 	const [showReplies, setShowReplies] = useState(false);
 	const replyRef = useRef(null);
@@ -48,6 +50,7 @@ const CommentPerPost = ({ postId, comment }) => {
 				</div>
 			</div>
 			<div className="post-body-box">
+				{comment?.file && <DisplayMedia mediaFile={comment?.file} />}
 				<div className="comm-body-text btxt">{comment?.text_content}</div>
 			</div>
 			<div className="post-likes-box">
@@ -69,7 +72,7 @@ const CommentPerPost = ({ postId, comment }) => {
 						Hide replies...
 					</div>
 					{getReplies?.data?.replies?.map((reply) => (
-						<ReplyComp reply={reply} />
+						<ReplyComp reply={reply} postId={postId} commentId={comment?.id} />
 					))}
 				</div>
 			) : (

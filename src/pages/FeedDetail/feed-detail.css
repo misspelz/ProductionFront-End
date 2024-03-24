@@ -1,3 +1,7 @@
+.feed-detail-container {
+    background: white;
+}
+
 .quick-dial-container {
     position: fixed;
     top: 44dvh;

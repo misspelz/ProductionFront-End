@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -13,7 +13,6 @@ import { FaMicrophone } from "react-icons/fa6";
 import "./feed-detail.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { RxCross2 } from "react-icons/rx";
 import FileInputField from "components/Modals/Feed-detail-modals/FileInputField";
 import RecInputField from "components/Modals/Feed-detail-modals/RecInputField";
 import PhotoInputField from "components/Modals/Feed-detail-modals/PhotoInputField";
@@ -23,10 +22,6 @@ import VideoInputField from "components/Modals/Feed-detail-modals/VideoInputFiel
 export default function Quickdial({ postId }) {
 	const [openModal, setOpenModal] = useState(false);
 	const [modalType, setModalType] = useState("");
-	const [selectedVideo, setSelectedVideo] = useState(null);
-	const [selectedFile, setSelectedFile] = useState(null);
-	const [showCommentInput, setShowCommentInput] = useState(false);
-	const [showRecInput, setShowRecInput] = useState(false);
 
 	const handleCloseModal = () => {
 		setOpenModal(false);
@@ -110,32 +105,6 @@ export default function Quickdial({ postId }) {
 		setModalType(type);
 	};
 
-
-	const handleFileChange = (e) => {
-		const selected = e.target.files[0];
-		if (selected) {
-			const fileName = selected.name.toLowerCase();
-			if (
-				fileName.endsWith(".pdf") ||
-				fileName.endsWith(".doc") ||
-				fileName.endsWith(".docx") ||
-				fileName.endsWith(".xls") ||
-				fileName.endsWith(".xlsx") ||
-				fileName.endsWith(".ppt") ||
-				fileName.endsWith(".pptx") ||
-				fileName.endsWith(".exe") ||
-				fileName.endsWith(".apk")
-			) {
-				setSelectedFile(selected);
-			} else {
-				// Handle invalid file type
-				setSelectedFile(null);
-				alert(
-					"Please select a valid file type (PDF, Word, Excel, PowerPoint, EXE, or APK)."
-				);
-			}
-		}
-	};
 	return (
 		<>
 			<Box
@@ -170,30 +139,30 @@ export default function Quickdial({ postId }) {
 					</div> */}
 					{modalType === "audio" && (
 						<div className="inpu-com-box pic-bx-cont">
-							<RecInputField postId={postId} />
+							<RecInputField postId={postId} onClose={handleCloseModal}/>
 						</div>
 					)}
 
 					{modalType === "file" && (
 						<div className="inpu-com-box pic-bx-cont">
-							<FileInputField postId={postId} />
+							<FileInputField postId={postId} onClose={handleCloseModal}/>
 						</div>
 					)}
 
 					{modalType === "image" && (
 						<div className="inpu-com-box pic-bx-cont">
-							<PhotoInputField postId={postId} />
+							<PhotoInputField postId={postId} onClose={handleCloseModal}/>
 						</div>
 					)}
 					{modalType === "video" && (
 						<div className="inpu-com-box pic-bx-cont">
-							<VideoInputField postId={postId} />
+							<VideoInputField postId={postId} onClose={handleCloseModal}/>
 						</div>
 					)}
 
 					{modalType === "text" && (
 						<div className="inpu-com-box pic-bx-cont">
-							<CommentInputField postId={postId} />
+							<CommentInputField postId={postId} onClose={handleCloseModal}/>
 						</div>
 					)}
 				</Box>

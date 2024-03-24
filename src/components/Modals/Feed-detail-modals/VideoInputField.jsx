@@ -5,11 +5,11 @@ import "./feed-detail-modal.css";
 import Custombutton from "components/Custom-button/Custombutton";
 import { AiFillDelete } from "react-icons/ai";
 
-const VideoInputField = ({ postId }) => {
+const VideoInputField = ({ postId, onClose }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
+			onClose()
 			setCommentText("");
 			setSelectedVideo(null);
 		},

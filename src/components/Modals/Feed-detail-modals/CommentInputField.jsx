@@ -4,11 +4,11 @@ import { useCreateComment } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
 import "./feed-detail-modal.css";
 
-const CommentInputField = ({ postId }) => {
+const CommentInputField = ({ postId, onClose }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
+			onClose()
 			setCommentText("");
 		},
 		onError: (errorResponse) => {

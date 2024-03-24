@@ -3,7 +3,7 @@ import { ModalContext } from "Context/ModalContext";
 import {
   ClosePollApi,
   FindUserPollsApi,
-  PromotePollApi
+  PromotePollApi,
 } from "api/services/auth&poll";
 import AD1 from "assets/images/AD1.png";
 import AD2 from "assets/images/AD2.png";
@@ -44,6 +44,7 @@ const MyPolls = () => {
     handleEndedPolls,
     setShowAction,
     loading,
+    isPageLoading,
   } = useContext(ModalContext);
 
   const goBack = () => nav("/Voting");
@@ -118,7 +119,6 @@ const MyPolls = () => {
   };
 
   const HandlePromote = (poll) => {
-    console.log("singlePoll", poll);
     setSinglePoll(poll);
     setShowPromoteModal(true);
   };
@@ -152,6 +152,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -188,6 +189,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -226,6 +228,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -269,6 +272,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -307,6 +311,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -347,6 +352,7 @@ const MyPolls = () => {
                   options={poll?.options?.length > 1 && poll?.options}
                   daysRemaining={poll.close_time}
                   isClosed={poll.is_closed}
+                  tag={poll.is_paid}
                   backgroundImageUrl={
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
@@ -416,6 +422,7 @@ const MyPolls = () => {
         const resp = res.data.data.paystack[1].data.authorization_url;
         console.log("url", res);
         window.location.href = resp;
+        setIsPromoteLoading(false);
       }
     } catch (error) {
       console.log("finduserpollserror", error);
@@ -468,6 +475,10 @@ const MyPolls = () => {
     const intervalId = setInterval(closeExpiredPolls, 60000);
     return () => clearInterval(intervalId);
   }, []);
+
+  if (isPageLoading) {
+    return <Spin />;
+  }
 
   return (
     <div className="lg:bg-[#f5f5f5] h-full overflow-scroll  lg:flex w-full  lg:px-10 lg:gap-6 relative">
@@ -570,7 +581,7 @@ const MyPolls = () => {
         )} */}
 
           {/* WEB */}
-          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-28 right-10 ">
+          <div className="md:w-[30%]  bg-[#fff] hidden md:block fixed top-[101px] right-10 ">
             <PollsNotification
               setNotify={setNotify}
               handleShowCreateModal={handleShowCreateModal}
@@ -712,25 +723,29 @@ const MyPolls = () => {
                   <div className="flex gap-2 w-full mt-4">
                     <PricingComponent
                       title="Basic"
-                      price="N1,000"
+                      price={1000}
                       duration="1 day"
+                      onSelect={handleSelect}
                     />
                     <PricingComponent
                       title="Standard"
-                      price="N5,000"
+                      price={5000}
                       duration="7 days"
+                      onSelect={handleSelect}
                     />
                   </div>
                   <div className="flex gap-2 w-full mt-4">
                     <PricingComponent
                       title="Premium"
-                      price="N9,000"
+                      price={9000}
                       duration="14 days"
+                      onSelect={handleSelect}
                     />
                     <PricingComponent
                       title="Pro"
-                      price="N14,000"
+                      price={14000}
                       duration="30 days"
+                      onSelect={handleSelect}
                     />
                   </div>
 

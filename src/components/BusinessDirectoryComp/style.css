@@ -12,22 +12,24 @@
 }
 .search-container-busi {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 30px;
   border: 0.5px solid var(--stroke, #e4e4e4);
   backdrop-filter: blur(2.5px);
   font-size: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   height: 45px;
-  padding: 0 10px;
+  padding: 20px 10px;
   color: #5c5c5c;
+  background: #fff;
 }
 
 .search-inp-bus {
   width: 100%;
   outline: none;
   border: none;
+  
 }
 .filter-search-bus {
   font-size: 25px;

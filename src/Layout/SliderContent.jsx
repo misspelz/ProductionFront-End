@@ -6,6 +6,7 @@ import { IoChatbubbleEllipsesOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineHowToVote } from "react-icons/md";
 import { ModalContext } from "Context/ModalContext";
 import toast from "react-hot-toast";
+import connectwhitelogo from "../assets/connectwhitelogo.svg";
 
 const nav_item_style = {
   active:
@@ -38,8 +39,27 @@ export const SliderContent = ({ setSlider }) => {
             isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
+          <img src={connectwhitelogo} alt="" />
+        </NavLink>
+
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
+          }
+        >
           <BiSolidHome className="text-[23px]" />
           <div>Home</div>
+        </NavLink>
+
+        <NavLink
+          to="/connect"
+          className={({ isActive }) =>
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
+          }
+        >
+          <BiSolidHome className="text-[23px]" />
+          <div>Connect</div>
         </NavLink>
 
         <NavLink

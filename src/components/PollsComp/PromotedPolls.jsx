@@ -40,7 +40,7 @@ export const PromotedPolls = ({ HandlePoll }) => {
     );
 
   if (!filteredPromotedPolls || filteredPromotedPolls.length === 0) {
-    return <p className="mt-5">No polls to display</p>;
+    return <p className="mt-5 text-center">No polls to display</p>;
   }
 
   return (
@@ -56,6 +56,7 @@ export const PromotedPolls = ({ HandlePoll }) => {
             options={poll?.options?.length > 1 && poll?.options}
             daysRemaining={poll.close_time}
             isClosed={poll.is_closed}
+            tag={poll.is_paid}
             backgroundImageUrl={
               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             }

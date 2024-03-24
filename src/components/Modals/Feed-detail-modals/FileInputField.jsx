@@ -13,13 +13,13 @@ import {
 	BsFiletypeExe,
 } from "react-icons/bs";
 
-const FileInputField = ({ postId }) => {
+const FileInputField = ({ postId, onClose }) => {
 	const { comment, isLoading } = useCreateComment({
 		postId,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
 			setCommentText("");
 			setSelectedFile(null);
+            onClose()
 		},
 		onError: (errorResponse) => {
 			console.log({ errorResponse });

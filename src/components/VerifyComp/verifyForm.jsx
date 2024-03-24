@@ -20,6 +20,7 @@ const VerifyForm = () => {
   const registrationData = JSON.parse(
     localStorage?.getItem("registrationData")
   );
+  
   const registrationEmail = registrationData?.email;
 
   const HandleSendOTP = async () => {
@@ -30,6 +31,7 @@ const VerifyForm = () => {
         toast.success(response.data.message);
       }
     } catch (error) {
+      console.log("otp", error);
       toast.error(
         error.response.data.message ||
           error.response.data.error ||

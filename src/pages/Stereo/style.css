@@ -215,9 +215,8 @@
 
 @media only screen and (max-width: 430px) {
   .left-side-container {
-    margin: 0 18px;
-    padding: 0;
-    width: 380px;
+    margin-top: 10px;
+    width: 100%;
   }
   .icon-dteail-bx {
     font-size: 50px;
@@ -246,16 +245,16 @@
 }
 @media only screen and (max-width: 410px) {
   .left-side-container {
-    margin: 0 13px;
-    padding: 0;
-    width: 370px;
+    /* margin: 0 13px;
+    padding: 0; */
+    /* width: 370px; */
   }
 }
 @media only screen and (max-width: 385px) {
   .left-side-container {
-    margin: 0 11px;
-    padding: 0;
-    width: 350px;
+    /* margin: 0 11px;
+    padding: 0; */
+    /* width: 350px; */
   }
   .str-reo {
     margin-left: 40px;
@@ -263,9 +262,9 @@
 }
 @media only screen and (max-width: 365px) {
   .left-side-container {
-    margin: 0 10px;
-    padding: 0;
-    width: 338px;
+    /* margin: 0 10px;
+    padding: 0; */
+    /* width: 338px; */
   }
   .artist-lister-btn-box {
     width: 100%;
@@ -282,30 +281,30 @@
 }
 @media only screen and (max-width: 355px) {
   .left-side-container {
-    margin: 0 14px;
-    padding: 0;
-    width: 320px;
+    /* margin: 0 14px;
+    padding: 0; */
+    /* width: 320px; */
   }
 }
 @media only screen and (max-width: 340px) {
   .left-side-container {
-    margin: 0 18px;
-    padding: 0;
-    width: 300px;
+    /* margin: 0 18px;
+    padding: 0; */
+    /* width: 300px; */
   }
 }
 @media only screen and (max-width: 320px) {
   .left-side-container {
-    margin: 0 16px;
-    padding: 0;
-    width: 282px;
+    /* margin: 0 16px;
+    padding: 0; */
+    /* width: 282px; */
   }
 }
 @media only screen and (max-width: 300px) {
   .left-side-container {
-    margin: 0 10px;
-    padding: 0;
-    width: 275px;
+    /* margin: 0 10px;
+    padding: 0; */
+    /* width: 275px; */
   }
   .icon-dteail-bx {
     font-size: 40px;
@@ -332,15 +331,15 @@
 }
 @media only screen and (max-width: 290px) {
   .left-side-container {
-    margin: 0 10px;
+    /* margin: 0 10px;
     padding: 0;
-    width: 260px;
+    width: 260px; */
   }
 }
 @media only screen and (max-width: 280px) {
   .left-side-container {
-    margin: 0 13px;
+    /* margin: 0 13px;
     padding: 0;
-    width: 250px;
+    width: 250px; */
   }
 }

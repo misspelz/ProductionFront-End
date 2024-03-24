@@ -110,8 +110,7 @@ const PostFormModal = ({
 
 	const addFileFn = useCreatePostFile({
 		postFileData: postFileData,
-		onSuccess: (response) => {
-			console.log({ response });
+		onSuccess: () => {
 			handleCloseMainContainerClick();
 			Swal.fire({
 				icon: "success",
@@ -119,7 +118,7 @@ const PostFormModal = ({
 				text: "Your media post has been successfully posted.",
 				confirmButtonText: "OK",
 			}).then(() => {
-				window.location.reload();
+				Swal.close();
 			});
 		},
 		onError: (errorResponse) => {
@@ -143,11 +142,16 @@ const PostFormModal = ({
 				text: "Your text content post has been successfully posted.",
 				confirmButtonText: "OK",
 			}).then(() => {
-				window.location.reload();
+				Swal.close();
 			});
 		},
-		onError: (errorResponse) => {
-			console.log({ errorResponse });
+		onError: () => {
+			Swal.fire({
+				icon: "error",
+				title: "An error occured",
+				text: "unable to create post at this time, please try again",
+				confirmButtonText: "OK",
+			})
 		},
 	});
 
@@ -164,7 +168,10 @@ const PostFormModal = ({
 			data.append("files", excel[0]);
 		}
 		if (location) {
-			textData.append("location", location);
+			textData.append(
+				"location",
+				`${location?.latitude},${location?.longitude}`
+			);
 		}
 		if (audioFile?.[0]) {
 			data.append("files", audioFile[0]);

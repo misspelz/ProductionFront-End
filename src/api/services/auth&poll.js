@@ -41,7 +41,7 @@ export const ReSendOTP = async (verificationType) => {
     `${url}/api/auth/resend-otp/?verification_type=${verificationType}`,
     {
       headers: {
-        Authorization: `Bearer ${getLoginToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     }
   );

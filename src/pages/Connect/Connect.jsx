@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
-import MainLayout from "../../Layout/MainLayout";
-// import DashMessage from "../../components/Dashboard/DasMess";
-// import Follower from "../../components/Dashboard/Follower";
 import "./style.css";
 import ConnectSearch from "../../components/ConnectComp/ConnectSearch";
-import SelectCategory from "../../components/Dashboard/SelectCategory";
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { GiShare } from "react-icons/gi";
 import ProfileStick from "../../components/Commons/ProfileStick";
 import SearchBusinessCard from "../../components/SearchComp/SearchBusinessCard";
 import BusinessStick from "../../components/Commons/BusinessStick";
 import ClamBuss from "../BussinessDirectory/ClamBuss";
+import logo from "../../assets/2gedalogo.svg";
+import AD1 from "assets/images/AD1.png";
+import AD2 from "assets/images/AD2.png";
+import user1 from "assets/userconnect.svg";
+import user2 from "assets/connectuser2.svg";
+import user3 from "assets/connectuser3.svg";
+import { default as AD3, default as AD4 } from "assets/images/AD3.png";
+import {
+  IoIosArrowDropleftCircle,
+  IoIosArrowDroprightCircle,
+} from "react-icons/io";
+import RightBar from "components/RightBar";
+import { NearbyUsersApi } from "api/services/connect";
+import Spin from "components/Spin/Spin";
+import toast from "react-hot-toast";
 
 const Data = [
   {
@@ -31,10 +40,19 @@ const Connect = () => {
   const [isClaimModalOpenThree, setIsClaimModalOpenThree] = useState(false);
   const [isClaimModalOpenDone, setIsClaimModalOpenDone] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentUserIndex, setCurrentUserIndex] = useState(0);
+  const [NearbyUsers, setNearbyUsers] = useState([]);
+  console.log("nearbyUsers", NearbyUsers);
+
+  const images = [AD1, AD2, AD3, AD4];
+
   const handleClaimClickDone = (e) => {
     e.preventDefault();
     setIsClaimModalOpenDone(true);
   };
+
   const handleClaimClickCloseDone = () => {
     setIsClaimModalOpenDone(false);
     setIsClaimModalOpenThree(false);
@@ -47,26 +65,33 @@ const Connect = () => {
     e.preventDefault();
     setIsClaimModalOpenThree(true);
   };
+
   const handleClaimClickCloseThree = () => {
     setIsClaimModalOpenThree(false);
   };
+
   const handleClaimClickTwo = (e) => {
     e.preventDefault();
     setIsClaimModalOpenTwo(true);
   };
+
   const handleClaimClickCloseTwo = () => {
     setIsClaimModalOpenTwo(false);
   };
+
   const handleClaimClickOne = (e) => {
     e.preventDefault();
     setIsClaimModalOpenOne(true);
   };
+
   const handleClaimClickCloseOne = () => {
     setIsClaimModalOpenOne(false);
   };
+
   const handleClaimClick = () => {
     setIsClaimModalOpen(true);
   };
+
   const handleClaimClickClose = () => {
     setIsClaimModalOpen(false);
   };
@@ -83,16 +108,87 @@ const Connect = () => {
     setIsProfileOpen(false);
   };
 
-  const handleProfileClick = () => {
-    setIsProfileOpen(true);
-  };
-
   const handleTabClick = (text) => {
     setActiveTab(text);
   };
+
+  // Nearby users
+  const nearbyUsers = async () => {
+    try {
+      const res = await NearbyUsersApi();
+      if (res.data.status) {
+        setNearbyUsers(res.data.data);
+      }
+    } catch (error) {
+      console.log("nearbyUsers", error);
+      toast.error(
+        error.response.data.message ||
+          error.response.message ||
+          "Something went wrong!"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const Users = NearbyUsers.map((user, index) => (
+    <div key={user.id}>
+      <div className="lg:text-[20px]">
+        {user?.user?.first_name || "Faith"} {user?.user?.last_name || "Moses"}
+      </div>
+      <div className="lg:text-[14px] lg:text-secondaryColor">
+        {user?.user?.email}
+      </div>
+      <div className="font-thin text-[14px] lg:text-[16px]">
+        @{user?.user?.first_name || "mosesfaith"}
+      </div>
+      <div className="font-thin text-[14px] lg:text-[16px]">
+        {user?.address?.country || "Abeokuta"}, {user?.distance || "120"}km from
+        you
+      </div>
+      {user?.bio && (
+        <div className="font-thin text-[14px] lg:text-[16px]">
+          {user?.bio || "No one knows tomorrow!"}
+        </div>
+      )}
+    </div>
+  ));
+
+  const NextImage = () => {
+    setCurrentUserIndex((prevIndex) =>
+      prevIndex === NearbyUsers.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const PrevImage = () => {
+    setCurrentUserIndex((prevIndex) =>
+      prevIndex === 0 ? NearbyUsers.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNextImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(goToNextImage, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    nearbyUsers();
+  }, []);
+
+  // if (loading) {
+  //   return <Spin />;
+  // }
 
   return (
     <>
@@ -124,9 +220,28 @@ const Connect = () => {
           {!isProfileOpen && !isBussinessOpen && (
             <>
               <div>
-                <div className="head-line bus-dir">Connect</div>
-                <ConnectSearch />
-                {/* <img src="images/jumia.png" alt="" className="ads-img" /> */}
+                <div className="head-line bus-dir flex justify-between w-full items-center mb-[16px] lg:hidden">
+                  <div className="flex items-center gap-2">
+                    <img src={logo} alt="logo" />
+                    <div>Connect with other users</div>
+                  </div>
+                </div>
+
+                <div className="flex lg:hidden">
+                  <ConnectSearch />
+                </div>
+
+                <div className="hidden lg:flex ">
+                  <ConnectSearch />
+                </div>
+
+                <div className="mt-[16px]">
+                  <img
+                    src={images[currentIndex]}
+                    alt="banner"
+                    className="w-full"
+                  />
+                </div>
               </div>
               <div className="select-what-display w-dis">
                 {Data.map((item, index) => (
@@ -143,51 +258,55 @@ const Connect = () => {
                   </div>
                 ))}
               </div>
-              {activeTab === "People nearby" ? (
-                <div className="connect-profile-view-box">
-                  <div className="cont-view-connect">
-                    <div className="arrr-ctrl disable flex">
-                      <AiOutlineLeft />
-                    </div>
-                    <div className="image-bx-cont">
-                      <div className="share-bx flex">
-                        <GiShare />
-                      </div>
-                      <div className="indicator-bx">
-                        <div className="ind-con actvv"></div>
-                        <div className="ind-con"></div>
-                        <div className="ind-con"></div>
-                      </div>
-                      <div className="flex all-ma-box">
-                        <img src="images/pic3.png" alt="" />
-                        <img src="images/pic2.png" alt="" />
-                      </div>
-                      <div className="prof-bx-connect">
-                        <img
-                          src="images/pic1.png"
-                          alt=""
-                          onClick={handleProfileClick}
+
+              {activeTab === "People nearby" && loading ? (
+                <Spin />
+              ) : (
+                <div className="bg-[#00000099]">
+                  <div className="flex relative w-full justify-center">
+                    {NearbyUsers !== NearbyUsers.length - 1 && (
+                      <div className="text-[40px] absolute top-[45%] right-0 lg:right-40 z-[999]">
+                        <IoIosArrowDroprightCircle
+                          size={40}
+                          color="#fff"
+                          onClick={NextImage}
+                          className="cursor-pointer"
                         />
-                        <div className="user-nmm">Mercy Alake</div>
-                        <div className="username-txtt">@mercyalkkk</div>
-                        <div className="username-txtt">
-                          Abeokuta, 56km From you
+                      </div>
+                    )}
+                    <div className="relative">
+                      <img
+                        src={
+                          NearbyUsers[currentUserIndex]?.cover_image || user1
+                        }
+                        alt="connect-user-images"
+                        className="w-full lg:my-20 rounded-[10px]"
+                      />
+                      <div className="absolute bottom-40 left-4 right-0   text-white text-[20px] font-bold text-left">
+                        {Users[currentUserIndex]}
+                      </div>
+                      <div className="flex absolute bottom-10 transform translate-x-[5%]  lg:translate-x-[28%] gap-3 lg:gap-6">
+                        <div className="bg-primaryColor text-white w-[140px] h-[50px] rounded-[30px] flex items-center justify-center text-[16px] cursor-pointer">
+                          Chat
                         </div>
-                        <div className="username-txtt biiio">
-                          Adewalw wed addyjum Adewalw wed addyjum Adewal...
+                        <div className="bg-secondaryColor text-white w-[140px] h-[50px] rounded-[30px] flex items-center justify-center text-[16px] cursor-pointer">
+                          Stick
                         </div>
                       </div>
-                      <div className="chat-stick-btn-bx flex">
-                        <button className="ch-st-btn ora-btn">Chat</button>
-                        <button className="ch-st-btn">Stick</button>
+                    </div>
+                    {NearbyUsers !== 0 && (
+                      <div className="text-[40px] absolute top-[45%] left-0 lg:left-40 z-[999] ">
+                        <IoIosArrowDropleftCircle
+                          size={40}
+                          color="#fff"
+                          onClick={PrevImage}
+                          className="cursor-pointer"
+                        />
                       </div>
-                    </div>
-                    <div className="arrr-ctrl flex">
-                      <AiOutlineRight />
-                    </div>
+                    )}
                   </div>
                 </div>
-              ) : null}
+              )}
 
               {activeTab === "Businesses nearby" ? (
                 <div className="csss">
@@ -217,15 +336,8 @@ const Connect = () => {
           )}
         </div>
 
-        <div className="middle-side-container mvmm">
-          <img src="images/ads1.png" alt="" />
-        </div>
-        <div className="right-side-container">
-          <SelectCategory />
-          {/* <Follower />
-              <div className="mess-bxx-conn">
-                <DashMessage />
-              </div> */}
+        <div className="w-[70%]">
+          <RightBar />
         </div>
       </div>
     </>

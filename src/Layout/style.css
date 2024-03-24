@@ -19,17 +19,17 @@
 
 .app_header {
   padding: 0 1.8rem;
-  height: 10vh;
-
+  height: 13vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .app_aside {
   grid-row: 1 / -1;
 z-index: 15;
-  padding: 5rem 3rem;
+  padding: 5rem 5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

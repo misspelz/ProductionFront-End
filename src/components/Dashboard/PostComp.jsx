@@ -7,18 +7,21 @@ import Sharepost from "components/Home/Sharepost/Sharepost";
 import Likepost from "components/Home/Likepost/Likepost";
 import { Link } from "react-router-dom";
 import BlankProfile from "assets/images/blank-profile-image.png";
-import { useGetTotalReactions } from "api/hooks/feeds";
+import { useGetGoogleLocation, useGetTotalReactions } from "api/hooks/feeds";
 import { convertPostTime } from "utils/helper";
+import { MdLocationOn } from "react-icons/md";
 
-const PostComp = ({
-	shared,
-    postData
-}) => {
+const PostComp = ({ shared, postData }) => {
 	const { data } = useGetTotalReactions(postData?.id);
-    const totalReactions = data ? Object
-			.values(data?.reactions)
-			?.reduce((acc, cur) => acc + cur) : 0
+	const totalReactions = data
+		? Object.values(data?.reactions)?.reduce((acc, cur) => acc + cur)
+		: 0;
 	const [commentList, setCommentList] = useState([]);
+	const coordinates = postData?.location?.split(",");
+	const getLocation = useGetGoogleLocation({
+		latitude: coordinates?.[0],
+		longitude: coordinates?.[1],
+	});
 
 	return (
 		<div className={`postcom`}>
@@ -65,11 +68,17 @@ const PostComp = ({
 				</div>
 				<hr className="feed-hr" />
 				<Link to={`/Home/${postData?.id}`} className="post-body-box">
+					{postData?.location !== null && (
+						<div className="flex items-center justify-start gap-2 text-[14px]">
+							<MdLocationOn color="red" size={20} />
+							{getLocation?.data?.[0]?.formatted_address}
+						</div>
+					)}
+
 					<div>
 						{postData?.text_content && (
 							<div className="post-body-text">
-								{postData?.text_content}
-								<br />
+								{postData?.text_content == "null" ? "" : postData?.text_content}
 								<br />
 							</div>
 						)}

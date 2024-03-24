@@ -1,6 +1,5 @@
 .buss-all-container {
-  background: #fff;
-  padding: 10px;
+  width: 100%;
 }
 .bus-dir {
   font-weight: 700;
@@ -22,6 +21,7 @@
     margin-top: -40px;
   }
   .bus-dir {
-    margin-left: 20px;
+    /* margin-left: 20px; */
+    font-size: 18px;
   }
 }

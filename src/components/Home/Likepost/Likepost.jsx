@@ -13,7 +13,11 @@ import {
 	ThumbsDown,
 } from "assets/custom-icons";
 import { EmojiHug } from "assets/custom-icons/Emojihug";
-import { useCreateCommentReaction, useCreateReaction, useCreateReplyReaction } from "api/hooks/feeds";
+import {
+	useCreateCommentReaction,
+	useCreateReaction,
+	useCreateReplyReaction,
+} from "api/hooks/feeds";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /**********************************************************************************
@@ -71,6 +75,10 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 		}
 		handleClose();
 	};
+	const loadingStat =
+		isLoading || commentReaction.isLoading || replyReaction.isLoading;
+	const successStat =
+		isSuccess || commentReaction.isSuccess || replyReaction.isSuccess;
 
 	return (
 		<div className="share-post-container">
@@ -85,12 +93,12 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 					padding: 0,
 					color: "#000000b9",
 				}}
-				disabled={isLoading}
+				disabled={loadingStat}
 			>
-				{isLoading ? (
+				{loadingStat ? (
 					<CircularProgress size={20} color="inherit" />
 				) : (
-					<BiLike size={24} color={isSuccess ? "blue" : "#000000b9"} />
+					<BiLike size={24} color={successStat ? "blue" : "#000000b9"} />
 				)}
 			</Button>
 			<Menu

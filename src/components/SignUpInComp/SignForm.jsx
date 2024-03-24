@@ -66,13 +66,23 @@ const SignForm = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(
-        error.message ||
-          error.response.data.detail ||
-          error.response.data.data.email[0] ||
-          error.response.data.message ||
-          "Something went wrong!"
-      );
+      if (error.response && error.response.status === 400) {
+        if (error.response.data.data.email) {
+          toast.error(error.response.data.data.email[0]);
+        } else if (error.response.data.data.username) {
+          toast.error(error.response.data.data.username[0]);
+        } else {
+          toast.error("Something went wrong!");
+        }
+      } else if (error.response && error.response.status === 500) {
+        toast.error("Something went wrong!");
+      } else {
+        toast.error(
+          error.message ||
+            error.response?.data?.data.message ||
+            "Something went wrong!"
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -86,11 +96,11 @@ const SignForm = () => {
     }
   }, [email, username, password]);
 
-  const isPasswordValid = () => {
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return regex.test(password);
-  };
+  // const isPasswordValid = () => {
+  //   const regex =
+  //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  //   return regex.test(password);
+  // };
 
   return (
     <div className="sign-form">
@@ -135,12 +145,12 @@ const SignForm = () => {
             )}
           </div>
         </div>
-        {password && !isPasswordValid() && (
+        {/* {password && !isPasswordValid() && (
           <div className="error-msg text-[12px] text-red-500">
             Password must contain at least 8 characters, one uppercase letter,
             one lowercase letter, one number, and one special character.
           </div>
-        )}
+        )} */}
         <div className="btn-continu">
           {isLoading ? (
             <Lottie
@@ -152,7 +162,7 @@ const SignForm = () => {
             />
           ) : (
             <ActionButton
-              disabled={!isPasswordValid()}
+              // disabled={!isPasswordValid()}
               onClick={signupUser}
               label={"Continue"}
               bg={"pruplr"}
