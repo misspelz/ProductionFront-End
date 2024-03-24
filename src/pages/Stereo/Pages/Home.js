@@ -116,7 +116,7 @@ export default function StereoHome() {
 
           {/* Tab Section */}
           <div
-            className="mt-20 sm:mt-0 sm:pt-5"
+            className="pt-20 sm:mt-0 sm:pt-5"
             style={{ overflowX: "hidden" }}>
             <div
               className="mx-3"

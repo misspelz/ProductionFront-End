@@ -4,8 +4,10 @@ import Search from "../Assets/search.svg";
 import Music from "../Assets/file-music.svg";
 import Navbar from "../Layout/Navbar";
 import DesktopNavbar from "../Layout/DesktopNavbar";
+import { useNavigate } from "react-router-dom";
 
 export default function Header1() {
+  const navigte = useNavigate()
   return (
     <div
       className="fixed w-full z-20 bg-white top-0"
@@ -34,7 +36,7 @@ export default function Header1() {
           <button style={{ width: 24, height: 24 }}>
             <img src={Search} />
           </button>
-          <button style={{ width: 24, height: 24 }}>
+          <button style={{ width: 24, height: 24 }} onClick={()=>navigte("/stereo/library")}>
             <img src={Music} />
           </button>
         </div>

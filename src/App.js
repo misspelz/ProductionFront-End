@@ -70,6 +70,7 @@ import RecentUploads from "pages/Stereo/Pages/UploadMusic/recentUploads";
 import { AppLayout } from "Layout/AppLayout";
 import PollPayment from "components/PollsComp/PollPayment";
 import PromotionPayment from "components/PollsComp/PromotionPayment";
+import Library from "pages/Stereo/Pages/Library";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -281,6 +282,11 @@ function App() {
             <Route
               path="/stereo/nonauth"
               element={<ProtectedRoutes element={<NonAuthStero />} />}
+            />
+
+<Route
+              path="/stereo/library"
+              element={<ProtectedRoutes element={<Library />} />}
             />
 
             {/* Profile */}

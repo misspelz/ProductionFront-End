@@ -30,7 +30,7 @@ export default function UploadMusic() {
         setRecentUpload(res?.data?.data);
         console.log(recentUpload + "trending state===");
         console.log(JSON.stringify(res.data) + "trending====");
-      });
+      })
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function UploadMusic() {
   }, []);
   return (
     <UploadLayout2>
-      <Header1/>
+      <UploadSongHeader/>
       <div className="pt-20 md:pt-10 lg:pt-10 xl:pt-0">
         <div className="sm:hidden flex flex-col px-5">
           <span className="font-medium text-base mt-4">Artist Overview</span>
