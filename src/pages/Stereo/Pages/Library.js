@@ -19,8 +19,9 @@ export default function Library() {
   const [isOpen, setIsOpen] = useState(false);
   const [albums, setAlbums] = useState([])
   const [artists, setArtists] = useState([])
+  const [selectedId, setSelectedId] = useState(null)
 
-  const handleOpenModal = () => setIsOpen(true);
+  const handleOpenModal = (artistId) => {setIsOpen(true); setSelectedId(artistId)}
   const handleCloseModal = () => setIsOpen(false);
 
   const authToken = localStorage.getItem("authToken")
@@ -277,7 +278,7 @@ export default function Library() {
           <ArtistTabCard onClick={handleOpenModal} />
           <ArtistTabCard onClick={handleOpenModal} /> */}
           {artists.length>0?artists.map(artist =>{
-          return(<ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={handleOpenModal} />)
+          return(<ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={()=>handleOpenModal(artist.id)} />)
         }):<div className="flex justify-center items-center">
           <Lottie
                 animationData={NothingHere}
@@ -326,7 +327,7 @@ export default function Library() {
 
       {isOpen && (
         <Modal isOpen={isOpen} onClose={handleCloseModal}>
-          <ArtistProfile onClick={handleCloseModal} />
+          <ArtistProfile onClick={handleCloseModal} id={selectedId} />
         </Modal>
       )}
     </div>

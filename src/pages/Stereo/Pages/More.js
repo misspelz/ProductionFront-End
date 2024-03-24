@@ -10,6 +10,7 @@ import Arrow2 from "../Assets/arrowback.svg";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../Assets/nothing_here.json"
+import Header1 from "../Components/Header1";
 
 export default function More() {
   const [quickpicks, setQuickPicks] = useState([])
@@ -35,6 +36,7 @@ export default function More() {
 
   return (
     <LayoutMain>
+      {/* <Header1/> */}
       <div className="bg-white pb-10 sm:mx-5 sm:pt-8">
         <div
           id="iconwrapper"

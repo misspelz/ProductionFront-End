@@ -6,13 +6,16 @@ import ArtistProfile from "../ArtistProfile";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../../Assets/nothing_here.json"
+import ModalWrapper2 from "pages/Stereo/Components/Modals/ModalWrapper2";
 
 export default function Artists() {
   const [isOpen, setIsOpen] = useState(false);
   const [artists, setArtists] = useState([]);
+  const [selectedArtistId, setSelectedArtistId] = useState(null);
+
   const authToken = localStorage.getItem("authToken")
 
-  const handleOpenModal = () => setIsOpen(true);
+  const handleOpenModal = (artistId) =>{setIsOpen(true); setSelectedArtistId(artistId)};
   const handleCloseModal = () => setIsOpen(false);
   const GetArtists = () => {
     axios
@@ -36,7 +39,8 @@ export default function Artists() {
     <div className="mx-4">
       <div className={artists.length>0?`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6`:null}>
         {artists.length>0?artists.map(artist =>{
-          return(<div><ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={handleOpenModal} />
+          return(<div><ArtistTabCard name={artist.artist_name} image={artist.brand_image} onClick={()=>handleOpenModal(artist.id)} />
+          
           </div>)
         }):<div className="flex justify-center items-center">
           <Lottie
@@ -85,7 +89,7 @@ export default function Artists() {
       </div>
       {isOpen && (
         <Modal isOpen={isOpen} onClose={handleCloseModal}>
-          <ArtistProfile onClick={handleCloseModal} />
+          <ArtistProfile onClick={handleCloseModal} id={selectedArtistId} />
         </Modal>
       )}
     </div>
