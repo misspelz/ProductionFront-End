@@ -7,6 +7,7 @@ import axios from 'axios';
 import Lottie from "lottie-react";
 import NothingHere from "../Assets/nothing_here.json"
 import MoreCard from '../Components/MoreCard';
+import ArtistTabCard from '../Components/ArtistTabCard';
 
 export default function StereoSearchPage() {
   const [active, setActive] = useState(1)
@@ -81,7 +82,7 @@ export default function StereoSearchPage() {
           <Header1/>
         <section
               id="iconwrapper"
-              className="flex items-center space-x-3">
+              className="flex items-center mx-2 space-x-3">
               <button style={{ width: 24, height: 24 }}>
                 <img src={Arrow} />
               </button>
@@ -89,7 +90,7 @@ export default function StereoSearchPage() {
                 Search
               </span>
             </section>
-            <div className="relative mt-3">
+            <div className="relative mt-3 mx-3">
         <input
           type="text"
           className="w-full bg-[#F5F5F5] py-2 rounded-3xl pl-10"
@@ -97,7 +98,7 @@ export default function StereoSearchPage() {
         <img src={Search} className="absolute top-2 left-2" />
       </div>
 
-      <main className="flex items-center space-x-8 my-4">
+      <main className="flex items-center space-x-8 my-4 mx-2">
         <button onClick={()=>{handleActiveTab(1)}} className={active===1?'bg-[#4F0DA3] rounded-3xl px-8 py-2': 'bg-transparent px-8 py-2'}>
           <span className={active===1?"text-white text-xl":"text-xl text-[#403F3F]"}>All</span>
         </button>
@@ -108,11 +109,50 @@ export default function StereoSearchPage() {
           <span className={active===3?"text-white text-xl":"text-xl text-[#403F3F]"}>Artists</span>
         </button>
       </main>
-      <main>
-        {active === 1 && <div>
+      <main className='mx-2'>
+        {active === 1 && <div className="flex flex-col gap-4">
           {songs?.length>0?songs?.map(res=>{
                   return (
-                  <MoreCard title={res.title} img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null} artist={res.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
+                  <MoreCard title={res.title} img={res.cover_image?res.cover_image:null} artist={res.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+
+<div
+                className={artist?.length>0?"flex mx-3 gap-3 overflow-x-scroll h-full":null}
+                  style={{
+                  //   display: "flex",
+                  //   marginLeft: 10,
+                  //   marginRight: 10,
+                  //   gap: 10,
+                  //   overflowX: "scroll",
+                    scrollbarWidth: "none",
+                  //   justifyContent: "space-between",
+                  //   height: "100%",
+                  //   // position: "unset"
+                  }}
+                  >
+                    {artist?.length>0?artist?.map(res=>{
+                  return (
+                  <ArtistTabCard name={res?.artist_name} image={res?.brand_image?res?.brand_image:null} artist={res?.artist_name} audio={res?.audio_file?`https://development.2geda.net${res?.audio_file}`:null} id={res?.id}/>
+                  )
+                }):<div className="flex justify-center items-center"><Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
+              </div>
+
+              {albums?.length>0?albums?.map(res=>{
+                  return (
+                  <MoreCard title={res.name} img={res.cover_image?res.cover_image:null} artist={res.artist.artist_name} audio={res.audio_file?`https://development.2geda.net${res.audio_file}`:null} id={res.id}/>
                   )
                 }):<div className="flex justify-center items-center"><Lottie
                 animationData={NothingHere}
