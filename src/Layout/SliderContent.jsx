@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { BiSolidHome } from "react-icons/bi";
 import { BsPersonCircle, BsTicketFill } from "react-icons/bs";
 import { IoChatbubbleEllipsesOutline, IoLogOutOutline } from "react-icons/io5";
-import { MdOutlineHowToVote } from "react-icons/md";
+import { MdOutlineHowToVote, MdOutlineStorefront } from "react-icons/md";
 import { ModalContext } from "Context/ModalContext";
 import toast from "react-hot-toast";
 import connectwhitelogo from "../assets/connectwhitelogo.svg";
@@ -60,6 +60,16 @@ export const SliderContent = ({ setSlider }) => {
         >
           <BiSolidHome className="text-[23px]" />
           <div>Connect</div>
+        </NavLink>
+
+        <NavLink
+          to="/commerce"
+          className={({ isActive }) =>
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
+          }
+        >
+          <MdOutlineStorefront className="text-[23px]" />
+          <div>Commerce</div>
         </NavLink>
 
         <NavLink

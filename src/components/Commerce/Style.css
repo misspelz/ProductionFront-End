@@ -1,4 +1,4 @@
-.buy-sell-comp-cont {
+/* .buy-sell-comp-cont {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +49,7 @@
 }
 
 /* product Major ard */
-.card-product-major {
+/* .card-product-major {
   width: 200px;
   cursor: pointer;
 }
@@ -90,7 +90,6 @@
 .product-card-row {
   display: flex;
   gap: 10px;
-  /* justify-content: space; */
   width: 100%;
   overflow: auto;
   scrollbar-width: normal;
@@ -260,7 +259,7 @@
     width: 80%;
     height: 180px;
   }
-}
+}  */
 /* @media only screen and (max-width: 300px) {
   .cat-card-bx-mg {
     width: 100px;

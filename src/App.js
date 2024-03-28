@@ -29,8 +29,12 @@ import MyPolls from "./pages/Polls/MyPolls";
 import Voting from "./pages/Polls/Voting";
 import BusinessDirectory from "./pages/BussinessDirectory/BusinessDirectory";
 import Chat from "./pages/Chat/Chat";
-import Commerce from "./pages/Commerce/Commerce";
-import CategoryPage from "./pages/Commerce/Category";
+import Commerce from "pages/Commerce/commerce";
+import ProductCategory from "pages/Commerce/category/index";
+// import CategoryPage from "./pages/Commerce/Category";
+// creating-new-commerce-page
+import Productinformation from "pages/Commerce/products/productInfo";
+import Cart from "pages/Commerce/cart";
 import PersonalDetails from "./pages/PersonalDetails/PersonalDetails";
 import SearchPage from "./pages/SearchPage/SearchPage";
 import Ticket from "./pages/Ticket/Ticket";
@@ -85,13 +89,11 @@ function ScrollToTop() {
 }
 
 function App() {
-
   const { isAuthenticated } = useContext(ModalContext);
 
   useEffect(() => {
     localStorage.setItem("isAuthenticated", isAuthenticated);
   }, [isAuthenticated]);
-
   return (
     <>
       <div className="App">
@@ -127,7 +129,6 @@ function App() {
           <Route index path="/reset-password" element={<ForgotPassword />} />
           <Route index path="/verify" element={<Verify />} />
 
-          {/* Below are the pages with aside containers */}
           <Route
             path="/"
             element={
@@ -144,6 +145,10 @@ function App() {
             element={<ProtectedRoutes element={<PromotionPayment />} />}
           />
 
+          {/* temporary-Stand-alone-commerce-layout-(aside-and-header) */}
+
+          {/* Below are the pages with aside containers */}
+
           <Route element={<AppLayout />}>
             <Route element={<Navigate replace to="Home" />} />
             <Route
@@ -153,6 +158,28 @@ function App() {
 
             <Route path="/Home/:feedId" element={<FeedDetail />} />
 
+            {/* Commerce-routes */}
+            <Route
+              // removed-protected-route-for-testing-purpose
+              path="/commerce"
+              element={<ProtectedRoutes element={<Commerce />} />}
+            />
+
+            {/* route-to-specific-category in commerce page */}
+            <Route
+              path="/commerce/:category"
+              element={<ProtectedRoutes element={<ProductCategory />} />}
+            />
+            <Route
+              // removed-protected-route-for-testing-purpose
+              path="/commerce/product/:productName"
+              element={<ProtectedRoutes element={<Productinformation />} />}
+            />
+
+            <Route
+              path="/commerce/cart"
+              element={<ProtectedRoutes element={<Cart />} />}
+            />
             {/* Below are poll routes */}
             <Route
               path="/Voted"
@@ -166,17 +193,14 @@ function App() {
               path="/PollResult"
               element={<ProtectedRoutes element={<PollResult />} />}
             />
+            {/* <Route index path="/Voting" element={<Voting />} /> */}
             <Route
               path="/Voting"
               element={<ProtectedRoutes element={<Voting />} />}
             />
             <Route
-              path="/CanVote"
-              element={<ProtectedRoutes element={<CantVote />} />}
-            />
-            <Route
-              path="/CreatePoll"
-              element={<ProtectedRoutes element={<CreatePoll />} />}
+              path="/PrivacyPolicy"
+              element={<ProtectedRoutes element={<PrivacyPolicy />} />}
             />
             <Route
               path="/SuccessPoll"
@@ -201,32 +225,12 @@ function App() {
               path="/personaldetail"
               element={<ProtectedRoutes element={<PersonalDetails />} />}
             />
-            <Route
-              path="/search"
-              element={<ProtectedRoutes element={<SearchPage />} />}
-            />
-            <Route
-              path="/ComingSoonPage"
-              element={<ProtectedRoutes element={<ComingSoonPage />} />}
-            />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/ComingSoonPage" element={<ComingSoonPage />} />
 
-            <Route
-              path="/PrivacyPolicy"
-              element={<ProtectedRoutes element={<PrivacyPolicy />} />}
-            />
+            <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
-            <Route
-              path="/TicketDashCard"
-              element={<ProtectedRoutes element={<TicketDashCard />} />}
-            />
-            <Route
-              path="/commerce"
-              element={<ProtectedRoutes element={<Commerce />} />}
-            />
-            <Route
-              path="/category"
-              element={<ProtectedRoutes element={<CategoryPage />} />}
-            />
+            <Route path="/TicketDashCard" element={<TicketDashCard />} />
             <Route
               path="/business"
               element={<ProtectedRoutes element={<BusinessDirectory />} />}
@@ -271,7 +275,7 @@ function App() {
               element={<ProtectedRoutes element={<StereoSearchResult />} />}
             /> */}
 
-<Route
+            <Route
               path="/stereo/artistIndex"
               element={<ProtectedRoutes element={<UploadMusic />} />}
             />
@@ -286,12 +290,12 @@ function App() {
               element={<ProtectedRoutes element={<NonAuthStero />} />}
             />
 
-<Route
+            <Route
               path="/stereo/search"
               element={<ProtectedRoutes element={<StereoSearchPage />} />}
             />
 
-<Route
+            <Route
               path="/stereo/library"
               element={<ProtectedRoutes element={<Library />} />}
             />
@@ -321,7 +325,6 @@ function App() {
               <Route path="rewards/payment" element={<Payment />} />
             </Route>
           </Route>
-         
         </Routes>
       </div>
 
