@@ -71,6 +71,8 @@ import { AppLayout } from "Layout/AppLayout";
 import PollPayment from "components/PollsComp/PollPayment";
 import PromotionPayment from "components/PollsComp/PromotionPayment";
 import Library from "pages/Stereo/Pages/Library";
+import StereoSearchPage from "pages/Stereo/Pages/Search";
+// import SearchPage from "pages/Stereo/Pages/Search"
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -264,10 +266,10 @@ function App() {
               element={<ProtectedRoutes element={<TopAlbums />} />}
             />
 
-            <Route
+            {/* <Route
               path="/stereo/search"
               element={<ProtectedRoutes element={<StereoSearchResult />} />}
-            />
+            /> */}
 
 <Route
               path="/stereo/artistIndex"
@@ -282,6 +284,11 @@ function App() {
             <Route
               path="/stereo/nonauth"
               element={<ProtectedRoutes element={<NonAuthStero />} />}
+            />
+
+<Route
+              path="/stereo/search"
+              element={<ProtectedRoutes element={<StereoSearchPage />} />}
             />
 
 <Route

@@ -19,6 +19,8 @@ export default function Library() {
   const [isOpen, setIsOpen] = useState(false);
   const [albums, setAlbums] = useState([])
   const [artists, setArtists] = useState([])
+  const [downloaded, setDownloaded] = useState([])
+  const [recentlyPlayed, setRecentlyPlayed] = useState([])
   const [selectedId, setSelectedId] = useState(null)
 
   const handleOpenModal = (artistId) => {setIsOpen(true); setSelectedId(artistId)}
@@ -56,10 +58,42 @@ export default function Library() {
       });
   };
 
+  const GetDownloaded = () => {
+    axios
+      .get(`https://development.2geda.net/api/account/profile/songs/downloads/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setDownloaded(res.data.data);
+        console.log(JSON.stringify(downloaded) + "downloaded state===");
+        console.log(JSON.stringify(res.data.data) + "downloads====");
+      });
+  };
+
+  const GetRecentlyPlayed = () => {
+    axios
+      .get(`https://development.2geda.net/api/account/profile/songs/recently-played/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "X-CSRFToken": process.env.REACT_TOKEN,
+        },
+      })
+      .then((res) => {
+        setRecentlyPlayed(res.data.data);
+        console.log(JSON.stringify(recentlyPlayed) + "recently played state===");
+        console.log(JSON.stringify(res.data.data) + "recently played====");
+      });
+  };
+
 
   useEffect(()=>{
     GetAlbums()
     GetArtists()
+    GetDownloaded()
+    GetRecentlyPlayed()
   },[])
   return (
     <div>
@@ -135,8 +169,8 @@ export default function Library() {
       </div>
 
       {activeTab === null && (
-        <div className="grid grid-cols-2 gap-4 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-          <LibraryCard
+        <div className={recentlyPlayed.length>0?"grid grid-cols-2 gap-4 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2":null}>
+          {/* <LibraryCard
             img={require("../Assets/Frame 1243.png")}
             title={"Liked songs"}
             no={"85"}
@@ -175,13 +209,27 @@ export default function Library() {
             img={require("../Assets/Component 14.png")}
             title={"Liked songs"}
             no={"85"}
+          /> */}
+          {recentlyPlayed.length>0?recentlyPlayed.map(res=>{
+            return <LibraryCard
+            img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
+            title={res.name}
+            artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
+          }):<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
         </div>
       )}
 
       {activeTab === 1 && (
-        <div className="grid grid-cols-2 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-          <LibraryCard
+        <div className={recentlyPlayed.length>0?"grid grid-cols-2 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2":null}>
+          {/* <LibraryCard
             img={require("../Assets/Component 14.png")}
             title={"Liked songs"}
             no={"85"}
@@ -210,7 +258,21 @@ export default function Library() {
             img={require("../Assets/Image2.jpeg")}
             title={"Are we annoyed?"}
             artist={"Billie Eilish"}
+          /> */}
+          {recentlyPlayed.length>0?recentlyPlayed.map(res=>{
+            return <LibraryCard
+            img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
+            title={res.name}
+            artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
+          }).reverse():<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
         </div>
       )}
 
@@ -291,8 +353,8 @@ export default function Library() {
       )}
 
       {activeTab === 4 && (
-        <div className="grid grid-cols-2 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-          <LibraryCard
+        <div className={downloaded.length>0?"grid grid-cols-2 gap-2 mt-4 justify-center align-middle items-center md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2":null}>
+          {/* <LibraryCard
             img={require("../Assets/Component 14.png")}
             title={"Liked songs"}
             no={"85"}
@@ -321,7 +383,21 @@ export default function Library() {
             img={require("../Assets/Image2.jpeg")}
             title={"Are we annoyed?"}
             artist={"Billie Eilish"}
+          /> */}
+          {downloaded.length>0?downloaded.map(res=>{
+            return <LibraryCard
+            img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
+            title={res.name}
+            artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
+          }):<div className="flex justify-center items-center">
+          <Lottie
+                animationData={NothingHere}
+                style={{
+                  width: "263.38px",
+                  height: "100%",
+                }}
+              /></div>}
         </div>
       )}
 

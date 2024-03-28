@@ -18,7 +18,7 @@ export default function ChartCard({ img, title, no }) {
       />
       <div className="flex flex-col">
         <span className="font-medium text-xl">{title}</span><br/>
-        <span className="font-normal text-lg text-[#403F3F]">{no} songs</span>
+        <span className="font-normal text-lg text-[#403F3F]">{no? `${no} songs`: null}</span>
         <p></p>
       </div>
     </div>

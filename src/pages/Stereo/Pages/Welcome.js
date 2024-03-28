@@ -26,10 +26,12 @@ export default function Welcome() {
   const [about, setAbout] = useState()
   const [image, setImage] = useState();
   const [loading, setLoading] = useState(false)
+  const [redirect, setRedirect] = useState(false)
   const navigation = useNavigate()
 
   const [trendingSongs, setTrendingSongs] = useState([]);
   const authToken = localStorage.getItem("authToken")
+  const account = localStorage.getItem("accounts")
 
   const handleFileChange = (e)=>{
     if (e.target.files){
@@ -90,6 +92,12 @@ export default function Welcome() {
 
   useEffect(() => {
     GetTrendingSongs();
+    if (account ==="artist"){
+      setRedirect(true)
+    } else {
+      setRedirect(false)
+    }
+    console.log(account, "took account=======")
   }, []);
   const closeModal = () => {
     setIsOpen(!isOpen);
@@ -117,7 +125,7 @@ export default function Welcome() {
               <span className="font-normal text-xs text-[#4F0DA3]">Listener</span>
             </button>
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {redirect? navigation("/stereo/artistIndex"):setIsOpen(!isOpen)}}
               className="border h-min px-4 py-1 rounded-xl border-[#4F0DA3]">
               <span className="font-normal text-xs text-[#4F0DA3]">Artist</span>
             </button>

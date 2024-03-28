@@ -79,13 +79,13 @@ export default function LayoutMain({ children }) {
         {children}
       </div> */}
 
-      <div className="sm:grid sm:grid-cols-12 hidden bg-[#F5F5F5] mt-10">
+      <div className="lg:grid xl:grid lg:grid-cols-12 xl:lg:grid-cols-12 hidden bg-[#F5F5F5] mt-10">
       <div className="col-span-7">{children}</div>
       <div className="col-span-5">
               <RightSider />
             </div>
       </div>
-      <div className="sm:hidden block">
+      <div className="lg:hidden xl:hidden block">
         {children}
       </div>
     </div>

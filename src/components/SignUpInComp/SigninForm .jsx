@@ -54,6 +54,7 @@ const SigninForm = () => {
       setIsAuthenticated(true);
 
       localStorage.setItem("authToken", response.data.data.token);
+      localStorage.setItem("accounts", response.data.data.accounts)
 
       const userInfo = await UserInfoApi(response.data.data.token);
 
