@@ -17,14 +17,22 @@ import livestream from "../../assets/profile_images/livestream.svg";
 import ticket from "../../assets/profile_images/ticket.svg";
 import coinReward from "../../assets/profile_images/coin-rewards.svg";
 import ReferAndEarnBox from "./ReferAndEarnBox";
+import { useReward } from "pages/Rewards/useReward";
 
 const RewardItems = () => {
   const { status, rewards } = useRewards();
+  const [rewardId, setRewardId] = useState();
+  const { refetch, getReward, rewardStatus } = useReward(rewardId);
+  console.log(rewards);
   const [all, setAll] = useState(false);
-
+  console.log(getReward);
   function handleSeeAll() {
     setAll((all) => !all);
   }
+
+  const handleRewardId = (id) => {
+    setRewardId(id);
+  };
 
   return (
     <div className="reward_items">
@@ -38,29 +46,42 @@ const RewardItems = () => {
 
       <ul className="reward_items_lists">
         {/* LOGIN CLAIM */}
-        <li>
-          <div className="reward_left">
-            <div className="icon">
-              <img src={loginSymbol} alt="" />
-            </div>
+        {rewards?.data?.map((reward, index) => {
+          return (
+            <li key={index}>
+              <div className="reward_left">
+                <div className="icon">
+                  <img src={loginSymbol} alt="" />
+                </div>
 
-            <div className="text">
-              <h1>
-                Login &nbsp;&nbsp;&nbsp;
-                <span>
-                  <img src={ooniCoin} alt="" /> <span>+ 5</span>
-                </span>
-              </h1>
+                <div className="text">
+                  <h1>
+                    {reward?.acknowledge} &nbsp;&nbsp;&nbsp;
+                    <span>
+                      <img src={ooniCoin} alt="" />{" "}
+                      <span>+ {reward?.point}</span>
+                    </span>
+                  </h1>
 
-              <div>Daily login bonus</div>
-            </div>
-          </div>
+                  <div>{reward?.login} bonus</div>
+                </div>
+              </div>
 
-          <button className="reward_right">Claim</button>
-        </li>
+              <button
+                onClick={() => {
+                  handleRewardId(reward?.id);
+                  refetch();
+                }}
+                className="reward_right"
+              >
+                Claim
+              </button>
+            </li>
+          );
+        })}
 
         {/* OTHER CLAIMS */}
-        <RewardItem
+        {/* <RewardItem
           title="Post creation"
           icon={createPost}
           text="Create a new post"
@@ -190,7 +211,7 @@ const RewardItems = () => {
             length="7"
             amount="5"
           />
-        )}
+        )} */}
       </ul>
 
       {/* REFER & EARN REGISTRATION */}

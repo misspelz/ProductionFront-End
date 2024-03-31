@@ -14,7 +14,11 @@ const ProfileActivityButton = ({ children, count, param }) => {
     <button
       className={`px-[2rem] py-[0.8rem] rounded-[25px] text-[12px] font-light border-none cursor-pointer ${
         currentTab === param ? "bg-[#4f0da3] text-white" : "text-gra-600"
+<<<<<<< HEAD
+      } lg:text-[15px] font-medium flex items-center`}
+=======
       } lg:text-[15px] font-medium`}
+>>>>>>> 8b76aa43bd0779e5a4c51e23d4d00fb7681df0f9
       onClick={handleClick}
     >
       <span>{children}</span>{" "}

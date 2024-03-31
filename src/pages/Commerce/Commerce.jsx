@@ -10,11 +10,13 @@ import TrendingProduct from "../../components/Commerce/TrendingPro";
 import SelectCategory from "../../components/Dashboard/SelectCategory";
 import TopSeller from "../../components/Dashboard/TopSeller";
 import SellItem from "../../components/Modals/SellItem";
-import "./Style.css";
+import "./main.css";
 import SellItemStepTwo from "../../components/Modals/SellItemStepTwo";
 import SellItemStepThree from "../../components/Modals/SellItemStepThree";
 import ProjectDetail from "../../components/Commerce/ProjectDetail";
-import MyStore from "./MyStore";
+import MyStoreSearchComp from "components/Commerce/MyStoreSearchComp";
+// import MyStore from "./MyStore";
+// MyStoreSearchComp
 
 const Commerce = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -111,7 +113,9 @@ const Commerce = () => {
               </button>
             </div>
           </div>
-          {isStoreOpen && <MyStore handleStoreClose={handleStoreClose} />}
+          {isStoreOpen && (
+            <MyStoreSearchComp handleStoreClose={handleStoreClose} />
+          )}
           {isProductOpen && (
             <ProjectDetail handleProductClose={handleProductClose} />
           )}

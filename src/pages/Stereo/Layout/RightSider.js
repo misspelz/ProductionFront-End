@@ -12,7 +12,10 @@ import Modal from "../Components/Modals/ModalWrapper1";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../Assets/nothing_here.json"
+<<<<<<< HEAD
+=======
 import MusicPlayer2 from "../Components/MusicPlayer2";
+>>>>>>> 8b76aa43bd0779e5a4c51e23d4d00fb7681df0f9
 
 export default function RightSider() {
   const [activeTab, setActiveTab] = useState(null);
@@ -217,7 +220,11 @@ export default function RightSider() {
            {recentlyPlayed.length>0?recentlyPlayed.map(res=>{
             return <LibraryCard
             img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
+<<<<<<< HEAD
+            title={res.name}
+=======
             title={res.title}
+>>>>>>> 8b76aa43bd0779e5a4c51e23d4d00fb7681df0f9
             artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
           }):<div className="flex justify-center items-center">
@@ -404,9 +411,12 @@ export default function RightSider() {
               /></div>}
         </div>
       )}
+<<<<<<< HEAD
+=======
       <div className="mt-5">
       <MusicPlayer2/>
       </div>
+>>>>>>> 8b76aa43bd0779e5a4c51e23d4d00fb7681df0f9
 
       {isOpen && (
         <Modal isOpen={isOpen} onClose={handleCloseModal}>

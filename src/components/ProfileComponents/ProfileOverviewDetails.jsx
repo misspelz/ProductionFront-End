@@ -3,6 +3,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import cover from "../../assets/profile_images/cover-photo.jpeg";
 import mainProfile from "../../assets/profile_images/main-profile.webp";
 import { mainURL } from "services/profile_business_API";
+import { Link } from "react-router-dom";
 
 const ProfileOverviewDetails = ({ data }) => {
   const [profileState, setProfileState] = useState(false);
@@ -15,8 +16,8 @@ const ProfileOverviewDetails = ({ data }) => {
     cover_image,
     profile_picture,
     user,
-    stickers_count,
-    sticking_count,
+    stickers,
+    sticking,
     address,
     occupation,
   } = data;
@@ -27,9 +28,10 @@ const ProfileOverviewDetails = ({ data }) => {
 
   const job = occupation ? occupation : "Unemployed";
 
-  const addr = address.city
-    ? `${address.city}, ${address?.country}`
-    : "Address unknown";
+  const addr =
+    address.city && address?.country
+      ? `${address.city}, ${address?.country}`
+      : "Address unknown";
 
   return (
     <div className="px-0 lg:px-[20px]">
@@ -75,14 +77,14 @@ const ProfileOverviewDetails = ({ data }) => {
         </div>
 
         <div className="profile_details_btns">
-          <div className="stickers">
+          <Link to={"/profile/stickers"} className="stickers no-underline">
             <span>Stickers</span>
-            <span>{stickers_count}</span>
-          </div>
+            <span>{stickers}</span>
+          </Link>
 
           <div className="stickers">
             <span>Sticking</span>
-            <span>{sticking_count}</span>
+            <span>{sticking}</span>
           </div>
         </div>
       </div>

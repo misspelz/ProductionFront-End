@@ -33,21 +33,21 @@ const ManageBusiness = () => {
 
         <div className="bottom_box mt-2">
           {businessesStatus === "pending" ? (
-            Array.from({ length: 20 }, (_, i) => i + 1).map((ske) => (
+            Array.from({ length: 20 }, (_, i) => i + 1)?.map((ske) => (
               <ManageBusinessSkeleton key={ske} />
             ))
           ) : businessesStatus === "error" ? (
             "Please check your internet "
-          ) : businesses.length === 0 ? (
+          ) : businesses?.length === 0 ? (
             <ManageBusinessEmpty />
           ) : (
-            businesses.map((business, i) => (
+            businesses?.map((business, i) => (
               <ManageBusinessLists businessData={business} key={i + 1} />
             ))
           )}
         </div>
 
-        {businesses.length > 0 && (
+        {businesses?.length > 0 && (
           <>
             <div
               className="absolute bottom-[20px] right-[20px] w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#4f0da3] cursor-pointer clickModalOpen"

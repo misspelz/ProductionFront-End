@@ -29,7 +29,9 @@ import MyPolls from "./pages/Polls/MyPolls";
 import Voting from "./pages/Polls/Voting";
 import BusinessDirectory from "./pages/BussinessDirectory/BusinessDirectory";
 import Chat from "./pages/Chat/Chat";
-import Commerce from "pages/Commerce/commerce";
+// import Commerce from "pages/Commerce/commerce";
+import Commerce from "pages/Commerce/Commerce";
+// Commerce
 import ProductCategory from "pages/Commerce/category/index";
 // import CategoryPage from "./pages/Commerce/Category";
 // creating-new-commerce-page
@@ -76,6 +78,7 @@ import PollPayment from "components/PollsComp/PollPayment";
 import PromotionPayment from "components/PollsComp/PromotionPayment";
 import Library from "pages/Stereo/Pages/Library";
 import StereoSearchPage from "pages/Stereo/Pages/Search";
+import Stickers from "pages/Profile/Stickers";
 import MusicPlayer2 from "pages/Stereo/Components/MusicPlayer2";
 // import SearchPage from "pages/Stereo/Pages/Search"
 
@@ -306,6 +309,10 @@ function App() {
               path="/profile"
               element={<ProtectedRoutes element={<Profile />} />}
             />
+            <Route
+              path="/profile/stickers"
+              element={<ProtectedRoutes element={<Stickers />} />}
+            />
 
             <Route
               path="/business-profile"
@@ -313,7 +320,7 @@ function App() {
             />
 
             <Route
-              path="manage-business"
+              path="/manage-business"
               element={<ProtectedRoutes element={<ManageBusiness />} />}
             />
 

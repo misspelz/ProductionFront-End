@@ -225,7 +225,6 @@ const EditBusinessProfile = ({ type, onModalClose }) => {
           });
 
           setModal({});
-
           navigate("/manage-business");
           return;
         }

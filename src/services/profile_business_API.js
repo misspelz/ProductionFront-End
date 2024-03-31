@@ -20,7 +20,6 @@ export const getProfileData = async () => {
     );
 
     const data = await response.json();
-
     return data;
   } catch (err) {
     throw new Error(err);
@@ -59,7 +58,6 @@ export const getUserPosts = async (parameter) => {
     );
 
     const data = await response.json();
-
     return data;
   } catch (err) {
     throw new Error(err);
@@ -233,7 +231,7 @@ export const getRewardsById = async (reward_id) => {
     );
 
     const data = await response.json();
-
+    console.log(data);
     return data;
   } catch (err) {
     throw new Error(err);
@@ -252,5 +250,48 @@ export const claimReward = async (reward_id) => {
     return data;
   } catch (err) {
     throw new Error(err);
+  }
+};
+
+export const getAccountData = async () => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profiles/`,
+      requestOptions
+    );
+    const data = await response.json();
+    console.log(data);
+
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const stickerSingleUser = async (profile_id) => {
+  try {
+    const response = await fetch(
+      `${mainURL}/api/account/profiles/${profile_id}/stick/`,
+      requestOptions
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const createUserMedia = async (info) => {
+  try {
+    const response = await fetch(`${mainURL}/api/account/profile/medias/`, {
+      ...requestOptions,
+      method: "POST",
+      body: JSON.stringify(info),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
