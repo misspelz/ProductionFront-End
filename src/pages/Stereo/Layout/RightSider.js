@@ -12,6 +12,7 @@ import Modal from "../Components/Modals/ModalWrapper1";
 import axios from "axios";
 import Lottie from "lottie-react";
 import NothingHere from "../Assets/nothing_here.json"
+import MusicPlayer2 from "../Components/MusicPlayer2";
 
 export default function RightSider() {
   const [activeTab, setActiveTab] = useState(null);
@@ -216,7 +217,7 @@ export default function RightSider() {
            {recentlyPlayed.length>0?recentlyPlayed.map(res=>{
             return <LibraryCard
             img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
-            title={res.name}
+            title={res.title}
             artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
           }):<div className="flex justify-center items-center">
@@ -403,6 +404,9 @@ export default function RightSider() {
               /></div>}
         </div>
       )}
+      <div className="mt-5">
+      <MusicPlayer2/>
+      </div>
 
       {isOpen && (
         <Modal isOpen={isOpen} onClose={handleCloseModal}>

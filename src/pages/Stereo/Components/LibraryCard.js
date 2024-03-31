@@ -18,7 +18,7 @@ export default function LibraryCard({ img, title, no }) {
       />
       <div className="flex flex-col">
         <span className="font-medium text-sm">{title}</span>
-        <span className="font-normal text-xs text-[#403F3F]">{no} songs</span>
+        {/* <span className="font-normal text-xs text-[#403F3F]">{no} songs</span> */}
         <span></span>
       </div>
     </div>

@@ -72,6 +72,7 @@ import PollPayment from "components/PollsComp/PollPayment";
 import PromotionPayment from "components/PollsComp/PromotionPayment";
 import Library from "pages/Stereo/Pages/Library";
 import StereoSearchPage from "pages/Stereo/Pages/Search";
+import MusicPlayer2 from "pages/Stereo/Components/MusicPlayer2";
 // import SearchPage from "pages/Stereo/Pages/Search"
 
 function ScrollToTop() {
@@ -321,7 +322,7 @@ function App() {
               <Route path="rewards/payment" element={<Payment />} />
             </Route>
           </Route>
-         
+          <Route path="/player" element={<MusicPlayer2 />} />
         </Routes>
       </div>
 
