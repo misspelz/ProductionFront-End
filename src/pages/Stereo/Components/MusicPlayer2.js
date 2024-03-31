@@ -79,6 +79,23 @@ const MusicPlayer2 = () => {
       });
   };
 
+  const handleDownload = ({fileUrl, fileName}) => {
+    fetch(fileUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch(error => {
+        console.error('Error downloading file:', error);
+      });
+  };
+
 
   useEffect(()=>{
     GetSongs()
@@ -245,7 +262,8 @@ const MusicPlayer2 = () => {
         <span className="song-autor">{currentSong?.artist?.artist_name}</span>
         </div>
         <button>
-            <BiDownload color='#4F0DA3' size={23}/>
+            
+            <a href={currentSong?.audio_file} download target="_blank"><BiDownload color='#4F0DA3' size={23}/></a>
         </button>
         </div>
 
