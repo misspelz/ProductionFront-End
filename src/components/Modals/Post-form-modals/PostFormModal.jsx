@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BsCardImage, BsMic } from "react-icons/bs";
 import { FaVideo, FaMusic, FaFileAlt } from "react-icons/fa";
 import { SiMicrosoftword, SiMicrosoftexcel } from "react-icons/si";
@@ -16,19 +16,11 @@ import PostFormExeModal from "./PostFormExeModal";
 import PostFormLocationModal from "./PostFormLocModal";
 import PostFormFilesModal from "./PostFormFilesModal";
 import HashtagModal from "../HashTagModal";
-import TagFriends from "../TagFriends";
-import data from "utils/tag.json";
+import TagFriends from "./tag-friends/TagFriends";
 import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
 import { useCreateFeedsPost, useCreatePostFile } from "api/hooks/feeds";
 import Custombutton from "components/Custom-button/Custombutton";
-
-const topFriends = [
-	{ name: "Alice Oghene", id: 1 },
-	{ name: "John doe", id: 2 },
-	{ name: "Simeon Harry", id: 3 },
-	{ name: "Theresa Oliver", id: 4 },
-	{ name: "Idris Haruna", id: 5 },
-];
+import { PiSuitcaseSimple } from "react-icons/pi";
 
 const icon = <MdCheckBoxOutlineBlank size={18} />;
 const checkedIcon = <MdOutlineCheckBox size={18} />;
@@ -43,8 +35,9 @@ const PostFormModal = ({
 	const [addedTags, setAddedTags] = useState([]);
 	const [isTagsFrd, setIsTagsFrd] = useState(false);
 	const [selectedSuggestion] = useState("");
-	const hashtags = ["#programming", "#technology", "#art", "#travel"];
+	const hashtags = ["#programming", "#outside", "#art"];
 	const [checkedFriends, setCheckedFriends] = useState([]);
+	const [taggedUserIds, setTaggedUserIds] = useState([]);
 	const [images, setImages] = useState([]);
 	const [selectedFile, setSelectedFile] = useState([]);
 	const [audioFile, setAudioFile] = useState([]);
@@ -55,12 +48,23 @@ const PostFormModal = ({
 	const [contentText, setContentText] = useState(null);
 	const [location, setLocation] = useState(null);
 	const [postFileData, setPostFileData] = useState(null);
+	const sampleJob = {
+		job_title: "Robotics Engineer",
+		company_name: "Xendia Tech",
+		min_salary: 400000,
+		max_salary: 500000,
+		period: 1,
+		job_description:
+			"A dedicated Robotics Engineer with 5 yrs experience in Java, C++ and Python",
+	};
 
-	const handleFriendCheck = (img) => {
-		if (checkedFriends.includes(img)) {
-			setCheckedFriends(checkedFriends.filter((friend) => friend !== img));
+	const handleFriendCheck = (item) => {
+		if (checkedFriends.includes(item)) {
+			setCheckedFriends(
+				checkedFriends.filter((friend) => friend.id !== item?.id)
+			);
 		} else {
-			setCheckedFriends([...checkedFriends, img]);
+			setCheckedFriends([...checkedFriends, item]);
 		}
 	};
 
@@ -69,6 +73,10 @@ const PostFormModal = ({
 		updatedFriends.splice(index, 1);
 		setCheckedFriends(updatedFriends);
 	};
+
+	useEffect(() => {
+		setTaggedUserIds(checkedFriends.map((item) => item?.id));
+	}, [checkedFriends]);
 
 	const handleInputChange = (event) => {
 		const inputText = event.target.value;
@@ -127,10 +135,6 @@ const PostFormModal = ({
 	});
 	const { createPost, isLoading, isError } = useCreateFeedsPost({
 		onSuccess: (response) => {
-			console.log({ response });
-			for (const value of postFileData.values()) {
-				console.log(value);
-			}
 			if (postFileData) {
 				addFileFn.postFile(response?.data?.post?.id);
 				return;
@@ -146,55 +150,55 @@ const PostFormModal = ({
 			});
 		},
 		onError: () => {
+			handleCloseMainContainerClick();
 			Swal.fire({
 				icon: "error",
 				title: "An error occured",
 				text: "unable to create post at this time, please try again",
 				confirmButtonText: "OK",
-			})
+			});
 		},
 	});
 
 	const handlePost = () => {
-		let data = new FormData();
-		let textData = new FormData();
+		let fileData = new FormData();
+		let plainData = {};
+
 		if (exe?.[0]) {
-			data.append("files", exe[0]);
+			fileData.append("files", exe[0]);
 		}
 		if (word?.[0]) {
-			data.append("files", word[0]);
+			fileData.append("files", word[0]);
 		}
 		if (excel?.[0]) {
-			data.append("files", excel[0]);
+			fileData.append("files", excel[0]);
 		}
 		if (location) {
-			textData.append(
-				"location",
-				`${location?.latitude},${location?.longitude}`
-			);
+			plainData.location = `${location?.latitude},${location?.longitude}`;
 		}
 		if (audioFile?.[0]) {
-			data.append("files", audioFile[0]);
+			fileData.append("files", audioFile[0]);
+		}
+		if (music?.[0]) {
+			fileData.append("files", music[0]);
 		}
 
 		if (images.length > 0) {
 			images.map((image) => {
-				return data.append("files", image);
+				return fileData.append("files", image);
 			});
 		}
 		if (selectedFile.length > 0) {
 			selectedFile.map((file) => {
-				return data.append("files", file);
+				return fileData.append("files", file);
 			});
 		}
 
-		textData.append("hashtags", addedTags);
-		textData.append("text_content", contentText);
-		// data.append("url", "https://example.com");
-		// data.append("is_business_post", "True");
-		// data.append("tagged_users", TagFriends);
-		setPostFileData(data);
-		createPost(textData);
+		plainData.hashtags = hashtags;
+		plainData.text_content = contentText;
+		plainData.tagged_users = taggedUserIds;
+		setPostFileData(fileData);
+		createPost(plainData);
 	};
 
 	return (
@@ -245,6 +249,12 @@ const PostFormModal = ({
 							setSelectedFiles={setSelectedFile}
 						/>
 					)}
+					{selectedIcon === "job" && (
+						<PostFormFilesModal
+							selectedFiles={selectedFile}
+							setSelectedFiles={setSelectedFile}
+						/>
+					)}
 				</div>
 				<div className="hashtags-container">
 					<div className="add-tags-btn">Add hashtag</div>
@@ -281,7 +291,6 @@ const PostFormModal = ({
 					<div className="modal-full-container">
 						<TagFriends
 							handleCloseTagFrdClick={handleCloseTagFrdClick}
-							data={data}
 							onFriendCheck={handleFriendCheck}
 						/>
 					</div>
@@ -290,14 +299,23 @@ const PostFormModal = ({
 					<div className="add-tags-frd">Tag Friends</div>
 				</div>
 				<div className="taged-frd-box">
-					{checkedFriends.map((img, index) => (
-						<div className="tag-frd-cont" key={index}>
-							<img src={img} alt="" />
-							<IoCloseSharp
-								className="cls-tag-fr"
-								onClick={() => handleRemoveTagFrd(index)}
-							/>
-						</div>
+					{checkedFriends.map((item, index) => (
+						<>
+							<div className="tag-frd-cont" key={index}>
+								<img
+									src={
+										item?.profile_picture ??
+										"https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+									}
+									alt=""
+								/>
+								<IoCloseSharp
+									className="cls-tag-fr"
+									onClick={() => handleRemoveTagFrd(index)}
+								/>
+							</div>
+							{/* <span>{item?.username}</span> */}
+						</>
 					))}
 				</div>
 				<div className="down-post-feed">
@@ -331,6 +349,10 @@ const PostFormModal = ({
 							className="excel"
 							onClick={() => handleIconClick("excel")}
 						/>
+						<PiSuitcaseSimple
+							className="fil"
+							onClick={() => handleIconClick("job")}
+						/>
 					</div>
 					<Custombutton
 						className="post-btn"
@@ -346,3 +368,9 @@ const PostFormModal = ({
 };
 
 export default PostFormModal;
+
+// textData.is_job_post = true;
+// textData.job_details = sampleJob;
+// data.append("url", "https://example.com");
+// textData.append("job_details", sampleJob);
+// setPostFileData(data);

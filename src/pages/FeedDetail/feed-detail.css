@@ -28,12 +28,16 @@
 }
 
 .post-display-images img,
-.post-display-images video,
-.post-display-images audio {
+.post-display-images video{
     width: 100%;
     margin-bottom: .8rem;
     height: auto;
     object-fit: cover;
+}
+
+.post-display-images audio {
+    width: 100%;
+    margin-bottom: .8rem;
 }
 
 .post-display-images audio::-webkit-media-controls-enclosure {

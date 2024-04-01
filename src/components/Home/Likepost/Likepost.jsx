@@ -17,6 +17,10 @@ import {
 	useCreateCommentReaction,
 	useCreateReaction,
 	useCreateReplyReaction,
+	useRemoveCommentReaction,
+	useRemoveReaction,
+	useRemoveReplyReaction,
+	useUser,
 } from "api/hooks/feeds";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -25,7 +29,15 @@ import CircularProgress from "@mui/material/CircularProgress";
  * Like: 1, Dislike: 2, Love/ Hug: 3, Sad: 4, Angry: 5, Surprised: 6, Laughing: 7
  ***********************************************************************************/
 
-const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
+const Likepost = ({
+	postId,
+	commentId,
+	replyId,
+	isComment,
+	isReply,
+	userReactions,
+}) => {
+	const { user } = useUser();
 	const { reaction, isLoading, isSuccess } = useCreateReaction({
 		postId,
 		onSuccess: (response) => {
@@ -35,6 +47,17 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 			console.log({ errorResponse });
 		},
 	});
+
+	const removeReaction = useRemoveReaction({
+		postId,
+		onSuccess: (response) => {
+			console.log({ response });
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+
 	const commentReaction = useCreateCommentReaction({
 		postId,
 		commentId,
@@ -45,7 +68,31 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 			console.log({ errorResponse });
 		},
 	});
+
+	const removeCommentReaction = useRemoveCommentReaction({
+		postId,
+		commentId,
+		onSuccess: (response) => {
+			console.log({ response });
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+
 	const replyReaction = useCreateReplyReaction({
+		postId,
+		commentId,
+		replyId,
+		onSuccess: (response) => {
+			console.log({ response });
+		},
+		onError: (errorResponse) => {
+			console.log({ errorResponse });
+		},
+	});
+
+	const removeReplyReaction = useRemoveReplyReaction({
 		postId,
 		commentId,
 		replyId,
@@ -65,18 +112,59 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 		setAnchorEl(null);
 	};
 
-	const handleReact = (reactionId) => {
-		if (isComment) {
-			commentReaction.reaction({ reaction_type: reactionId });
-		} else if (isReply) {
-			replyReaction.reaction({ reaction_type: reactionId });
+	const checkReaction = (reactionId) => {
+		const hasReacted = userReactions?.find(
+			(userReaction) => userReaction?.user === user?.email
+		);
+		const hasReaction = userReactions?.find(
+			(userReaction) => userReaction?.reaction_type === reactionId
+		);
+		return hasReacted && hasReaction;
+	};
+
+	const handlePostReact = (reactionId) => {
+		if (checkReaction(reactionId)) {
+			//remove reaction
+			removeReaction.delete({ reaction_type: reactionId });
 		} else {
 			reaction({ reaction_type: reactionId });
+		}
+	};
+
+	const handleCommentReact = (reactionId) => {
+		if (checkReaction(reactionId)) {
+			//remove comment reaction
+			removeCommentReaction.delete({ reaction_type: reactionId });
+		} else {
+			commentReaction.reaction({ reaction_type: reactionId });
+		}
+	};
+
+	const handleReplyReact = (reactionId) => {
+		if (checkReaction(reactionId)) {
+			//remove reply reaction
+			removeReplyReaction.delete({ reaction_type: reactionId });
+		} else {
+			replyReaction.reaction({ reaction_type: reactionId });
+		}
+	};
+
+	const handleReact = (reactionId) => {
+		if (isComment) {
+			handleCommentReact(reactionId);
+		} else if (isReply) {
+			handleReplyReact(reactionId);
+		} else {
+			handlePostReact(reactionId);
 		}
 		handleClose();
 	};
 	const loadingStat =
 		isLoading || commentReaction.isLoading || replyReaction.isLoading;
+	const removeloadingStat =
+		removeReaction.isLoading ||
+		removeCommentReaction.isLoading ||
+		removeReplyReaction.isLoading;
 	const successStat =
 		isSuccess || commentReaction.isSuccess || replyReaction.isSuccess;
 
@@ -93,9 +181,9 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 					padding: 0,
 					color: "#000000b9",
 				}}
-				disabled={loadingStat}
+				disabled={loadingStat || removeloadingStat}
 			>
-				{loadingStat ? (
+				{loadingStat || removeloadingStat ? (
 					<CircularProgress size={20} color="inherit" />
 				) : (
 					<BiLike size={24} color={successStat ? "blue" : "#000000b9"} />
@@ -149,21 +237,21 @@ const Likepost = ({ postId, commentId, replyId, isComment, isReply }) => {
 						handleReact(4);
 					}}
 				>
-					<EmojiLaughing />
+					<EmojiSad />
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
 						handleReact(5);
 					}}
 				>
-					<EmojiSad />
+					<EmojiAngry />
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
 						handleReact(6);
 					}}
 				>
-					<EmojiAngry />
+					<EmojiLaughing />
 				</MenuItem>
 				<MenuItem
 					onClick={() => {

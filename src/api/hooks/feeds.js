@@ -14,6 +14,7 @@ import {
 	createStatus,
 	feedsRepost,
 	getAllFeedsPost,
+	getAllUsers,
 	getCommentReplies,
 	getComments,
 	getGoogleLocation,
@@ -22,6 +23,9 @@ import {
 	getTotalCommentReactions,
 	getTotalReactions,
 	promotePost,
+	removeCommentReaction,
+	removeReaction,
+	removeReplyReaction,
 	reportPost,
 	savePost,
 } from "api/services/feeds";
@@ -31,17 +35,17 @@ const feedsKey = "feed";
 const commentKey = "comment";
 const replyKey = "reply";
 const reactionKey = "reaction";
-const c_reactionKey = "reaction";
-const r_reactionKey = "reaction";
+const c_reactionKey = "comment-reaction"; //comment reaction key
+const r_reactionKey = "reply-reaction"; //reply reaction key
 
 /**CREATE FEEDS DATA HOOKS */
 
 export const useCreateFeedsPost = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (postData) => createFeedsPost(postData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [feedsKey] });
+			query.invalidateQueries({ queryKey: [feedsKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -58,11 +62,11 @@ export const useCreateFeedsPost = (options) => {
 };
 
 export const useCreatePostFile = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (postId) => createPostFile(postId, options.postFileData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [feedsKey] });
+			query.invalidateQueries({ queryKey: [feedsKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -79,11 +83,11 @@ export const useCreatePostFile = (options) => {
 };
 
 export const useCreateComment = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (commentData) => createComment(options.postId, commentData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [commentKey] });
+			query.invalidateQueries({ queryKey: [commentKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -100,12 +104,12 @@ export const useCreateComment = (options) => {
 };
 
 export const useCreateReply = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (replyData) =>
 			createReply(options.postId, options.commentId, replyData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [replyKey] });
+			query.invalidateQueries({ queryKey: [replyKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -122,11 +126,11 @@ export const useCreateReply = (options) => {
 };
 
 export const useFeedsRepost = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (postData) => feedsRepost(options.postId, postData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [feedsKey] });
+			query.invalidateQueries({ queryKey: [feedsKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -221,11 +225,11 @@ export const useBlockUser = (options) => {
 /**CREATE FEEDS REACTION HOOKS */
 
 export const useCreateReaction = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (reactionData) => createReaction(options.postId, reactionData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [reactionKey] });
+			query.invalidateQueries({ queryKey: [reactionKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -242,12 +246,12 @@ export const useCreateReaction = (options) => {
 };
 
 export const useCreateCommentReaction = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (reactionData) =>
 			createCommentReaction(options.postId, options.commentId, reactionData),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [c_reactionKey] });
+			query.invalidateQueries({ queryKey: [c_reactionKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -264,7 +268,7 @@ export const useCreateCommentReaction = (options) => {
 };
 
 export const useCreateReplyReaction = (options) => {
-    const query = useQueryClient();
+	const query = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: (reactionData) =>
 			createReplyReaction(
@@ -274,7 +278,7 @@ export const useCreateReplyReaction = (options) => {
 				reactionData
 			),
 		onSuccess: (data) => {
-            query.invalidateQueries({ queryKey: [r_reactionKey] });
+			query.invalidateQueries({ queryKey: [r_reactionKey] });
 			options.onSuccess && options.onSuccess(data);
 		},
 		onError: (error) => {
@@ -380,7 +384,7 @@ export const useGetTotalReactions = (postId) => {
 	const response = useQuery({
 		queryKey: [reactionKey, postId],
 		queryFn: () => getTotalReactions(postId),
-		enabled: postId != undefined
+		enabled: postId != undefined,
 	});
 
 	return {
@@ -408,7 +412,12 @@ export const useGetTotalCommentReactions = (params) => {
 
 export const useGetReplyReactions = (params) => {
 	const response = useQuery({
-		queryKey: [r_reactionKey, params?.postId, params?.commentId, params?.replyId],
+		queryKey: [
+			r_reactionKey,
+			params?.postId,
+			params?.commentId,
+			params?.replyId,
+		],
 		queryFn: () =>
 			getReplyReactions(params?.postId, params?.commentId, params?.replyId),
 		enabled: params?.commentId !== undefined,
@@ -444,5 +453,97 @@ export const useGetGoogleLocation = (options) => {
 	};
 };
 
+export const useGetAllUsers = () => {
+	const response = useQuery({
+		queryKey: ["tag-users"],
+		queryFn: () => getAllUsers(),
+	});
+
+	return {
+		isError: response.isError,
+		isLoading: response.isLoading,
+		isSuccess: response.isSuccess,
+		data: response.data ? response.data?.data : undefined,
+	};
+};
+
+export const useUser = () => {
+    const userInfo = JSON.parse(localStorage.getItem("2gedaUserInfo"));
+
+    return {
+        user: userInfo?.user
+    }
+}
+
 /**DELETE FEEDS DATA HOOKS */
 //none here at the moment
+
+export const useRemoveReaction = (options) => {
+	const query = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: (reactionData) => removeReaction(options?.postId, reactionData),
+		onSuccess: (data) => {
+			query.invalidateQueries({ queryKey: [reactionKey] });
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		delete: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
+export const useRemoveCommentReaction = (options) => {
+	const query = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: (reactionData) =>
+			removeCommentReaction(options?.postId, options.commentId, reactionData),
+		onSuccess: (data) => {
+			query.invalidateQueries({ queryKey: [c_reactionKey] });
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		delete: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};
+
+export const useRemoveReplyReaction = (options) => {
+	const query = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: (reactionData) =>
+			removeReplyReaction(
+				options.postId,
+				options.commentId,
+				options.replyId,
+				reactionData
+			),
+		onSuccess: (data) => {
+			query.invalidateQueries({ queryKey: [r_reactionKey] });
+			options.onSuccess && options.onSuccess(data);
+		},
+		onError: (error) => {
+			options.onError && options.onError(error);
+		},
+	});
+
+	return {
+		delete: mutation.mutate,
+		isSuccess: mutation.isSuccess,
+		isError: mutation.isError,
+		isLoading: mutation.isPending,
+	};
+};

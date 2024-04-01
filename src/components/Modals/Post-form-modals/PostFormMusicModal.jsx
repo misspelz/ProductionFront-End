@@ -38,8 +38,6 @@ const PostFormMusicModal = ({ setMusic, music }) => {
 								src={URL.createObjectURL(
 									new Blob(audioFile, { type: "audio/wav" })
 								)}
-								// src={URL.createObjectURL(audioFile)}
-								// src=""
 								type={audioFile.type}
 							/>
 							Your browser does not support the audio tag.

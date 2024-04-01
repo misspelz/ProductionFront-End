@@ -107,10 +107,11 @@ const PostComp = ({ shared, postData }) => {
 				<div className="post-likes-box">
 					<div className="posted-likes-cont">
 						<div className="icon-text">
-							<Likepost postId={postData?.id} />
-							<span className="text-[12px]">
-								{postData?.reaction?.like_count}
-							</span>
+							<Likepost
+								postId={postData?.id}
+								userReactions={data?.user_reactions}
+							/>
+							<span className="text-[12px]">{totalReactions}</span>
 						</div>
 						<div className="icon-text">
 							<BiMessageAlt size={22} color="#000000b9" />

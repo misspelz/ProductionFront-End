@@ -1,11 +1,7 @@
-import React from "react"
+import React from "react";
 import { PiMicrosoftPowerpointLogo } from "react-icons/pi";
 import { SiMicrosoftword, SiMicrosoftexcel } from "react-icons/si";
-import {
-	BsAndroid2,
-	// BsFiletypeExe,
-	BsFillFileEarmarkPdfFill,
-} from "react-icons/bs";
+import { BsAndroid2, BsFillFileEarmarkPdfFill } from "react-icons/bs";
 import { IoCloudDownloadSharp } from "react-icons/io5";
 
 const domainUrl = "https://development.2geda.net";
