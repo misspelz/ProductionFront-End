@@ -48,7 +48,7 @@ export default function StereoSearchPage() {
         setAlbums(res?.data.data);
         console.log(albums + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetArtists = () => {
@@ -63,7 +63,7 @@ export default function StereoSearchPage() {
         setArtist(res.data.data);
         console.log(JSON.stringify(artist) + "artist state===");
         console.log(JSON.stringify(res.data.data) + "artists====");
-      });
+      }).catch(e=>console.log(e));
   };
 
 

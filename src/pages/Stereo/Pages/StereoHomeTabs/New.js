@@ -27,7 +27,7 @@ export default function New() {
         setRecentAlbums(res?.data?.data);
         console.log(recentAlbums + "newAlbums state===");
         console.log(JSON.stringify(res.data) + "newAlbums====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetSongs = () => {
@@ -44,7 +44,7 @@ export default function New() {
         console.log(JSON.stringify(res.data) + "songs====");
 
         
-      });
+      }).catch(e=>console.log(e));
   };
 
   

@@ -42,7 +42,7 @@ export default function StereoHome() {
         setTopAlbums(res?.data?.data);
         console.log(topAlbums + "topAlbums state===");
         console.log(JSON.stringify(res.data) + "topAlbums====");
-      });
+      }).catch(e=>console.log(e));
   };
   const GetBigHits = () => {
     axios
@@ -76,7 +76,7 @@ export default function StereoHome() {
         setQuickPicks(res?.data?.data);
         console.log(quickpicks + "quickpicks state===");
         console.log(JSON.stringify(res.data) + "quickpicks====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(()=>{

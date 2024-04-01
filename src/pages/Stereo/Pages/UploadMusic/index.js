@@ -28,7 +28,7 @@ export default function UploadMusic() {
         setRecentUpload(res?.data?.data);
         console.log(recentUpload + "trending state===");
         console.log(JSON.stringify(res.data) + "trending====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetCategories = () => {
@@ -43,7 +43,7 @@ export default function UploadMusic() {
         setCategory(res?.data?.data);
         console.log(category + "category state===");
         console.log(JSON.stringify(res.data) + "category====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(() => {

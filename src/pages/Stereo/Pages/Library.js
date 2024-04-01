@@ -40,7 +40,7 @@ export default function Library() {
         setAlbums(res?.data.data);
         console.log(albums + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetArtists = () => {

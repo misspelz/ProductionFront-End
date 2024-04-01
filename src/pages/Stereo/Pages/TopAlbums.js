@@ -31,7 +31,7 @@ export default function TopAlbums() {
         setTopAlbums(res?.data?.data);
         console.log(topAlbums + "topAlbums state===");
         console.log(JSON.stringify(res.data) + "topAlbums====");
-      });
+      }).catch(e=>console.log(e));
   };
   
   

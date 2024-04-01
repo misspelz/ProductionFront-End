@@ -29,7 +29,7 @@ export default function Artists() {
         setArtists(res.data.data);
         console.log(JSON.stringify(artists) + "artist state===");
         console.log(JSON.stringify(res.data.data) + "artists====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(() => {

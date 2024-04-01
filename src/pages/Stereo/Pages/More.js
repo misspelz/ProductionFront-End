@@ -27,7 +27,7 @@ export default function More() {
         setQuickPicks(res?.data?.data);
         console.log(quickpicks + "quickpicks state===");
         console.log(JSON.stringify(res.data) + "quickpicks====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(()=>{

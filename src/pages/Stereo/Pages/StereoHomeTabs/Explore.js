@@ -30,7 +30,7 @@ export default function Explore() {
         // Assuming setBigHit is a function to update state
         setAfrobeats(afroHits);
         console.log(afroHits,"afrohits");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(()=>{

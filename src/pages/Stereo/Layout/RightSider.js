@@ -40,7 +40,7 @@ export default function RightSider() {
         setAlbums(res?.data.data);
         console.log(albums + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetArtists = () => {
@@ -55,7 +55,7 @@ export default function RightSider() {
         setArtists(res.data.data);
         console.log(JSON.stringify(artists) + "artist state===");
         console.log(JSON.stringify(res.data.data) + "artists====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetDownloaded = () => {
@@ -70,7 +70,7 @@ export default function RightSider() {
         setDownloaded(res.data.data);
         console.log(JSON.stringify(downloaded) + "downloaded state===");
         console.log(JSON.stringify(res.data.data) + "downloads====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   const GetRecentlyPlayed = () => {
@@ -85,7 +85,7 @@ export default function RightSider() {
         setRecentlyPlayed(res.data.data);
         console.log(JSON.stringify(recentlyPlayed) + "recently played state===");
         console.log(JSON.stringify(res.data.data) + "recently played====");
-      });
+      }).catch(e=>console.log(e));
   };
 
 

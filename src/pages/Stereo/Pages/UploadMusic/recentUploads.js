@@ -56,7 +56,7 @@ export default function RecentUploads() {
         setCategory(res?.data?.data);
         console.log(category + "category state===&&&");
         console.log(JSON.stringify(res.data) + "category====");
-      });
+      }).catch(e=>console.log(e));
   };
 
 
@@ -91,7 +91,7 @@ export default function RecentUploads() {
         setLoading(false)
       }
       console.log(res)
-    })
+    }).catch(e=>console.log(e))
   }
 
   const UploadAlbum = () => {
@@ -145,7 +145,7 @@ export default function RecentUploads() {
         setRecentUpload(res?.data?.data);
         console.log(recentUpload + "recent upload state===");
         console.log(JSON.stringify(res.data) + "recentUpload====");
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(()=>{

@@ -25,7 +25,7 @@ export default function TopTracks() {
         console.log(JSON.stringify(res.data) + "songs====");
 
         
-      });
+      }).catch(e=>console.log(e));
   };
 
   useEffect(()=>{

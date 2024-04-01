@@ -24,7 +24,7 @@ const ArtistProfile = ({ handleArtistProClose, onClick, id }) => {
         setArtists(res.data.data);
         console.log(JSON.stringify(artists) + "artistprofile state===");
         console.log(JSON.stringify(res.data.data) + "artistsprofile====");
-      });
+      }).catch(e=>console.log(e));
   };
   
 
