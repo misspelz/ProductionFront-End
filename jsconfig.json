@@ -5,7 +5,7 @@
     "baseUrl": "src",
     "paths": {
       "components/*": ["components/*"],
-      "assets/*": ["assets/*"],
+      "assets/*": ["assets/*", "pages/Stereo/Assets/*"],
       "utils/*": ["utils/*"],
       "layouts/*": ["layouts/*"],
       "pages/*": ["pages/*"],
