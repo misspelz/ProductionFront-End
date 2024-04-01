@@ -7,7 +7,6 @@ import { IoCloudDownloadSharp } from "react-icons/io5";
 const domainUrl = "https://development.2geda.net";
 const docUrl = "https://docs.google.com/gview?url=";
 const docUrlPrefix = "&embedded=true";
-// https://docs.google.com/gview?url=http://remote.url.tld/path/to/document.doc&embedded=true
 
 const DisplayMedia = ({ mediaFile }) => {
 	const renderFileIcon = (fileType) => {

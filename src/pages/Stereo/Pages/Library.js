@@ -213,11 +213,7 @@ export default function Library() {
           {recentlyPlayed.length>0?recentlyPlayed.map(res=>{
             return <LibraryCard
             img={res.cover_image?`https://development.2geda.net${res.cover_image}`:null}
-<<<<<<< HEAD
-            title={res.name}
-=======
             title={res.title}
->>>>>>> 8b76aa43bd0779e5a4c51e23d4d00fb7681df0f9
             artist={res.artist.artist_name?res.artist.artist_name:"2GEDA Artist"}
           />
           }):<div className="flex justify-center items-center">
