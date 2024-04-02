@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { MdOutlineHowToVote } from "react-icons/md";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./style.css";
-import { IoMdBook } from "react-icons/io";
 
 const Sidebar = ({ isCollapsed }) => {
   const nav = useNavigate();

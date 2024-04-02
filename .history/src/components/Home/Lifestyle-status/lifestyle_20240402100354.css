@@ -355,8 +355,8 @@
 .swiper-pagination-bullets.swiper-pagination-horizontal {
   display: flex;
   flex-direction: row;
-  padding-bottom: 6px !important;
-  align-items: center !important;
+  margin-top: 6px;
+  align-items: center m !important;
   left: 34% !important;
   right: 6px;
 }
