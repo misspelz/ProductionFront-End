@@ -7,7 +7,6 @@ import { MdOutlineHowToVote, MdOutlineStorefront } from "react-icons/md";
 import { ModalContext } from "Context/ModalContext";
 import toast from "react-hot-toast";
 import connectwhitelogo from "../assets/connectwhitelogo.svg";
-import { IoMdBook } from "react-icons/io";
 
 const nav_item_style = {
   active:
@@ -33,112 +32,104 @@ export const SliderContent = ({ setSlider }) => {
 
   return (
     <>
-      <div className='flex flex-col space-y-10'>
+      <div className="flex flex-col space-y-10">
         <NavLink
-          to='/home'
+          to="/home"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <img src={connectwhitelogo} alt='' />
+          <img src={connectwhitelogo} alt="" />
         </NavLink>
 
         <NavLink
-          to='/home'
+          to="/home"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <BiSolidHome className='text-[23px]' />
+          <BiSolidHome className="text-[23px]" />
           <div>Home</div>
         </NavLink>
+
         <NavLink
-          to='/education'
+          to="/connect"
           className={({ isActive }) =>
-            isActive ? 'active_link side-item' : 'side-item'
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <IoMdBook className='side-icon ' />
-          <div className='sidebar-text'>Education</div>
-        </NavLink>
-        <NavLink
-          to='/connect'
-          className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
-          }
-        >
-          <BiSolidHome className='text-[23px]' />
+          <BiSolidHome className="text-[23px]" />
           <div>Connect</div>
         </NavLink>
 
         <NavLink
-          to='/commerce'
+          to="/commerce"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <MdOutlineStorefront className='text-[23px]' />
+          <MdOutlineStorefront className="text-[23px]" />
           <div>Commerce</div>
         </NavLink>
 
         <NavLink
-          to='/chat'
+          to="/chat"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <IoChatbubbleEllipsesOutline className='text-[23px]' />
+          <IoChatbubbleEllipsesOutline className="text-[23px]" />
           <div>Chats</div>
         </NavLink>
 
         <NavLink
-          to='/profile'
+          to="/profile"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <BsPersonCircle className='text-[23px]' />
+          <BsPersonCircle className="text-[23px]" />
           <div>Profile</div>
         </NavLink>
 
         <NavLink
-          to='/ticket'
+          to="/ticket"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <BsTicketFill className='text-[23px]' />
+          <BsTicketFill className="text-[23px]" />
           <div>Tickets</div>
         </NavLink>
 
         <NavLink
-          to='/Voting'
+          to="/Voting"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <MdOutlineHowToVote className='text-[23px]' />
+          <MdOutlineHowToVote className="text-[23px]" />
           <div>Voting</div>
         </NavLink>
 
         <NavLink
-          to='/stereo'
+          to="/stereo"
           className={({ isActive }) =>
-            isActive ? nav_item_style['active'] : nav_item_style['non_active']
+            isActive ? nav_item_style["active"] : nav_item_style["non_active"]
           }
         >
-          <MdOutlineHowToVote className='text-[23px]' />
+          <MdOutlineHowToVote className="text-[23px]" />
           <div>Stereo</div>
         </NavLink>
       </div>
 
       <button
-        className='flex items-center space-x-2 text-[15px] text-white'
+        className="flex items-center space-x-2 text-[15px] text-white"
         onClick={handleLogout}
       >
-        <IoLogOutOutline className='text-[23px]' />
+        <IoLogOutOutline className="text-[23px]" />
         <span>Sign out</span>
       </button>
     </>
-  )
+  );
 };

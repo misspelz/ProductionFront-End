@@ -355,10 +355,8 @@
 .swiper-pagination-bullets.swiper-pagination-horizontal {
   display: flex;
   flex-direction: row;
-  padding-bottom: 6px !important;
-  align-items: center !important;
-  left: 34% !important;
-  right: 6px;
+  margin-top: 6px;
+  align-items: center;
 }
 /* .swiper-pagination-bullets.swiper-pagination-horizontal {
     top: -478px !important;

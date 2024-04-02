@@ -7,7 +7,6 @@ import { MdOutlineHowToVote, MdOutlineStorefront } from "react-icons/md";
 import { ModalContext } from "Context/ModalContext";
 import toast from "react-hot-toast";
 import connectwhitelogo from "../assets/connectwhitelogo.svg";
-import { IoMdBook } from "react-icons/io";
 
 const nav_item_style = {
   active:

@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { MdOutlineHowToVote } from "react-icons/md";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./style.css";
-import { IoMdBook } from "react-icons/io";
 
 const Sidebar = ({ isCollapsed }) => {
   const nav = useNavigate();
@@ -22,27 +21,18 @@ const Sidebar = ({ isCollapsed }) => {
 
   return (
     <div
-      className={isCollapsed ? 'sidebar-container  nil' : 'sidebar-container'}
+      className={isCollapsed ? "sidebar-container  nil" : "sidebar-container"}
     >
-      <div className='sidebar-box'>
-        <div className='side-items '>
+      <div className="sidebar-box">
+        <div className="side-items ">
           <NavLink
-            to='/Home'
+            to="/Home"
             className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
+              isActive ? "active_link side-item" : "side-item"
             }
           >
-            <BiSolidHome className='side-icon ' />
-            <div className='sidebar-text'>Home</div>
-          </NavLink>
-          <NavLink
-            to='/education'
-            className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
-            }
-          >
-            <IoMdBook className='side-icon ' />
-            <div className='sidebar-text'>Education</div>
+            <BiSolidHome className="side-icon " />
+            <div className="sidebar-text">Home</div>
           </NavLink>
           {/* <NavLink
             to="/connect"
@@ -82,31 +72,31 @@ const Sidebar = ({ isCollapsed }) => {
             <div className="sidebar-text">Chat</div>
           </NavLink> */}
           <NavLink
-            to='/chat'
+            to="/chat"
             className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
+              isActive ? "active_link side-item" : "side-item"
             }
           >
-            <IoChatbubbleEllipsesOutline className='side-icon ' />
-            <div className='sidebar-text'>Chats</div>
+            <IoChatbubbleEllipsesOutline className="side-icon " />
+            <div className="sidebar-text">Chats</div>
           </NavLink>
           <NavLink
-            to='/profile'
+            to="/profile"
             className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
+              isActive ? "active_link side-item" : "side-item"
             }
           >
-            <BsPersonCircle className='side-icon ' />
-            <div className='sidebar-text'>Profile</div>
+            <BsPersonCircle className="side-icon " />
+            <div className="sidebar-text">Profile</div>
           </NavLink>
           <NavLink
-            to='/ticket'
+            to="/ticket"
             className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
+              isActive ? "active_link side-item" : "side-item"
             }
           >
-            <BsTicketFill className='side-icon ' />
-            <div className='sidebar-text'>Tickets</div>
+            <BsTicketFill className="side-icon " />
+            <div className="sidebar-text">Tickets</div>
           </NavLink>
           {/* <NavLink
             to="/ComingSoonPage"
@@ -136,13 +126,13 @@ const Sidebar = ({ isCollapsed }) => {
             <div className="sidebar-text">Tv</div>
           </NavLink> */}
           <NavLink
-            to='/Voting'
+            to="/Voting"
             className={({ isActive }) =>
-              isActive ? 'active_link side-item' : 'side-item'
+              isActive ? "active_link side-item" : "side-item"
             }
           >
-            <MdOutlineHowToVote className='side-icon ' />
-            <div className='sidebar-text'>Voting</div>
+            <MdOutlineHowToVote className="side-icon " />
+            <div className="sidebar-text">Voting</div>
           </NavLink>
           {/* <NavLink
             to="/ComingSoonPage"
@@ -154,14 +144,14 @@ const Sidebar = ({ isCollapsed }) => {
             <div className="sidebar-text">Education</div>
           </NavLink> */}
 
-          <NavLink className='side-item flex flex-row' onClick={handleLogout}>
-            <IoLogOutOutline className='side-icon ' />
-            <div className='sidebar-text'>Sign Out</div>
+          <NavLink className="side-item flex flex-row" onClick={handleLogout}>
+            <IoLogOutOutline className="side-icon " />
+            <div className="sidebar-text">Sign Out</div>
           </NavLink>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default Sidebar;
